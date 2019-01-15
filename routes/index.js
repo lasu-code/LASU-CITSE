@@ -75,6 +75,7 @@ router.get('/researchPlan', controller.researchPlanPage);
 router.get('/industrial', controller.industrailPage);
 router.get('/partnership', controller.partnershipPage);
 router.get('/news', controller.newsPage);
+router.post('/reply', dashboardController.reply)
 
 
 router.post('/post_contact', controller.post_contactPage);
@@ -83,7 +84,9 @@ router.get('/implementation-timeline', controller.implementationPage);
 
 router.get('/dashboard', adminLoggedIn, function(req, res, next){
   res.render('backend/dashboard')
-})
+});
+
+router.get('/dashboard/messages',adminLoggedIn, dashboardController.messages)
 
 router.get('/login', dashboardController.login)
 router.get('/signup', function(req, res, next){

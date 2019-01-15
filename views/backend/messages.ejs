@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <%- include('../partials/dashboard-head', {pagename: "user's messages"}) %>
+    
+    <style>
+      .Mbody{
+        border: 3px solid blue;
+        border-radius: 10px;
+        margin: 5px  20px;
+      }
+
+      .label{
+        font-style: italic;
+        padding: 10px;
+      }
+    </style>
+
+  </head>
+
+  <body>
+    <%- include('../partials/dashboard-nav') %>
+   
+
+    <!-- sidebar -->
+    <%- include('../partials/sidebar.ejs', {active: 'news'}) %>
+
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Messages from users</h1>
+          
+        </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                  <th> <b>NAMES</b> </th>
+                  <th> <B>EMAILS</B> </th>
+                  <th> <b>MESSAGES</b> </th>
+                  
+                  
+                </tr>
+              </thead>
+              <tbody>
+                    <% for(let i=0; i < result.length; i++){ %>
+
+                <tr>
+
+                  <td><%= result[i].name %></td>
+                  <td><%= result[i].email %></td>
+                  <td><button type="button" data-toggle="modal" class="btn" style="background-color: #31B0D5; color: white" class="details"
+                    data-target="#myModal<%=[i]%>">read
+                    message</button> 
+                  </td>
+                  
+                </tr>
+
+                <!-- modal -->
+                <div class="modal fade" id="myModal<%=[i]%>" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <!-- conntent goes here -->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h4 class="modal-title">
+                          MESSAGE FROM <span style="font-style:italic"><%= result[i].name%></span>
+
+                        </h4>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="close">
+                          <span aria-hidden="true">&times;</span>
+                            
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <label for="subject" class="subject">
+                           <h4 class="text-center"> SUBJECT: <span style="font-style:italic"> <%=result[i].subject%> </span> </h4>
+                        </label>
+                        <div class="Mbody">
+                          <label for="message" class="label"></label>
+                          <%=result[i].message%>
+                          </label>
+                        </div>
+                      </div>
+                      <br> <hr>
+
+                      <div>
+                        <h3 style="margin:0px 15px;">reply <%= result[i].name%></h3>
+                        <div class="form-group" style="margin: 0px 30px">
+                          <form action="/reply" method="POST">
+                              <label for="reply" class="label">reply:</label>
+                              <input type="hidden" name="userMail" value=<%= result[i].email %>>
+                              <textarea name="reply" class="form-control" cols="10" rows="7" id="reply" ></textarea>
+                              <br>
+                              <button class="btn btn-primary" type="submit">post</button>
+                          </form>
+                      </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">
+                          close
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <% } %>
+
+
+              </tbody>
+            </table>
+          </div>
+         </main>
+  </body>
+
+
+
+
+  <%- include('../partials/dashboard-scripts') %>
+              
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

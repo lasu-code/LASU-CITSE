@@ -2,7 +2,11 @@
 let mongoose = require('mongoose')
 let message = require('../models/message')
 let Slider = require('../models/slider');
+let nodemailer = require('nodemailer');
 let News = require('../models/news');
+let Page = require('../models/page');
+
+
 
 
 exports.homePage = function (req, res, next) {
@@ -25,14 +29,17 @@ exports.servicesPage = function (req, res, next) {
 };
 
 exports.contactPage = function (req, res, next) {
-  News.find({}).then((doc) => {
-    if (doc) {
-      res.render('frontend/contact', { doc });
-      console.log(doc)
-    } else {
-      res.render('frontend/contact', {});
-    }
-  })  
+  Page.find({name: "contactus"}).then((file)=>{
+      if (file){
+          News.find({}).then((doc)=>{
+              if(doc){
+      res.render('frontend/contact', {file, doc});                                                    
+              }
+          })
+      }else{
+      res.render('frontend/contact');                      
+      }
+  })
 };
 
 exports.newsPage = function (req, res, next) {
@@ -61,49 +68,73 @@ exports.teamPage = function (req, res, next) {
 };
 
 exports.jecPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/jec', {doc});
-          console.log(doc)
+  Page.find({name: "justification"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/jec', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/jec', {});
+    res.render('frontend/jec');                      
     }
-  })
-    
-};
+})
+  }
 
-exports.visionPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/vision', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/vision', {});
-    }
+  exports.visionPage = function (req, res, next) {
+    Page.find({name: "vision"}).then((file)=>{
+      if (file){
+          News.find({}).then((doc)=>{
+              if(doc){
+      res.render('frontend/vision', {file, doc});                                                    
+              }
+          })
+      }else{
+      res.render('frontend/vision');                      
+      }
   })
-};
+    }
+
+
+// exports.visionPage = function (req, res, next) {
+//      News.find({}).then((doc)=>{
+//       if (doc){
+        
+//     res.render('frontend/vision', {doc});
+//           console.log(doc)
+//     }else{
+//     res.render('frontend/vision', {});
+//     }
+//   })
+// };
 
 exports.missionPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/mission', {doc});
-          console.log(doc)
+  Page.find({name: "mission"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/mission', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/mission', {});
+    res.render('frontend/mission');                      
     }
-  })
-   
-};
+})
+  }
+
 
 exports.objectivesPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/objectives', {doc});
-          console.log(doc)
+  Page.find({name: "objectives"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/objectives', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/objectives', {});
+    res.render('frontend/objectives');                      
     }
-  })
+})
 };
 
 exports.retentionPage = function (req, res, next) {
@@ -153,91 +184,115 @@ exports.operationsPage = function (req, res, next) {
 };
 
 exports.educationPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/education', {doc});
-          console.log(doc)
+  Page.find({name: "education"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/education', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/education', {});
+    res.render('frontend/education');                      
     }
-  })
+})
 };
 
 exports.learningPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/learning', {doc});
-          console.log(doc)
+  Page.find({name: "learning-activities"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/learning', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/learning', {});
+    res.render('frontend/learning');                      
     }
-  })
+})
 };
 
 exports.teachingPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/teaching', {doc});
-          console.log(doc)
+  Page.find({name: "teaching"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/teaching', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/teaching', {});
+    res.render('frontend/teaching');                      
     }
-  })
+})
 };
 
 exports.skillsPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/skills', {doc});
-          console.log(doc)
+  Page.find({name: "gaps"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/skills', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/skills', {});
+    res.render('frontend/skills');                      
     }
-  })
+})
 };
 
 exports.innovationPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/innovation', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/innovation', {});
-    }
-  })
+    Page.find({name: "innovations-p"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/innovation', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/innovation');                      
+        }
+    })
 };
 
 exports.innovationAssPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/innovationAss', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/innovationAss', {});
-    }
-  })
+    Page.find({name: "innovations-a"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/innovationAss', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/innovationAss');                      
+        }
+    })
 };
 
 exports.onlineCoursePage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/onlineCourse', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/onlineCourse', {});
-    }
-  })
+    Page.find({name: "online-courses"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/onlineCourse', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/onlineCourse');                      
+        }
+    })
 };
 
 exports.researchPlanPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/researchPlan', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/researchPlan', {});
-    }
-  })
+    Page.find({name: "research-p"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/researchPlan', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/researchPlan');                      
+        }
+    })
 }
 
 exports.industrailPage = (req, res, next)=>{
@@ -276,11 +331,14 @@ exports.post_contactPage =(req, res, next)=>{
     let messageData = {
         name: req.body.name,
         email: req.body.email,
+        subject: req.body.subject,
         message: req.body.message
         
     }
     let newData = new message(messageData);
     newData.save()
     res.render('frontend/contact', {})
+
+    
 }
 

@@ -30,7 +30,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/ttt.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -51,21 +51,7 @@
                     <div class=" w3-container w3-leftbar">
                         <div class="container-fluid">
                             <br>
-                            <ol>
-                                <li>To offer unique, qualitative and transformative training aimed at promoting excellence and innovation in STEM
-                                    teaching,
-                                    development of 21st century skills and leadership.</li>
-                                <li>To serve as a train-the-trainers’ centre of excellence for skilled STEM master teachers who will later
-                                    undertake
-                                    training of other teachers and school leaders and policy makers.</li>
-                                <li>To develop and apply models of innovative STEM teaching and learning based on cutting-edge research and
-                                    practice.</li>
-                                <li>To address science and technology-related national and regional development challenges through the provision of
-                                    better-trained STEM teachers.</li>
-                                <li>To undertake continuous monitoring of the critical mass of master teachers trained by the Centre in
-                                    institutions where
-                                    they are multiplying their innovative and transformative skills.</li>
-                            </ol>
+                                <p> <%- file.content%> </p>
                             <br><br>
                         </div>
                     </div>

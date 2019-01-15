@@ -25,7 +25,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/research.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -47,7 +47,7 @@
                         <br>
                         <!-- page main post -->
                         <p>
-                                The research focus of the proposed Centre is teacher quality in STEM Education. 
+                                <!-- The research focus of the proposed Centre is teacher quality in STEM Education. 
                                 The broad research needs for solving major developmental challenges of Nigeria specifically and the West Africa sub-region in general 
                                 such as poverty, youth unemployment, food insecurity and ethnic/religious conflicts through training of quality STEM teachers are in four 
                                 areas. These are:
@@ -152,7 +152,8 @@
                                   after a minimum of three years (for PhD students). Research findings from the Centre will be published in reputable international, 
                                   academic and peer-reviewed journals for global dissemination. Currently, the faculty has the capacity to commence the research 
                                   activities of the proposed Center. However, there will be need for improvement in terms of human resources (faculty expertise) and 
-                                  facilities (as enumerated in section Va).
+                                  facilities (as enumerated in section Va). -->
+                                  <%-file.content%>
                         </p>
                         <br><br>
                     </div>

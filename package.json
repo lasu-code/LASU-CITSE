@@ -1,14 +1,15 @@
 {
-  "name": "stem",
-  "version": "0.0.0",
+  "name": "lasucitse",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node server.js",
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
+    "bootstrap": "^4.2.1",
     "ckeditor": "^4.11.1",
     "connect-mongodb-session": "^2.0.6",
     "cookie-parser": "~1.4.3",
@@ -18,14 +19,37 @@
     "express-flash": "0.0.2",
     "express-session": "^1.15.6",
     "http-errors": "~1.6.2",
+    "jquery": "^3.3.1",
     "method": "^2.0.0",
     "method-override": "^3.0.0",
     "mongoose": "^5.4.2",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
+    "nodemailer": "^5.1.1",
     "nodemon": "^1.18.9",
     "override": "0.0.1",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
-  }
+    "passport-local": "^1.0.0",
+    "popper.js": "^1.14.6"
+  },
+  "engines": {
+    "node": "8.11.4",
+    "npm": "6.4.1"
+  },
+  "description": "Centre of Excellence for Innovative and Tranformative STEM Education",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lasu-code/LASU-CITSE.git"
+  },
+  "keywords": [
+    "lasu-citse"
+  ],
+  "author": "kareem fawas, siyanbola opeyemi, olabiran joshua, dosunmu temitope",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lasu-code/LASU-CITSE/issues"
+  },
+  "homepage": "https://github.com/lasu-code/LASU-CITSE#readme"
 }
