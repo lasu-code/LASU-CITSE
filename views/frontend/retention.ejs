@@ -28,7 +28,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/ttt.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -48,7 +48,8 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>International students deserve international treatment. To retain and support students that have come from outside
+                        <p>
+                        <!-- International students deserve international treatment. To retain and support students that have come from outside
                         Nigeria, we will constitute and genuinely work with various committees of students to proactively address problems and
                         deal with any grievances swiftly. We will also put in place a monitoring and mentoring system under the leadership of a
                         Faculty staff not below the rank of Associate Professor. The system, which will be discipline-based will help to keep
@@ -59,7 +60,9 @@
                         regional focus that will attract participants from across Africa. The strategies that will be employed to recruit
                         regional students for these short courses will be similar to those to recruit regional students into our postgraduate
                         programmes. However, the involvement of foreign Ministries of Education, and other relevant agencies within the region
-                        will be involved as many of our short courses will be beneficial to even their staff.</p> <br><br>
+                        will be involved as many of our short courses will be beneficial to even their staff. -->
+                        <%-file.content%>
+                    </p> <br><br>
                     </div>
                 </div>
     

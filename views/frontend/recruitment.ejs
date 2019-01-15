@@ -28,7 +28,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/ttt.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -48,7 +48,8 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>The proposed Centre will adopt a vigorous recruitment campaign to get a regionally diverse student body. There will be
+                        <p>
+                            <!-- The proposed Centre will adopt a vigorous recruitment campaign to get a regionally diverse student body. There will be
                         local and international advertisements in a variety of media- print, electronic and social. Our national, regional and
                         global partners will be part of our student recruitment efforts on their websites. In student recruitment
                         advertisements, incentives available for students within the Centre will clearly be highlighted. Online advertisement,
@@ -61,7 +62,9 @@
                         Centers of Excellence must be from Africa (non-national). The available incentives in the Centre is also another plus
                         for regional students’ enrolment. We will consider sponsoring staff to neighbouring countries to visit universities
                         particularly those that do not have postgraduate programmes, discuss the benefits of studying at the Centre and attract
-                        final year students of the universities to our Centre for their postgraduate programmes.</p>
+                        final year students of the universities to our Centre for their postgraduate programmes. -->
+                        <%-file.content%>
+                    </p>
                         <br><br>
                     </div>
                 </div>

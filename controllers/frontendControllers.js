@@ -138,27 +138,32 @@ exports.objectivesPage = function (req, res, next) {
 };
 
 exports.retentionPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/retention', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/retention', {});
-    }
-  })
+    Page.find({name: "retention-support"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/retention', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/retention');                      
+        }
+    })
 
 };
 
 exports.recruitmentPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/recruitment', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/recruitment', {});
-    }
-  })
-
+    Page.find({name: "student-recruitment"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/recruitment', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/recruitment');                      
+        }
+    })
 };
 
 exports.staffPage = function (req, res, next) {
