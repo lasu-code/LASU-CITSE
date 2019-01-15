@@ -19,7 +19,7 @@
                     <h1 class="h2">Justification CMS</h1>
                 </div>
 
-                <form action="/postjustification" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <form action="/postjustification"  method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                     
                     <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
 
@@ -30,6 +30,7 @@
                     <%- include('../fields/button', { fieldvalue: 'Upload justification'}); %>
                     
                 </form>
+                
                 <span style="display: none" id="upload">
                     <%=upload%>
                 </span>

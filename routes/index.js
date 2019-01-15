@@ -289,9 +289,7 @@ router.get('/dashboard/justification', function (req, res, next) {
   let upload = req.flash('upload');
     let failure = req.flash('failure');
   
-
-     res.render('backend/justification', { upload, failure })
-   
+     res.render('backend/justification', { upload, failure }) 
 })
 
 router.post('/postjustification', function(req, res, next){
