@@ -121,7 +121,8 @@ router.delete('/deleteadmin', function(req, res, next){
 router.get('/dashboard/slider', function(req, res, next){
       let failure = req.flash('failure');
       let success = req.flash('success');     
-      let uploaded = req.flash('uploaded');     
+      let uploaded = req.flash('uploaded');   
+      let test = "test";  
 
    Slider.find({}).then((result)=>{
     if (result){
@@ -830,39 +831,144 @@ upload(req, res, (err) => {
 
 router.get('/dashboard/ISP', function (req, res, next) {
   let upload = req.flash('upload');
+  let failure = req.flash('failure');    
 
-  News.find({}).then((doc) => {
-    if (doc) {
-      res.render('backend/ISP', { upload, doc })
-      console.log(doc)
-    } else {
-      res.render('backend/ISP')
+      res.render('backend/ISP', { upload, failure })
+})
+
+router.post('/postisp', function(req, res, next){
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOne({name: "isp"}).then(function(result){
+   if (result){ 
+        
+               req.flash('failure', "Sorry You can only update not create new ones");
+             res.redirect('dashboard/ISP');
+
+        
+         }else if(!result){
+
+  let newPage = new Page();
+
+           newPage.name = req.body.name;
+           newPage.content = req.body.content;
+           newPage.newImg = '/uploads/'+ req.files["newImg"][0].filename;
+     
+           newPage.save().then((result)=>{
+           if(result){
+             console.log(result)  
+               req.flash('upload', "Industrial/Sectorial Partnership page has been uploaded successfully");             
+             res.redirect('dashboard/ISP');
+           }else{
+             res.send("err")
+           }
+         })
+
+    // console.log("sorry cannot save new data")
+   }   
+  //    // res.send("test")
+    })
     }
   })
 })
 
 router.get('/dashboard/partnership', function (req, res, next) {
   let upload = req.flash('upload');
+  let failure = req.flash('failure');    
 
-  News.find({}).then((doc) => {
-    if (doc) {
-      res.render('backend/partnership', { upload, doc })
-      console.log(doc)
-    } else {
-      res.render('backend/partnership')
+      res.render('backend/partnership', { upload, failure })
+})
+
+router.post('/postpartnership', function(req, res, next){
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOne({name: "partnership"}).then(function(result){
+   if (result){ 
+        
+               req.flash('failure', "Sorry You can only update not create new ones");
+             res.redirect('dashboard/partnership');
+
+        
+         }else if(!result){
+
+  let newPage = new Page();
+
+           newPage.name = req.body.name;
+           newPage.content = req.body.content;
+           newPage.newImg = '/uploads/'+ req.files["newImg"][0].filename;
+     
+           newPage.save().then((result)=>{
+           if(result){
+             console.log(result)  
+               req.flash('upload', "Partnership with Academic Institutions page has been uploaded successfully");             
+             res.redirect('dashboard/partnership');
+           }else{
+             res.send("err")
+           }
+         })
+
+    // console.log("sorry cannot save new data")
+   }   
+  //    // res.send("test")
+    })
     }
   })
 })
 
 router.get('/dashboard/research-plan', function (req, res, next) {
   let upload = req.flash('upload');
+  let failure = req.flash('failure');  
 
-  News.find({}).then((doc) => {
-    if (doc) {
-      res.render('backend/research-plan', { upload, doc })
-      console.log(doc)
-    } else {
-      res.render('backend/research-plan')
+      res.render('backend/research-plan', { upload, failure })
+})
+
+router.post('/postresearch-plan', function(req, res, next){
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOne({name: "research-plan"}).then(function(result){
+   if (result){ 
+        
+               req.flash('failure', "Sorry You can only update not create new ones");
+             res.redirect('dashboard/research-plan');
+
+        
+         }else if(!result){
+
+  let newPage = new Page();
+
+           newPage.name = req.body.name;
+           newPage.content = req.body.content;
+           newPage.newImg = '/uploads/'+ req.files["newImg"][0].filename;
+     
+           newPage.save().then((result)=>{
+           if(result){
+             console.log(result)  
+               req.flash('upload', "Research Plan page has been uploaded successfully");             
+             res.redirect('dashboard/research-plan');
+           }else{
+             res.send("err")
+           }
+         })
+
+    // console.log("sorry cannot save new data")
+   }   
+  //    // res.send("test")
+    })
     }
   })
 })

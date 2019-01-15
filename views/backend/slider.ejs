@@ -18,8 +18,8 @@
             <h1 class="h2">Slider CMS</h1>
           </div>
 
-          <h3>Create Slide Images</h3>
-                    <form action="/uploadslider" method="POST" enctype="multipart/form-data">
+          <h3 style = "<%if(result.length == 0) {%> display: block   <% } else if(result.length > 0) {%> display: none <% }%>" >Create Slide Images</h3>
+                    <form  action="/uploadslider" style = "<%if(result.length == 0) {%> display: block  <% } else if(result.length > 0) {%> display: none <% }%>" method="POST" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Image 1</label>
             <div class="col-sm-10">
@@ -49,8 +49,8 @@
         </form>
 <hr>
 
-          <h3>Update Slider Images</h3>
-                    <form action="/update/uploadslider?_method=PUT" method="POST" enctype="multipart/form-data">
+          <h3 style = "<%if(result.length == 0) {%> display: none   <% } else if(result.length > 0) {%> display: block <% }%>">Update Slider Images</h3>
+                    <form style = "<%if(result.length == 0) {%> display: none  <% } else if(result.length > 0) {%> display: block <% }%>" action="/update/uploadslider?_method=PUT" method="POST" enctype="multipart/form-data">
         <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Image 1</label>
             <div class="col-sm-10">
