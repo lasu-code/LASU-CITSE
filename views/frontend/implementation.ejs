@@ -32,7 +32,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/time.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -52,7 +52,7 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>The Implementation Timeline is designed to provide a high-level overview of the planned administrative, education and
+                        <!-- <p>The Implementation Timeline is designed to provide a high-level overview of the planned administrative, education and
                         research activities of the proposed Center. In the Table below, identify up to three major activities planned for each
                         year of the project in education, research and other topics (e.g. center management, institutional impact, facilities).
                         In all aspects of the project, disparate activities should link together to result in a coherent workplan that achieves
@@ -62,11 +62,12 @@
                         <p>The yearly activities of the Centre will include quarterly delivery of short courses, advertisement, application,
                         screening and admission of postgraduate students into the Master’s and PhD programmes of the Centre, teaching of
                         courses on the PG programmes, conduct of research by staff and students at the Center, monthly PG seminars, attendance
-                        of conference and training workshops for staff (academic and non-academic) and students.</p>
+                        of conference and training workshops for staff (academic and non-academic) and students.</p> -->
+                        <p><%-file.content%></p>
                         <br>
                     </div>
                     <br><br>
-                    <div class="container-fluid">
+                    <!-- <div class="container-fluid">
                         <table class="w3-table w3-striped table w3-card-4">
                             <thead>
                                 <tr class="w3-blue">
@@ -300,7 +301,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- sideNav -->

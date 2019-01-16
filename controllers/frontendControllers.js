@@ -167,25 +167,31 @@ exports.recruitmentPage = function (req, res, next) {
 };
 
 exports.staffPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/staff', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/staff', {});
-    }
-  })
+    Page.find({name: "staff"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/staff', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/staff');                      
+        }
+    })
 };
 
 exports.operationsPage = function (req, res, next) {
-  News.find({}).then((doc) => {
-    if (doc) {
-      res.render('frontend/operations', { doc });
-      console.log(doc)
-    } else {
-      res.render('frontendoperations', {});
-    }
-  })
+    Page.find({name: "centre-operations"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/operations', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/operations');                      
+        }
+    })
 };
 
 exports.educationPage = (req, res, next)=>{
@@ -328,14 +334,17 @@ exports.partnershipPage = (req, res, next)=>{
     })
 }
 exports.implementationPage = function (req, res, next) {
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/implementation', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/implementation', {});
-    }
-  })
+    Page.find({name: "implementation"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/implementation', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/implementation');                      
+        }
+    })
 }
 
 exports.post_contactPage =(req, res, next)=>{

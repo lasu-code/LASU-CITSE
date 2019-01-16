@@ -28,7 +28,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/program-mech-eng.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -48,7 +48,7 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>The administrative and financial support staff of the proposed Center will be carefully chosen by working very closely
+                        <!-- <p>The administrative and financial support staff of the proposed Center will be carefully chosen by working very closely
                         with senior registry staff of the university. It is important that they are fast learners who will easily understand
                         policies and procedures so as to ensure the achievement of the Centre (education and research) goals.</p>
                         <p>It terms of procurement policies and administration shall be guided by the university policies (attached) and the
@@ -62,7 +62,8 @@
                         other unit of the university, when purchases are (to be) made in the Centre, auditory regulations will be followed to
                         the letter. However, as is the case with procurement and administration, where there is a need to have an amendment to
                         the existing regulations, this will be discussed at the Centre Management level and then tabled with the University
-                        Management for consideration and approval.</p>
+                        Management for consideration and approval.</p> -->
+                        <p><%-file.content%></p>
                         <br><br>
                     </div>
                 </div>

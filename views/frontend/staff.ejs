@@ -28,7 +28,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/ttt.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -48,13 +48,16 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>The proposed Centre will support the career development of the associated faculty members (both academic and
+                        <p>
+                            <!-- The proposed Centre will support the career development of the associated faculty members (both academic and
                         administrative) by ensuring attendance and participation at conferences both local and international at least once a
                         year. Incentives will be put in place both through the institution or the proposed Centre, in appreciation of hard
                         work. Such incentives may include establishing research grants from where faculty members who for example have produced
                         master’s students or PhD graduates. They will be encouraged to pursue postdoctoral fellowships after graduation. For
                         the administrative support staff of the proposed Center to further their career development, sponsorship to job-related
-                        conferences nationally and internationally will also be put in place.</p>
+                        conferences nationally and internationally will also be put in place. -->
+                        <%-file.content%>
+                        </p>
                         <br><br>
                     </div>
                 </div>
