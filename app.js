@@ -24,13 +24,8 @@ const port = process.env.PORT|| 3000
 var app = express();
 // mongoose.connect('mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected"));
 
-<<<<<<< HEAD
 // 'mongodb://criotech:lasu123@ds155614.mlab.com:55614/heroku_9n7zsc0c' || 
 mongoose.connect('mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err));
-=======
-mongoose.connect('mongodb://heroku_rdk8wx20:9vufp7rs4vr1fk7mnefs6t1s1q@ds255784.mlab.com:55784/heroku_rdk8wx20' || 'mongodb://localhost:27017/dashboard',  { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err)) 
-// mongoose.connect(process.env.MONGODB_URI ||'mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err))
->>>>>>> 8efda5445ca0a13243b1da4838b4e22a2187af60
 
 
 // view engine setup

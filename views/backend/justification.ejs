@@ -19,11 +19,11 @@
                     <h1 class="h2">Justification CMS</h1>
                 </div>
 
-                <form action="/postjustification"  method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <form action="/postjustification" style = "<%if(result.length == 0) {%> display: block   <% } else if(result.length > 0) {%> display: none <% }%>"  method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
                     
                     <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
 
-                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content'}); %>
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', fieldid: 'editor'}); %>
 
                     <%- include('../fields/filename', { fieldname: 'name', fieldplaceholder: 'justification', valueField: 'justification' }); %>                   
 
@@ -31,6 +31,19 @@
                     
                 </form>
                 
+                <form action="/updatejustification?_method=PUT" style = "<%if(result.length == 0) {%> display: none   <% } else if(result.length > 0) {%> display: block <% }%>" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                  
+                    
+                    <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
+
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', fieldid: 'editor1'}); %>
+
+                    <%- include('../fields/filename', { fieldname: 'name', fieldplaceholder: 'justification', valueField: 'justification' }); %>                   
+
+                    <%- include('../fields/button', { fieldvalue: 'Upload justification'}); %>
+                    
+                </form>
+
                 <span style="display: none" id="upload">
                     <%=upload%>
                 </span>
@@ -39,7 +52,10 @@
                     <%=failure%>
                 </span>
 
-                <br> <br>
+                 <span style="display: none" id="success">
+                    <%=success%>
+                </span>
+                    <br> <br>
             </main>
         </div>
     </div>
@@ -48,7 +64,10 @@
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         // Init Ckeditor
+        
         CKEDITOR.replace('editor');
+        CKEDITOR.replace('editor1');
+        
 
                 // Show success alert
         if ($.trim($('#upload').text()).length !== 0) {
@@ -57,6 +76,9 @@
           
       if($.trim($('#failure').text()).length !== 0) {
         alert("<%=failure%>")
+      }
+     if($.trim($('#success').text()).length !== 0) {
+          alert("<%=success%>")
       }
 
     </script>
