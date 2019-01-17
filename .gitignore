@@ -3,5 +3,5 @@ node_modules
 public/uploads
 /config/keys.js
 npm-debug.log
-.DS_Store
-/.env
+
+

@@ -291,10 +291,19 @@ router.post('/postvision', function(req, res, next){
 router.get('/dashboard/justification', function (req, res, next) {
   let upload = req.flash('upload');
     let failure = req.flash('failure');
-  
+    let success = req.flash('success');            
+    
+    Page.find({name: 'justification'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/justification', { upload, failure, result, success }) 
 
-     res.render('backend/justification', { upload, failure })
-   
+      }else{
+     res.render('backend/justification', { upload, failure, success }) 
+        
+      }
+    })
+  
 })
 
 router.post('/postjustification', function(req, res, next){
@@ -334,6 +343,38 @@ router.post('/postjustification', function(req, res, next){
    }   
   //    // res.send("test")
     })
+    }
+  })
+})
+
+
+router.put("/updatejustification", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "justification"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Justification Page has been updated");            
+            res.redirect("/dashboard/justification")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
     }
   })
 })
@@ -488,8 +529,18 @@ router.get('/dashboard/education', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');
   
+  Page.find({name: 'justification'}).then(function(result){
+    if (result){
+      console.log(result)
+   res.render('backend/education', { upload, failure, result, success }) 
 
-      res.render('backend/education', { upload, failure })
+    }else{
+   res.render('backend/education', { upload, failure, success }) 
+      
+    }
+  })
+
+      // res.render('backend/education', { upload, failure })
     
 })
 
@@ -530,6 +581,37 @@ router.post('/posteducation', function(req, res, next){
    }   
   //    // res.send("test")
     })
+    }
+  })
+})
+
+router.put("/updateEducation", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "education"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "education Page has been updated");            
+            res.redirect("/dashboard/education")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
     }
   })
 })
