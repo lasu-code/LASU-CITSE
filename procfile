@@ -1,3 +1,0 @@
-//PROCFILE
-
-web: node ./bin/www

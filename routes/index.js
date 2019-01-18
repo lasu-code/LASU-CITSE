@@ -528,10 +528,11 @@ router.post('/postcontactus', function(req, res, next){
 router.get('/dashboard/education', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');
-  
-  Page.find({name: 'justification'}).then(function(result){
-    if (result){
-      console.log(result)
+  let success = req.flash('success');            
+
+  Page.find({name: 'education'}).then(function(result){
+    console.log(result)
+    if(result){
    res.render('backend/education', { upload, failure, result, success }) 
 
     }else{

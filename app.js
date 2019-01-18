@@ -24,12 +24,8 @@ const port = process.env.PORT|| 3000
 var app = express();
 // mongoose.connect('mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected"));
 
-<<<<<<< HEAD
-// mongoose.connect('mongodb://criotech:lasu123@ds255364.mlab.com:55364/criotech', { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err));
-=======
 // 'mongodb://criotech:lasu123@ds155614.mlab.com:55614/heroku_9n7zsc0c' || 
 mongoose.connect('mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err));
->>>>>>> mainjeo
 
 
 // view engine setup
@@ -81,8 +77,8 @@ app.use(function(err, req, res, next) {
   res.render('frontend/error');
 });
 
-app.listen(port, ()=>{
-  console.log(`connected to port ${port}`)
-})
+// app.listen(port, ()=>{
+//   console.log(`connected to port ${port}`)
+// })
 
 module.exports = app;
