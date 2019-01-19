@@ -897,8 +897,20 @@ router.put("/updategaps", function (req, res){
 router.get('/dashboard/innovations-a', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');  
+  let success = req.flash('success');
 
-      res.render('backend/innovations-a', { upload, failure })
+  Page.find({name: 'innovations-a'}).then(function(result){
+    console.log(result)
+    if(result){
+   res.render('backend/innovations-a', { upload, failure, result, success }) 
+
+    }else{
+   res.render('backend/innovations-a', { upload, failure, success }) 
+      
+    }
+  })
+
+      // res.render('backend/innovations-a', { upload, failure })
 
 })
 
@@ -942,6 +954,38 @@ upload(req, res, (err) => {
     }
   })
 })
+
+router.put("/updateinnovations-a", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "innovations-a"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "innovations-a Page has been updated");            
+            res.redirect("/dashboard/innovations-a")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 
 router.get('/dashboard/innovations-p', function (req, res, next) {
   let upload = req.flash('upload');
