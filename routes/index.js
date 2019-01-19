@@ -1083,8 +1083,20 @@ router.put("/updateinnovations-p", function (req, res){
 router.get('/dashboard/online-courses', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');  
+  let success = req.flash('success');
 
-      res.render('backend/online-courses', { upload, failure })
+  Page.find({name: 'online-courses'}).then(function(result){
+    console.log(result)
+    if(result){
+   res.render('backend/online-courses', { upload, failure, result, success }) 
+
+    }else{
+   res.render('backend/online-courses', { upload, failure, success }) 
+      
+    }
+  })
+
+      // res.render('backend/online-courses', { upload, failure })
 
 })
 
@@ -1125,6 +1137,37 @@ upload(req, res, (err) => {
    }   
   //    // res.send("test")
     })
+    }
+  })
+})
+
+router.put("/updateonline-courses", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "online-courses"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "online courses Page has been updated");            
+            res.redirect("/dashboard/online-courses")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
     }
   })
 })
