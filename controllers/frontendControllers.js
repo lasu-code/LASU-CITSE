@@ -280,6 +280,7 @@ exports.innovationAssPage = (req, res, next)=>{
 
 exports.onlineCoursePage = (req, res, next)=>{
     Page.find({name: "online-courses"}).then((file)=>{
+        console.log(file)
         if (file){
             News.find({}).then((doc)=>{
                 if(doc){
