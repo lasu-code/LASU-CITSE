@@ -879,9 +879,10 @@ router.put("/updategaps", function (req, res){
     }},
      {new: true})
       .then((result)=>{
+        console.log(result)
           if (result) {
                req.flash('success', "skill gaps Page has been updated");            
-            res.redirect("/dashboard/gaps")
+            res.redirect("/dashboard/skills-gap")
           } else {
             res.send("error")
           }
