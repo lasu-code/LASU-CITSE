@@ -620,8 +620,21 @@ router.put("/updateEducation", function (req, res){
 router.get('/dashboard/teaching', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');
+  let success = req.flash('success')
+
+
+  Page.find({name: 'teaching'}).then(function(result){
+    console.log(result)
+    if(result){
+   res.render('backend/teaching', { upload, failure, result, success }) 
+
+    }else{
+   res.render('backend/teaching', { upload, failure, success }) 
+      
+    }
+  })
   
-      res.render('backend/teaching', { upload, failure})
+      // res.render('backend/teaching', { upload, failure})
      
 })
 
@@ -666,11 +679,54 @@ router.post('/postteaching', function(req, res, next){
   })
 })
 
+router.put("/updateTeaching", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "teaching"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "teaching Page has been updated");            
+            res.redirect("/dashboard/teaching")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 router.get('/dashboard/learning-activities', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');  
+  let success = req.flash('success');
 
-      res.render('backend/learning-activities', { upload, failure })
+  Page.find({name: 'learning-activities'}).then(function(result){
+    console.log(result)
+    if(result){
+   res.render('backend/learning-activities', { upload, failure, result, success }) 
+
+    }else{
+   res.render('backend/learning-activities', { upload, failure, success }) 
+      
+    }
+  })
+
+      // res.render('backend/learning-activities', { upload, failure })
     
 })
 
@@ -715,11 +771,54 @@ router.post('/postlearning-activites', function(req, res, next){
   })
 })
 
+router.put("/updateLearning", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "learning-activities"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "learning-activities Page has been updated");            
+            res.redirect("/dashboard/learning-activities")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 router.get('/dashboard/skills-gap', function (req, res, next) {
   let upload = req.flash('upload');
-  let failure = req.flash('failure');  
+  let failure = req.flash('failure');
+  let success = req.flash('success');
 
-      res.render('backend/gaps', { upload, failure })
+  Page.find({name: 'gaps'}).then(function(result){
+    console.log(result)
+    if(result){
+   res.render('backend/gaps', { upload, failure, result, success }) 
+
+    }else{
+   res.render('backend/gaps', { upload, failure, success }) 
+      
+    }
+  })
+
+      // res.render('backend/gaps', { upload, failure })
 })
 
 router.post('/postgaps', function(req, res, next){
@@ -762,6 +861,38 @@ upload(req, res, (err) => {
     }
   })
 })
+
+router.put("/updategaps", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "gaps"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "skill gaps Page has been updated");            
+            res.redirect("/dashboard/gaps")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 
 router.get('/dashboard/innovations-a', function (req, res, next) {
   let upload = req.flash('upload');

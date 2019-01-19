@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', {pagename: 'Edit Learning Activities'}) %>
+    <%- include('../partials/dashboard-head', {pagename: 'Edit learning-activities'}) %>
 </head>
 
 <body>
@@ -12,32 +12,50 @@
         <div class="row">
 
             <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs', {active: 'lactivities'}) %>
+            <%- include('../partials/sidebar.ejs', {active: 'learning-activities'}) %>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2">Learning Activities CMS</h1>
+                    <h1 class="h2">learning-activities CMS</h1>
                 </div>
 
-                <form action="/postlearning-activites" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
+                <form action="/postlearning-activities" style = "<%if(result.length == 0) {%> display: block   <% } else if(result.length > 0) {%> display: none <% }%>"  method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    
                     <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
 
-                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content'}); %>
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', fieldid: 'editor'}); %>
 
-                    <%- include('../fields/filename', { fieldname: 'name', fieldplaceholder: 'Learning Activities', valueField: 'learning-activities' }); %>                   
+                    <%- include('../fields/filename', { fieldname: 'name', fieldplaceholder: 'learning-activities', valueField: 'learning-activities' }); %>                   
 
-
-                    <%- include('../fields/button', { fieldvalue: 'Upload News'}); %>
+                    <%- include('../fields/button', { fieldvalue: 'Upload teaching'}); %>
+                    
                 </form>
+                
+                <form action="/updateLearning?_method=PUT" style = "<%if(result.length == 0) {%> display: none   <% } else if(result.length > 0) {%> display: block <% }%>" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                  
+                    
+                    <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
+
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', fieldid: 'editor1'}); %>
+
+                    <%- include('../fields/filename', { fieldname: 'name', fieldplaceholder: 'learning-activities', valueField: 'learning-activities' }); %>                   
+
+                    <%- include('../fields/button', { fieldvalue: 'Upload teaching'}); %>
+                    
+                </form>
+
                 <span style="display: none" id="upload">
                     <%=upload%>
                 </span>
-                <span style="display: none" id="failure">
+
+                 <span style="display: none" id="failure">
                     <%=failure%>
                 </span>
 
-                <br> <br>
+                 <span style="display: none" id="success">
+                    <%=success%>
+                </span>
+                    <br> <br>
             </main>
         </div>
     </div>
@@ -46,14 +64,23 @@
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         // Init Ckeditor
+        
         CKEDITOR.replace('editor');
+        CKEDITOR.replace('editor1');
+        
 
-        if ($.trim($('#failure').text()).length !== 0) {
-            alert("<%=failure%>")
-        }
+                // Show success alert
         if ($.trim($('#upload').text()).length !== 0) {
             alert("<%=upload%>")
         }
+          
+      if($.trim($('#failure').text()).length !== 0) {
+        alert("<%=failure%>")
+      }
+     if($.trim($('#success').text()).length !== 0) {
+          alert("<%=success%>")
+      }
+
     </script>
 </body>
 
