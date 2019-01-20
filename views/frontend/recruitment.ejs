@@ -28,7 +28,9 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
+    <% for (var i=0; i < file.length; i++) { %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file[i].newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -63,7 +65,7 @@
                         for regional students’ enrolment. We will consider sponsoring staff to neighbouring countries to visit universities
                         particularly those that do not have postgraduate programmes, discuss the benefits of studying at the Centre and attract
                         final year students of the universities to our Centre for their postgraduate programmes. -->
-                        <%-file.content%>
+                        <%-file[i].content%>
                     </p>
                         <br><br>
                     </div>
@@ -76,6 +78,7 @@
 
         </div>
     </section>
+    <%}%>
     <!-- ***** Blog Area End ***** -->
 
 

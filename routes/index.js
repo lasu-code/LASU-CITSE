@@ -898,7 +898,7 @@ router.get('/dashboard/learning-activities', function (req, res, next) {
     
 })
 
-router.post('/postlearning-activites', function(req, res, next){
+router.post('/postlearning-activities', function(req, res, next){
   upload(req, res, (err) => {
     if (err){
     

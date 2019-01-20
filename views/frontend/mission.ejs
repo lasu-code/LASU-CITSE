@@ -23,9 +23,10 @@
 <body>
     <!-- Preloader -->
     <% include ../partials/navbar.ejs %>
+    <% for (var i=0; i < file.length; i++) { %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file[i].newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -45,9 +46,12 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>To produce innovative and transformative teachers that will inspire learning in STEM subjects through the delivery of a
+                        <p>
+                            <!-- To produce innovative and transformative teachers that will inspire learning in STEM subjects through the delivery of a
                         range of engaging, contextual and technology-mediated teacher professional development programmes for addressing
-                        regional development challenges..</p> <br><br>
+                        regional development challenges.. -->
+                        <%-file[i].content%>
+                    </p> <br><br>
                     </div>
                 </div>
 
@@ -58,6 +62,7 @@
 
         </div>
     </section>
+    <%}%>
     <!-- ***** Blog Area End ***** -->
 
 

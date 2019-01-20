@@ -25,7 +25,9 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
+    <% for (var i=0; i < file.length; i++) { %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file[i].newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -62,7 +64,7 @@
 
                         <b>Global partnerships:</b> Commitment for academic partnership has been/is being secured for the proposed Centre outside Africa especially in the US, Canada and the UK. So far, we have firm commitment from Washington State University (US) and Georgia Southern University (US). We are anticipating a minimum of 20 of such global partnerships drawing from the extensive contacts and international respectability of the Director and staff of the proposed Centre. These professors and their institutions will support the teaching and research activities of the Centre.
                          -->
-                         <%-file.content%>
+                         <%-file[i].content%>
                     </div>
                 </div>
     
@@ -73,6 +75,7 @@
             
         </div>
     </section>
+    <%}%>
     <!-- ***** Blog Area End ***** -->
 
 

@@ -28,7 +28,9 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
+    <% for (var i=0; i < file.length; i++) { %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file[i].newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -61,7 +63,7 @@
                         regional students for these short courses will be similar to those to recruit regional students into our postgraduate
                         programmes. However, the involvement of foreign Ministries of Education, and other relevant agencies within the region
                         will be involved as many of our short courses will be beneficial to even their staff. -->
-                        <%-file.content%>
+                        <%-file[i].content%>
                     </p> <br><br>
                     </div>
                 </div>
@@ -73,6 +75,7 @@
     
         </div>
     </section>
+    <%}%>
     <!-- ***** Blog Area End ***** -->
 
 

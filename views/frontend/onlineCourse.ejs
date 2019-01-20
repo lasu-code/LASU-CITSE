@@ -25,7 +25,9 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
+    <% for (var i=0; i < file.length; i++) { %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file[i].newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -51,7 +53,7 @@
                                 staff of the department to develop and implement online courses. This will ensure an upscaling 
                                 of enrolment especially for short courses in STEM education. The LASU Open and Distance Learning and Research Institute 
                                 will be partnered in delivering many of the proposed novel online courses. -->
-                                <%-file.content%>
+                                <%-file[i].content%>
                         </p>
                         <br><br>
                     </div>
@@ -64,6 +66,7 @@
             
         </div>
     </section>
+    <%}%>
     <!-- ***** Blog Area End ***** -->
 
 
