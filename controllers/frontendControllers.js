@@ -69,6 +69,7 @@ exports.teamPage = function (req, res, next) {
 
 exports.jecPage = function (req, res, next) {
   Page.find({name: "justification"}).then((file)=>{
+      console.log(file)
     if (file){
         News.find({}).then((doc)=>{
             if(doc){

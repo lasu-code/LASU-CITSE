@@ -696,6 +696,7 @@ router.put("/updatecontactus", function (req, res){
 router.get('/dashboard/education', function (req, res, next) {
   let upload = req.flash('upload');
   let failure = req.flash('failure');
+  let success = req.flash('success')
   
   Page.find({name: 'justification'}).then(function(result){
     if (result){
