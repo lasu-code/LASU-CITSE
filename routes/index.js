@@ -244,7 +244,18 @@ router.get('/dashboard/news', function(req, res, next){
 router.get('/dashboard/vision', function (req, res, next) {
   let upload = req.flash('upload');
     let failure = req.flash('failure');
-      res.render('backend/vision', { upload, failure })
+      let success = req.flash('success');            
+    
+    Page.find({name: 'vision'}).then(function(result){
+      if (result){
+        console.log(result)
+      res.render('backend/vision', { upload, failure, result, success })
+      }else{
+      res.render('backend/vision', { upload, failure })        
+      }
+    })
+
+
 })
 
 router.post('/postvision', function(req, res, next){
@@ -287,6 +298,38 @@ router.post('/postvision', function(req, res, next){
     }
   })
 })
+
+router.put("/updatevision", function (req, res){
+    upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "vision"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Vision Page has been updated");            
+            res.redirect("/dashboard/vision")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+
+})
+
 
 router.get('/dashboard/justification', function (req, res, next) {
   let upload = req.flash('upload');
@@ -380,11 +423,20 @@ router.put("/updatejustification", function (req, res){
 })
 
 router.get('/dashboard/mission', function (req, res, next) {
-  let upload = req.flash('upload');
+    let upload = req.flash('upload');
     let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'mission'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/mission', { upload, failure, result, success }) 
 
-      res.render('backend/mission', {upload, failure})
-  
+      }else{
+     res.render('backend/mission', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postmission', function(req, res, next){
@@ -428,12 +480,53 @@ router.post('/postmission', function(req, res, next){
   })
 })
 
-router.get('/dashboard/objectives', function (req, res, next) {
-  let upload = req.flash('upload');
-    let failure = req.flash('failure');
- 
-      res.render('backend/objectives', { upload, failure})
+
+router.put("/updatemission", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
     
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({"name": "mission"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Mission Page has been updated");            
+            res.redirect("/dashboard/mission")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
+router.get('/dashboard/objectives', function (req, res, next) {
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'objectives'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/objectives', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/objectives', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postobjectives', function(req, res, next){
@@ -477,10 +570,53 @@ router.post('/postobjectives', function(req, res, next){
   })
 })
 
+router.put("/updateobjectives", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "objectives"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Objectives Page has been updated");            
+            res.redirect("/dashboard/objectives")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
+
 router.get('/dashboard/contact-us', function (req, res, next) {
-  let upload = req.flash('upload');
+   let upload = req.flash('upload');
     let failure = req.flash('failure');
-      res.render('backend/contact-us', { upload, failure })
+    let success = req.flash('success');            
+    
+    Page.find({name: 'contactus'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/contact-us', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/contact-us', { upload, failure, success }) 
+        
+      }
+    })
      
 })
 
@@ -524,6 +660,38 @@ router.post('/postcontactus', function(req, res, next){
     }
   })
 })
+
+router.put("/updatecontactus", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "contactus"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Contact-Us Page has been updated");            
+            res.redirect("/dashboard/contact-us")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 
 router.get('/dashboard/education', function (req, res, next) {
   let upload = req.flash('upload');
@@ -912,10 +1080,20 @@ upload(req, res, (err) => {
 
 
 router.get('/dashboard/ISP', function (req, res, next) {
-  let upload = req.flash('upload');
-  let failure = req.flash('failure');    
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'isp'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/ISP', { upload, failure, result, success }) 
 
-      res.render('backend/ISP', { upload, failure })
+      }else{
+     res.render('backend/ISP', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postisp', function(req, res, next){
@@ -959,11 +1137,53 @@ router.post('/postisp', function(req, res, next){
   })
 })
 
-router.get('/dashboard/partnership', function (req, res, next) {
-  let upload = req.flash('upload');
-  let failure = req.flash('failure');    
+router.put("/updateisp", function (req, res){
 
-      res.render('backend/partnership', { upload, failure })
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "isp"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Industrial/Sectorial Partnership Page has been updated");            
+            res.redirect("/dashboard/isp")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
+
+router.get('/dashboard/partnership', function (req, res, next) {
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'partnership'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/partnership', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/partnership', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postpartnership', function(req, res, next){
@@ -1007,12 +1227,55 @@ router.post('/postpartnership', function(req, res, next){
   })
 })
 
-router.get('/dashboard/research-plan', function (req, res, next) {
-  let upload = req.flash('upload');
-  let failure = req.flash('failure');  
+router.put("/updatepartnership", function (req, res){
 
-      res.render('backend/research-plan', { upload, failure })
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "partnership"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Partnership Page has been updated");            
+            res.redirect("/dashboard/partnership")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
 })
+
+
+router.get('/dashboard/research-plan', function (req, res, next) {
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'research-plan'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/research-plan', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/research-plan', { upload, failure, success }) 
+        
+      }
+    })
+     
+ })
 
 router.post('/postresearch-plan', function(req, res, next){
   upload(req, res, (err) => {
@@ -1055,11 +1318,53 @@ router.post('/postresearch-plan', function(req, res, next){
   })
 })
 
-router.get('/dashboard/retention-support', function (req, res, next) {
-  let upload = req.flash('upload');
-  let failure = req.flash('failure')
+router.put("/updateresearch-plan", function (req, res){
 
-      res.render('backend/retention-support', { upload, failure })
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "research-plan"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Research-Plan Page has been updated");            
+            res.redirect("/dashboard/research-plan")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
+router.get('/dashboard/retention-support', function (req, res, next) {
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'retention-support'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/retention-support', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/retention-support', { upload, failure, success }) 
+        
+      }
+    })
+     
 })
 
 router.post('/postretention-support', function(req, res, next){
@@ -1103,11 +1408,53 @@ router.post('/postretention-support', function(req, res, next){
   })
 })
 
-router.get('/dashboard/student-recruitment', function (req, res, next) {
-  let upload = req.flash('upload');
-  let failure = req.flash('failure');
+router.put("/updateretention-support", function (req, res){
 
-        res.render('backend/student-recruitment', { upload, failure})
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "retention-support"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Retention and Support Page has been updated");            
+            res.redirect("/dashboard/retention-support")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
+router.get('/dashboard/student-recruitment', function (req, res, next) {
+    let upload = req.flash('upload');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'student-recruitment'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/student-recruitment', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/student-recruitment', { upload, failure, success }) 
+        
+      }
+    })
+  
 })
 
 router.post('/poststudent-recruitment', function(req, res, next){
@@ -1136,7 +1483,7 @@ router.post('/poststudent-recruitment', function(req, res, next){
            newPage.save().then((result)=>{
            if(result){
              console.log(result)  
-               req.flash('upload', "Student Recuitment page has been uploaded successfully");             
+               req.flash('upload', "Student Recruitment page has been uploaded successfully");             
              res.redirect('dashboard/student-recruitment');
            }else{
              res.send("err")
@@ -1151,11 +1498,52 @@ router.post('/poststudent-recruitment', function(req, res, next){
   })
 })
 
+router.put("/updatestudent-recruitment", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "student-recruitment"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Student Recruitment Page has been updated");            
+            res.redirect("/dashboard/student-recruitment")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 router.get('/dashboard/centre-operations', function (req, res, next) {
   let upload = req.flash('upload');
-  let failure = req.flash('failure');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'centre-operations'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/centre-operations', { upload, failure, result, success }) 
 
-      res.render('backend/centre-operations', { upload, failure })
+      }else{
+     res.render('backend/centre-operations', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postcentre-operations', function(req, res, next){
@@ -1199,11 +1587,53 @@ router.post('/postcentre-operations', function(req, res, next){
   })
 })
 
+
+router.put("/updatecentre-operations", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "centre-operations"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Centre Operation Page has been updated");            
+            res.redirect("/dashboard/centre-operations")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 router.get('/dashboard/implementation-table', function (req, res, next) {
   let upload = req.flash('upload');
-  let failure = req.flash('failure');
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'implementation'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/implementation-table', { upload, failure, result, success }) 
 
-      res.render('backend/implementation-table', { upload, failure })
+      }else{
+     res.render('backend/implementation-table', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/postimplementation', function(req, res, next){
@@ -1247,10 +1677,53 @@ router.post('/postimplementation', function(req, res, next){
   })
 })
 
+
+router.put("/updateimplementation", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "implementation"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Implementation Table Page has been updated");            
+            res.redirect("dashboard/implementation-table")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
+    }
+  })
+})
+
 router.get('/dashboard/staff', function (req, res, next) {
   let upload = req.flash('upload');
-  let failure = req.flash('failure')
-      res.render('backend/staff', { upload, failure })
+    let failure = req.flash('failure');
+    let success = req.flash('success');            
+    
+    Page.find({name: 'staff'}).then(function(result){
+      if (result){
+        console.log(result)
+     res.render('backend/staff', { upload, failure, result, success }) 
+
+      }else{
+     res.render('backend/staff', { upload, failure, success }) 
+        
+      }
+    })
 })
 
 router.post('/poststaff', function(req, res, next){
@@ -1290,6 +1763,38 @@ router.post('/poststaff', function(req, res, next){
    }   
   //    // res.send("test")
     })
+    }
+  })
+})
+
+
+router.put("/updatestaff", function (req, res){
+
+  upload(req, res, (err) => {
+    if (err){
+    
+    //res.render('students', {msg : err})
+   res.send(err)
+    }else{
+      console.log(req.files);
+      Page.findOneAndUpdate({name: "staff"},
+       {$set:{
+        newImg: '/uploads/' + req.files['newImg'][0].filename,
+        content: req.body.content,      
+        
+    }},
+     {new: true})
+      .then((result)=>{
+          if (result) {
+               req.flash('success', "Staff Page has been updated");            
+            res.redirect("/dashboard/staff")
+          } else {
+            res.send("error")
+          }
+      })
+       
+      
+     // res.send("test")
     }
   })
 })
