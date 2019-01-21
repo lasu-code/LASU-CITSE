@@ -25,7 +25,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/innovation.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -47,12 +47,14 @@
                         <br>
                         <!-- page main post -->
                         <p>
-                            With improved resourcing as a Centre of Excellence, emphasis in pedagogical practices in the proposed Centre will shift to 
+                            <!-- With improved resourcing as a Centre of Excellence, emphasis in pedagogical practices in the proposed Centre will shift to 
                             technology-mediation. 
                             The innovation will be within the Culturo-Techno-Contextual Approach which has 
                             the high chance of producing innovative and transformative STEM master teachers. 
-                            E-learning protocols will also be deployed to ensure flexible learning and strengthen face-to-face delivery of the curriculum.
+                            E-learning protocols will also be deployed to ensure flexible learning and strengthen face-to-face delivery of the curriculum. -->
+                        <%-file.content%>
                         </p>
+
                         <br><br>
                     </div>
                 </div>

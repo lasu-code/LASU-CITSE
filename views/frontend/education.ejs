@@ -25,7 +25,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/class.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%- file.newImg-%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -45,7 +45,7 @@
                 <div class="col-12 col-lg-8">
                     <div class=" w3-container w3-leftbar">
                         <br>
-                        <p>
+                        <!-- <p>
                             An innovative and transformative education paradigm will be the adopted practice of education for the proposed Centre. 
                             This is the Culturo-Techno-Contextual Approach (CTCA) selected based on its efficacy for training exemplary STEM teachers (Smith and Adebayo, 2013). The increasing incursion of technology to teaching and learning especially in the last five years has brought a new and exciting dimension which science classrooms in Africa are taking advantage. 
                             Africa has one of the fastest growing rates of use of internet-enabled mobile devices making technology-mediated teaching and learning to take an upward swing (Uwadiae, 2015). 
@@ -57,7 +57,8 @@
                             It now needs isolating the elements of the individual approaches which research has confirmed to be potent and blending these into a 
                             simple but elegant approach that is flexible and adaptable to the different cultural contexts in Africa. 
                             This led to the emergence of the Culturo-Techno-Contextual Approach (CTCA).
-                        </p>
+                        </p> -->
+                        <p> <%-file.content%></p>
                         <br><br>
                     </div>
                 </div>

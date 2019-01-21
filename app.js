@@ -12,18 +12,17 @@ const MongoStore = require('connect-mongodb-session')(session);
 const flash = require("express-flash");
 const multer =require("multer");
 const methodOverride = require("method-override");
-// const nodemailer = require("nodemailer");
-// const port = process.env.PORT || 3000
-// const bootstrap = require("bootstrap")
-// const jquery = require(jquery)
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 require("./config/passport");
 
+const port = process.env.PORT|| 3000
+
 
 var app = express();
+// mongoose.connect('mongodb://localhost:27017/dashboard', { useNewUrlParser: true }).then(console.log("database connected"));
 
 // mongoose.connect('mongodb://localhost:27017/authoApp', { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err));
 let db = "mongodb://mainjoe:main12345@ds131698.mlab.com:31698/lasucitse";
@@ -80,6 +79,8 @@ app.use(function(err, req, res, next) {
   res.render('frontend/error');
 });
 
-
+app.listen(port, ()=>{
+  console.log(`connected to port ${port}`)
+})
 
 module.exports = app;

@@ -25,7 +25,7 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(img/bg-img/innovation.JPG);">
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%-file.newImg%>');">
         <div class="container h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-12">
@@ -47,9 +47,10 @@
                         <br>
                         <!-- page main post -->
                         <p>
-                                A broad-scoped assessment framework will be adopted to ensure full measurement of progress of cognitive, affective and psychomotor skills. 
+                                <!-- A broad-scoped assessment framework will be adopted to ensure full measurement of progress of cognitive, affective and psychomotor skills. 
                                 Continuous assessment will be a prominent feature and authentic assessment portfolios will be developed by individual students. 
-                                These portfolios will be basis for formative and summative evaluation of performance of the STEM teacher trainees.
+                                These portfolios will be basis for formative and summative evaluation of performance of the STEM teacher trainees. -->
+                                <%-file.content%>
                         </p>
                         <br><br>
                     </div>

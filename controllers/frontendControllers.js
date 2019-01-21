@@ -184,91 +184,115 @@ exports.operationsPage = function (req, res, next) {
 };
 
 exports.educationPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/education', {doc});
-          console.log(doc)
+  Page.find({name: "education"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/education', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/education', {});
+    res.render('frontend/education');                      
     }
-  })
+})
 };
 
 exports.learningPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/learning', {doc});
-          console.log(doc)
+  Page.find({name: "learning-activities"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/learning', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/learning', {});
+    res.render('frontend/learning');                      
     }
-  })
+})
 };
 
 exports.teachingPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/teaching', {doc});
-          console.log(doc)
+  Page.find({name: "teaching"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/teaching', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/teaching', {});
+    res.render('frontend/teaching');                      
     }
-  })
+})
 };
 
 exports.skillsPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/skills', {doc});
-          console.log(doc)
+  Page.find({name: "gaps"}).then((file)=>{
+    if (file){
+        News.find({}).then((doc)=>{
+            if(doc){
+    res.render('frontend/skills', {file, doc});                                                    
+            }
+        })
     }else{
-    res.render('frontend/skills', {});
+    res.render('frontend/skills');                      
     }
-  })
+})
 };
 
 exports.innovationPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/innovation', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/innovation', {});
-    }
-  })
+    Page.find({name: "innovations-p"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/innovation', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/innovation');                      
+        }
+    })
 };
 
 exports.innovationAssPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/innovationAss', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/innovationAss', {});
-    }
-  })
+    Page.find({name: "innovations-a"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/innovationAss', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/innovationAss');                      
+        }
+    })
 };
 
 exports.onlineCoursePage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/onlineCourse', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/onlineCourse', {});
-    }
-  })
+    Page.find({name: "online-courses"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/onlineCourse', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/onlineCourse');                      
+        }
+    })
 };
 
 exports.researchPlanPage = (req, res, next)=>{
-     News.find({}).then((doc)=>{
-    if (doc){
-    res.render('frontend/researchPlan', {doc});
-          console.log(doc)
-    }else{
-    res.render('frontend/researchPlan', {});
-    }
-  })
+    Page.find({name: "research-p"}).then((file)=>{
+        if (file){
+            News.find({}).then((doc)=>{
+                if(doc){
+        res.render('frontend/researchPlan', {file, doc});                                                    
+                }
+            })
+        }else{
+        res.render('frontend/researchPlan');                      
+        }
+    })
 }
 
 exports.industrailPage = (req, res, next)=>{
