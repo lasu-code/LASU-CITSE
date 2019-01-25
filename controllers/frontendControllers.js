@@ -136,14 +136,6 @@ exports.post_contactPage =(req, res, next)=>{
         }
       });
   
-      // let Transport = nodemailer.createTransport({
-      //   host: "smtp.mailtrap.io",
-      //   port: 2525,
-      //   auth: {
-      //     user: "f95012fff7abb4",
-      //     pass: "01752e418f9181"
-      //   }
-      // });
   
       //sending email with SMTP, configuration using SMTP settings
       let mailOptions = {
@@ -185,3 +177,11 @@ exports.subscribe = function (req, res, next){
     
     res.redirect(req.originalUrl)
 }
+
+// exports.subscribes = function(req, res, next){
+//     subscribe.find({}).then((result) =>{
+//         console.log(result.email)
+//     })
+      
+//     res.render('backend/subscribers', {})
+// }

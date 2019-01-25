@@ -4,6 +4,8 @@ const router = express.Router();
 const passport = require("passport");
 const multer =require("multer");
 const methodOverride = require("method-override");
+let subscribe = require('../models/subscribe')
+
 
 let User = require('../models/users');
 let News = require('../models/news');
@@ -103,6 +105,24 @@ router.get('/logout', function (req, res, next) {
 router.get('/dashboard', isLoggedIn, function(req, res, next){
     res.render('backend/dashboard')
 });
+
+router.get('/dashboard/subscriberList', function(req, res, next){
+    subscribe.find({}).then((result) =>{
+        console.log(result.email)
+        for (var i=0; i< result.length; i++){
+            result[i]['serial'] = i
+        }
+        console.log(result)
+
+        if (result){
+    res.render('backend/subscribers', {result})
+        } else
+    res.render('backend/subscribers', {result})
+        
+    })
+
+})
+
 
 // -----
 // Admin
@@ -432,5 +452,9 @@ router.get('/team', controller.teamPage);
 router.get('/news', controller.newsPage);
 router.get('/:page_name', controller.renderPage);
 router.post('/subscribe', controller.subscribe)
+
+router.get('/subscriberList', function(req, res, next){
+    res.render('backend/subscribers')
+})
 
 module.exports = router;

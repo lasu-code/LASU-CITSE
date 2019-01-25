@@ -1,0 +1,47 @@
+<!DOCTYPE html> <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <%- include('../partials/dashboard-head', { pagename: 'View SubscribersList'
+    }) %>
+  </head>
+
+  <body>
+    <!-- sidebar -->
+    <%- include('../partials/sidebar.ejs', {page: 'SubscribersList'}) %>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+      
+        <h1 class="h2">List of Subscribers: = <%= result.length %></h1>
+      </div>
+      <%- include('../partials/dashboard-nav') %> 
+      <table class="table table-hover">
+        <thead>
+
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Emails</th>
+            <!-- <th scope="col">Last</th>
+            <th scope="col">Handle</th> -->
+          </tr>
+        </thead>
+      <% for(var i=0; i < result.length; i++){ %>
+
+        <tbody>
+
+          <tr>
+            <th scope="row"><%= result[i].serial %></th>
+            <td> <%= result[i].email %></td>
+            <!-- <td>Otto</td>
+            <td>@mdo</td> -->
+      <%}%>
+
+          </tr>
+
+        </tbody>
+      </table>
+    </main>
+
+    <%- include('../partials/dashboard-scripts') %>
+  </body>
+</html>
