@@ -11,7 +11,7 @@ const passport = require('passport');
 const MongoStore = require('connect-mongodb-session')(session);
 const flash = require("express-flash");
 const multer =require("multer");
-const methodOverride = require("method-override");
+// const methodOverride = require("method-override");
 const nodemailer = require("nodemailer")
 
 
@@ -33,7 +33,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
-app.use(methodOverride('_method'))
+// app.use(methodOverride('_method'))
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

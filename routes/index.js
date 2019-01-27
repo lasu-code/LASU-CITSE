@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const passport = require("passport");
 const multer =require("multer");
-const methodOverride = require("method-override");
+// const methodOverride = require("method-override");
 let subscribe = require('../models/subscribe')
 
 

@@ -2,6 +2,8 @@ let message = require('../models/message')
 let keys = require('../config/keys.js')
 let nodemailer= require('nodemailer')
 
+
+
 exports.messages = (req,res,next) =>{
 
     message.find({}).then((result)=>{
@@ -44,8 +46,7 @@ exports.reply =(req, res, next)=>{
     let mailOptions = {
       from: "lasu CITSE - <lasu_citse@gmail.com>", //sender adress
       // to: req.body.userMail,
-      to: '6582c11462-624e8d@inbox.mailtrap.io',
-
+      to: message.email[i],
       subject: "LASU CITSE",
       html: req.body.reply
     };
