@@ -14,6 +14,8 @@ const multer =require("multer");
 // const methodOverride = require("method-override");
 const nodemailer = require("nodemailer")
 
+var username = 'phawazzzy';
+var name = 'kareem fawas olamilkan';
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');

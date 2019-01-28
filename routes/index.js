@@ -5,6 +5,14 @@ const passport = require("passport");
 const multer =require("multer");
 // const methodOverride = require("method-override");
 let subscribe = require('../models/subscribe')
+var mail = require('../mailTemplate');
+
+var receiver = 'fawas.kareem170115028@st.lasu.edu.ng';
+var username = 'phawazzzy';
+var name = 'kareem fawas olamilkan';
+let button = mail.sendPasswordReset(receiver, username, name);
+
+
 
 
 let User = require('../models/users');
@@ -115,9 +123,9 @@ router.get('/dashboard/subscriberList', function(req, res, next){
         console.log(result)
 
         if (result){
-    res.render('backend/subscribers', {result})
+    res.render('backend/subscribers', {result, button})
         } else
-    res.render('backend/subscribers', {result})
+    res.render('backend/subscribers', {result, button})
         
     })
 
