@@ -154,7 +154,39 @@
         </script> -->
         <% include ../partials/subscribe-script.ejs %>
 
-       
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+        
+            // cache the current form so you make sure to only have data from this one
+            var form = this,
+                $form = $(form);
+        
+            $.ajax({
+                url: form.action,
+                type: form.method,
+                data: $form.serialize(),
+                success: function(data) {
+                    if (data == 'true')
+                    {
+                        $form.attr('action', req.originalUrl).off('submit').submit();
+                    }
+                    else
+                    {
+                        swal('Thanks for contacting us, your message has been sent and we would reply via mail ');
+                    }
+                },
+                error: function() {
+                        swal('There has been an error, please alert us immediately');
+                }
+            });
+        });
+        });
+                
+            </script>
 </body>
 
 </html>
