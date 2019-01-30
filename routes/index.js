@@ -15,6 +15,7 @@ let Slider = require('../models/slider');
 let Page = require('../models/page');
 let Contact = require('../models/contact');
 let Settings = require('../models/settings');
+let sponsor = require('../models/sponsor');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -345,7 +346,32 @@ router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, nex
 
 router.post('/reply', mailController.reply);
 
+//sponsors
+//----
+router.route('/dashboard/sponsors')
+    .all(isLoggedIn)
+    .get(function (req, res, next) {
+        let failure = req.flash('failure');
+        let success = req.flash('success');
+        let uploaded = req.flash('uploaded');
 
+        sponsor.find({}).then((result) => {
+            if (result) {
+                res.render('backend/sponsors', { result, failure, success, uploaded })
+            } else {
+                res.render('backend/sponsors')
+            }
+        })
+    })
+
+router.route('/dashboard/sponsors/add')
+    .all( adminLoggedIn) 
+    .get ((req, res, next)=>{
+        let upload = req.flash('upload');
+        let failure = req.flash('failure');
+        res.render("backend/sponsors-form", {upload, failure})
+})
+//sponsors Ends here
 // Vc Speech
 //------
 
@@ -356,7 +382,7 @@ router.route('/dashboard/speech')
     })
     .get(function (req, res, next) {
         let upload = req.flash('upload');
-        let failure = req.flash('flash');
+        let failure = req.flash('failure');
 
         res.render('backend/speech', {upload, failure, content: {} })
     })

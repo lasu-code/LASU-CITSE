@@ -90,9 +90,9 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" data-target="#r&snav">
+                <a class="nav-link" data-toggle="collapse" data-target="#recruitment">
                     <span data-feather="book"></span> Recruitment Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
-                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'recruit') ? '' : 'collapse navbar-collapse' %>" id="r&snav">
+                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'recruit') ? '' : 'collapse navbar-collapse' %>" id="recruitment">
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'retention-support') ? 'text-primary' : '' %>" href="/dashboard/retention-support"> Retention and Support </a>
                     </li>
@@ -116,6 +116,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'implementation-timeline') ? 'text-primary' : '' %>" href="/dashboard/industrial-advisory-boards">Industrial Advisory Board</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'centre-leaders') ? 'text-primary' : '' %>" href="/dashboard/centre-leaders">Centre Leaders</a>
                     </li>
                 </ul>
             </li>
