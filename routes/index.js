@@ -144,6 +144,10 @@ router.get('/dashboard', isLoggedIn, function (req, res, next) {
     res.render('backend/dashboard');
 });
 
+// router.get('/dashboard/speech', isLoggedIn,(req, res, next)=>{
+//     res.render('backend/speech', {})
+// })
+
 // -----
 // Admin
 router.get('/dashboard/authorizeadmins', adminLoggedIn, function (req, res, next) {
@@ -340,6 +344,41 @@ router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, nex
 })
 
 router.post('/reply', mailController.reply);
+
+
+// Vc Speech
+//------
+
+router.route('/dashboard/speech')
+    .all(isLoggedIn, function (req, res, next) {
+        oldImage = null
+        return next()
+    })
+    .get(function (req, res, next) {
+        let upload = req.flash('upload');
+        let failure = req.flash('flash');
+
+        res.render('backend/speech', {upload, failure, content: {} })
+    })
+    .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
+        removeOldImage();
+        pageData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_active: true,
+            postImage: req.file.path.substring(6)
+        }
+
+        Slider.create(pageData)
+            .catch((err) => { console.error(`Error occured during POST(/dashboard/speech): ${err}`); })
+            .then(() => {
+                req.flash('upload', `VC's speech Creation Successful!`);
+                res.redirect('/dashboard/speech');
+            })
+    })
+
 
 // -----
 // Slider
