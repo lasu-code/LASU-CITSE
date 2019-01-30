@@ -1,5 +1,5 @@
 
-var createError = require('http-errors');
+const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
@@ -14,20 +14,17 @@ let methodOverride = require('method-override');
 
 dotenv.config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 require("./config/passport");
 
-var app = express();
+const app = express();
 
 let db_uri = process.env.DB_URI;
-// let db_uri = 'mongodb://localhost:27017/dashboard'
 mongoose.connect(db_uri, { useNewUrlParser: true, useCreateIndex: true }).then(console.log("database connected")).catch(err=>console.log(err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-
-
 app.set('view engine', 'ejs');
 
 
@@ -38,7 +35,7 @@ app.use(cookieParser('mysecrect'));
 app.use(methodOverride('_method'));
 
 
-var oneDay = 86400000; // in milliseconds
+const oneDay = 86400000; // in milliseconds
 app.use(express.static(path.join(__dirname, 'public'), {
   maxage: oneDay
 }));
@@ -73,7 +70,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('frontend/error');
 });
-
-
 
 module.exports = app;
