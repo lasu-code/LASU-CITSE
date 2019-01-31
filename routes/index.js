@@ -545,7 +545,7 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
             console.log(err)
         }
         if (res) {
-            User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newPass })
+            User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
                     res.redirect('/dashboard');
