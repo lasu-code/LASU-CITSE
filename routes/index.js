@@ -463,7 +463,7 @@ router.get('/dashboard/news', function (req, res, next) {
 
     News.find({}).then((doc) => {
         if (doc) {
-            res.render('backend/news', { upload, doc })
+            res.render('backend/news', { upload, doc, usrInfo })
             console.log(doc)
         } else {
             res.render('backend/news')
