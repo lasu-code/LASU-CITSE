@@ -8,7 +8,7 @@ module.exports = {
     'learning-activities': { data: 'learning-activities', nav: 'education' },
     'skills-gap': { data: 'skills-gap', nav: 'education' },
     'innovations-in-pedagogy': { data: 'innovations-in-pedagogy', nav: 'education' },
-    'innovations-in-assessment': { data: 'innovations-in-assessment', nav: 'education' },
+    'degree-programmes': { data: 'degree-programmes', nav: 'education' },
     'online-courses': { data: 'online-courses', nav: 'education' },
     'research-plan': { data: 'research-plan', nav: 'research' },
     'industrial-partnerships': { data: 'industrial-partnerships', nav: 'research' },
@@ -18,4 +18,5 @@ module.exports = {
     'staff-development': { data: 'staff', nav: 'management' },
     'centre-operations': { data: 'centre-operations', nav: 'management' },
     'implementation-timeline': { data: 'implementation-timeline', nav: 'management' },
+    'industrial-advisory-boards': { data: 'industrial-advisory-boards', nav: 'management' }
 }
