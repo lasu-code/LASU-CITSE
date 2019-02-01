@@ -21,5 +21,5 @@ module.exports = {
     implementation_timeline: {parent: 'management', title: 'implementation timeline'},
     settings: {parent: 'settings', title: 'settings'},
     industrial_advisory_boards: {parent: 'management', title: 'industrial advisory boards'},
-    centre_leaders: {parent: 'management', title: 'centre leaders'},
+    // centre_leaders: {parent: 'management', title: 'centre leaders'},
 }
