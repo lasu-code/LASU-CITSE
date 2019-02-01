@@ -438,11 +438,7 @@ router.get('/dashboard/news', function (req, res, next) {
 
     News.find({}).then((doc) => {
         if (doc) {
-<<<<<<< HEAD
-            res.render('backend/news', { upload, doc, usrInfo })
-=======
             res.render('backend/news', { upload, doc, page: 'news', activeParent: 'news' })
->>>>>>> master
             console.log(doc)
         } else {
             res.render('backend/news')
