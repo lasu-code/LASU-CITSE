@@ -6,7 +6,7 @@ module.exports = {
     'education': { data: 'education', nav: 'education' },
     'teaching': { data: 'teaching', nav: 'education' },
     'learning-activities': { data: 'learning-activities', nav: 'education' },
-    'skills-gap': { data: 'skills', nav: 'education' },
+    'skills-gap': { data: 'skills-gap', nav: 'education' },
     'innovations-in-pedagogy': { data: 'innovations-in-pedagogy', nav: 'education' },
     'innovations-in-assessment': { data: 'innovations-in-assessment', nav: 'education' },
     'online-courses': { data: 'online-courses', nav: 'education' },

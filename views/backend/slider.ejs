@@ -1,223 +1,68 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <%- include('../partials/dashboard-head', {pagename: 'Edit Slider'}) %>
-    
-  </head>
-
-  <body>
 
     <style>
-    #A_1 {
-    bottom: 0px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 5px 0px;
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    display: inline-block;
-    height: 45px;
-    left: 0px;
-    min-width: 140px;
-    position: relative;
-    right: 0px;
-    text-align: center;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-size-adjust: 100%;
-    top: 0px;
-    touch-action: manipulation;
-    vertical-align: middle;
-    white-space: nowrap;
-    width: 196.5px;
-    z-index: 1;
-    column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 98.25px 22.5px;
-    transform-origin: 98.25px 22.5px;
-    user-select: none;
-    caret-color: rgb(255, 255, 255);
-    animation: none 0s ease 0.7s 1 normal none running;
-    background: rgb(0, 108, 255) none repeat scroll 0% 0% / auto padding-box border-box;
-    border: 1px solid rgba(0, 0, 0, 0);
-    font: normal normal 700 normal 14px / 42px Roboto, sans-serif;
-    margin: 50px 0px 0px;
-    outline: rgb(255, 255, 255) none 0px;
-    padding: 0px 55px 0px 30px;
-    transition: color 0.5s ease-in-out 0s, background-color 0.5s ease-in-out 0s, border-color 0.5s ease-in-out 0s, box-shadow 0.5s ease-in-out 0s;
-}/*#A_1*/
-
-#A_1:after {
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    text-align: center;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-size-adjust: 100%;
-    white-space: nowrap;
-    column-rule-color: rgb(255, 255, 255);
-    user-select: none;
-    caret-color: rgb(255, 255, 255);
-    border: 0px none rgb(255, 255, 255);
-    font: normal normal 700 normal 14px / 42px Roboto, sans-serif;
-    outline: rgb(255, 255, 255) none 0px;
-}/*#A_1:after*/
-
-#A_1:before {
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    text-align: center;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-size-adjust: 100%;
-    white-space: nowrap;
-    column-rule-color: rgb(255, 255, 255);
-    user-select: none;
-    caret-color: rgb(255, 255, 255);
-    border: 0px none rgb(255, 255, 255);
-    font: normal normal 700 normal 14px / 42px Roboto, sans-serif;
-    outline: rgb(255, 255, 255) none 0px;
-}/*#A_1:before*/
-
-#SPAN_2 {
-    bottom: -1px;
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: block;
-    height: 45px;
-    left: 155.5px;
-    position: absolute;
-    right: -1px;
-    text-align: center;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-size-adjust: 100%;
-    top: -1px;
-    white-space: nowrap;
-    width: 40px;
-    column-rule-color: rgb(255, 255, 255);
-    perspective-origin: 20px 22.5px;
-    transform-origin: 20px 22.5px;
-    user-select: none;
-    caret-color: rgb(255, 255, 255);
-    background: rgb(8, 31, 62) none repeat scroll 0% 0% / auto padding-box border-box;
-    border: 0px none rgb(255, 255, 255);
-    font: normal normal 500 normal 24px / 42px Roboto, sans-serif;
-    outline: rgb(255, 255, 255) none 0px;
-    transition: all 0.5s ease 0s;
-}/*#SPAN_2*/
-
-#SPAN_2:after {
-    box-sizing: border-box;
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none solid rgb(255, 255, 255);
-    text-size-adjust: 100%;
-    white-space: nowrap;
-    column-rule-color: rgb(255, 255, 255);
-    user-select: none;
-    caret-color: rgb(255, 255, 255);
-    border: 0px none rgb(255, 255, 255);
-    font: normal normal 500 normal 24px / 42px Roboto, sans-serif;
-    outline: rgb(255, 255, 255) none 0px;
-}/*#SPAN_2:after*/
-
-        #SPAN_2:before {
-            box-sizing: border-box;
-            color: rgb(255, 255, 255);
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none solid rgb(255, 255, 255);
-            text-size-adjust: 100%;
-            white-space: nowrap;
-            column-rule-color: rgb(255, 255, 255);
-            user-select: none;
-            caret-color: rgb(255, 255, 255);
-            border: 0px none rgb(255, 255, 255);
-            font: normal normal 500 normal 24px / 42px Roboto, sans-serif;
-            outline: rgb(255, 255, 255) none 0px;
-        }/*#SPAN_2:before*/
-
-
     </style>
+</head>
+
+<body>
     <%- include('../partials/dashboard-nav') %>
 
     <div class="container-fluid">
-      <div class="row">
+        <div class="row">
+            <!-- sidebar -->
+            <%- include('../partials/sidebar.ejs', {page: 'slider', activeParent: 'home'}) %>
 
-                <!-- sidebar -->
-                <%- include('../partials/sidebar.ejs', {page: 'slider', activeParent: 'home'}) %>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2">Slider CMS</h1>
+                </div>
 
-                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                        <h1 class="h2">Slider CMS</h1>
-                    </div>
-
-
-                    <!-- <a href="/dashboard/add"> Create new slider</a> -->
-                    <a href="/dashboard/slider/add" id="A_1">Create new slider <span id="SPAN_2">+</span></a>
-                    <br> <br>
-                    <% for(var i=0; i < result.length; i++) { %>
-                    <div class="container">
-                      <div class="row">
-                        <div class="col-sm-4">
-                          <div class="card">
-                            <img src="/img/bg-img/class.jpg" alt="image" width="100%" height="100%">
-                          </div>
-                        
-                          
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <a href="/dashboard/slider/add" class="btn btn-primary">Create new slider <span class="fa fa-plus-circle"></span></a>
                         </div>
 
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <hr class="" />
+                        </div>
 
+                        <h3 class="col-lg-12 col-nd-12 col-sm-12 col-xs-12">Current Sliders</h3>
 
-                          <div class="col-sm-4">
-                            <div class="card">
-                              <img src="/img/bg-img/class.jpg" alt="image" width="100%" height="100%">
+                        <div class="col-xs-12 mt-3">
+                        <% for(let i=0; i < result.length; i++) { %>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 float-left">
+                                <div class="card p-3 mb-2 justify-content-middle">
+                                    <img src="<%= result[i].postImage %>" alt="image" width="100%" height="100%">
+                                </div>
+                                <a href="/dashboard/slider/edit/<%= result[i]._id %>">Edit Image</a>
                             </div>
-    
+                        <% }%>
                         </div>
-
-                            <div class="col-sm-4">
-                              <div class="card">
-                                <img src="/img/bg-img/class.jpg" alt="image" width="100%" height="100%">
-                              </div>
-      
-                          </div>
                     </div>
-                  </div>
-                <% }%>
-                
-                </main>
-      
+                </div>
+            </main>
+        </div>
     </div>
 
     <%- include('../partials/dashboard-scripts') %>
     <script type="text/javascript">
-      if($.trim($('#failure').text()).length !== 0) {
-        alert("<%=failure%>")
-      }
-
-      if($.trim($('#uploaded').text()).length !== 0) {
-        alert("<%=uploaded%>")
-      }
-
-      if($.trim($('#success').text()).length !== 0) {
-          alert("<%=success%>")
-      }
-
-    </script>
-
-<script>
-  $('.your-checkbox').prop('indeterminate', true)
-</script>
-
-<!-- <script>
-    $("#submit").click(function(event){
-      alert('hello')
-      event.preventDefault();
-        var $fileUpload = $("#img");
-        if (parseInt($fileUpload.get(0).files.length)>2){
-         alert("You can only upload a maximum of 2 files");
+        if($.trim($('#failure').text()).length !== 0) {
+            alert("<%=failure%>")
         }
-    });
-​
-</script> -->
-  </body>
+
+        if($.trim($('#uploaded').text()).length !== 0) {
+            alert("<%=uploaded%>")
+        }
+
+        if($.trim($('#success').text()).length !== 0) {
+            alert("<%=success%>")
+        }
+    </script>
+</body>
 </html>
 
 

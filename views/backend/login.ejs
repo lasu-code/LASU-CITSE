@@ -9,15 +9,7 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/login/vendor/bootstrap/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/vendor/animate/animate.css">
-<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/login/vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/vendor/animsition/css/animsition.min.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/login/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/login/css/main.css">
@@ -29,7 +21,6 @@
 			<div class="wrap-login100">
 
 				<form class="login100-form validate-form" action="/login/admin" method="POST">
-					<%- include('../partials/error') %>
 					<span class="login100-form-title p-b-34">
 						Admin Login
 					</span>
@@ -42,29 +33,26 @@
 						<input class="input100" type="password" name="password" placeholder="Password">
 						<span class="focus-input100"></span>
 					</div>
-										
+
 					<div class="w-full text-center p-t-27 p-b-239">
-						<span >
-							<a href="/forgot">Forgot password?</a>
-						</span>
+						<div class="container-login100-form-btn mb-3">
+							<button class="login100-form-btn">
+								Sign in
+							</button>
+						</div>
 
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Sign in
-						</button>
-					</div>
-
-						<a href="#" class="d-none txt2">
-							User name / password?
+						<a href="/forgot" class="txt2 text-warning">
+							Forgot password?
 						</a>
 					</div>
 
-					<div class="d-none w-full text-center">
-						<a href="#" class="txt3">
-							Sign Up
-						</a>
-					</div>
+					<%#
+						<div class="d-none w-full text-center">
+							<a href="#" class="txt3">
+								Sign Up
+							</a>
+						</div>
+					%>
 				</form>
 
 				<div class="login100-more" style="background-image: url('/login/images/africa.jpg');"></div>
@@ -72,35 +60,7 @@
 		</div>
 	</div>
 
-	
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
- <script> 
-if( "<%-success%>" ){
-  swal({
-  text: "<%=success%>",
-});
-}
-
-
-if( "<%-error%>" ){
-  swal({
-  text: "<%=error%>",
-});
-}
-
-
-</script>
-
-
-<!--===============================================================================================-->
-	<script src="/login/vendor/jquery/jquery-3.2.1.min.js"></script>
-<!--===============================================================================================-->
-	<!-- <script src="/login/vendor/animsition/js/animsition.min.js"></script> -->
-<!--===============================================================================================-->
-	<!-- <script src="/login/vendor/bootstrap/js/popper.js"></script> -->
-	<!-- <script src="/login/vendor/bootstrap/js/bootstrap.min.js"></script> -->
-<!--===============================================================================================-->
-	<!-- <script src="/login/js/main.js"></script> -->
+	<%- include('../partials/dashboard-scripts') %>
 
 </body>
 </html>

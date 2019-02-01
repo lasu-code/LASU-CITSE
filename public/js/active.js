@@ -60,7 +60,7 @@
             margin: 0,
             loop: true,
             nav: true,
-            navText: ['Prev', 'Next'],
+            navText: ['<i class="ti-angle-left bg-dark text-white fa-2x p-4"></i>', '<i class="ti-angle-right bg-dark text-white fa-2x p-4"></i>'],
             dots: true,
             autoplay: false,
             autoplayTimeout: 5000,
@@ -179,5 +179,4 @@
     if ($window.width() > 767) {
         new WOW().init();
     }
-    
 })(jQuery);

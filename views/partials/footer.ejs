@@ -50,10 +50,10 @@
                         </div>
 
                         <div class="footer-newsletter-area">
-                            <form action="#">
+                            <form action="/subscribe" method="POST">
                                 <input type="email" class="form-control border-0 mb-0" name="newsletterEmail" id="newsletterEmail"
-                                    placeholder="Your Email Here">
-                                <button type="submit">Subscribe</button>
+                                    placeholder="Your Email Here" required>
+                                <button type="submit" id="submitData">Subscribe</button>
                             </form>
                             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
                                 tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet,
@@ -87,3 +87,25 @@
         </div>
     </div>
 </footer>
+
+<!-- <script>
+$('#submitData').click(function(event) {
+    event.preventDefault();
+
+    $.ajax({
+        global: false,
+        type: 'POST',
+        url: '/subscribe',
+        dataType: 'html',
+        data: {
+            email: $("#newsletterEmail").val(),
+        },
+        success: function (result){
+            console.log(result);
+        },
+        error: function (request, status, error){
+            serviceError();
+        }
+    });
+});
+</script> -->

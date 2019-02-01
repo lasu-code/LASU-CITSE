@@ -17,6 +17,11 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/w3.css">
+    <style>
+        .w3-container ul, .w3-container ol {padding-left: 20px}
+        .w3-container ul li {padding-left: 15px; list-style: square outside}
+        .w3-container ol li {padding-left: 15px; list-style: decimal outside}
+    </style>
 
 </head>
 
@@ -76,7 +81,8 @@
     <script src="js/plugins.js"></script>
     <!-- Active js -->
     <script src="js/active.js"></script>
-
+    <% include ../partials/subscribe-script.ejs %>
+ 
 </body>
 
 </html>

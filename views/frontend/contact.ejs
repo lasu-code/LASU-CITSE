@@ -17,8 +17,6 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/w3.css">
-    
-
 </head>
 
 <body>
@@ -26,28 +24,24 @@
     <% include ../partials/navbar.ejs %>
 
     <!-- ***** Breadcumb Area Start ***** -->
-    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%file.newImg%>');">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="breadcumb-content">
-                        <h3 class="breadcumb-title">Contact</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <div style="height:15vh"></div>
+    <div class="container-fluid px-0 pt-5" id="gmap" style="height: 60vh"></div>
     <!-- ***** Breadcumb Area End ***** -->
-    
+
     <section class="medilife-contact-area section-padding-100">
         <div class="container">
             <div class="row">
                 <!-- Contact Form Area -->
                 <div class="col-12 col-lg-8">
                     <div class="contact-form">
+<<<<<<< HEAD
                         <h5 class="mb-50">Get in touch</h5>
     
                         <form action="/post_contact" method="POST">
+=======
+                        <h3 class="mb-50">Get in touch</h3>
+                        <form action="post_contact" method="POST">
+>>>>>>> master
                             <div class="form-group">
                                 <input type="text" class="form-control" id="contact-name" placeholder="Name" name="name" required>
                             </div>
@@ -64,65 +58,58 @@
                         </form>
                     </div>
                 </div>
-    
+
                 <div class="col-12 col-lg-4">
-                    <div class="content-sidebar">
-    
-    
+                    <div class="content-sidebar"></div>
                         <!-- Contact Card -->
                         <div class="medilife-contact-card mb-50">
-    
-                            <div class="single-contact d-flex align-items-center">
-                                <div class="contact-icon mr-30">
+
+                            <div class="single-contact d-flex">
+                                <div class="contact-icon mr-30 ">
                                     <i class="icon-hospital-8"></i>
                                 </div>
                                 <div class="contact-meta">
-                                    <p>Address: Lagos State University, <br>Ojo, Lagos. </p>
+                                    <%- content.address %>
                                 </div>
                             </div>
-    
+
                             <div class="single-contact d-flex align-items-center">
                                 <div class="contact-icon mr-30">
                                     <i class="icon-emergency-call-1"></i>
                                 </div>
                                 <div class="contact-meta">
-                                    <p>Phone: +234 543 7689</p>
+                                    <p>Phone: <%= content.phone %></p>
                                 </div>
                             </div>
-    
+
                             <div class="single-contact d-flex align-items-center">
                                 <div class="contact-icon mr-30">
                                     <i class="icon-smartphone-3"></i>
                                 </div>
                                 <div class="contact-meta">
-                                    <p>Email: lasu_citse@gmail.com</p>
+                                    <p>Email: <%= content.email %></p>
                                 </div>
                             </div>
-    
-    
+
                             <div class="contact-social-area">
                                 <a href="#"><i class="fa fa-google-plus"></i></a>
                                 <a href="#"><i class="fa fa-pinterest"></i></a>
                                 <a href="#"><i class="fa fa-facebook"></i></a>
                                 <a href="#"><i class="fa fa-twitter"></i></a>
                             </div>
-    
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <iframe class="container" src="https://www.google.com/maps/d/embed?mid=1Odi4X-I0WjMbCqPyhhk-nQAVvkk&hl=en" height="480"></iframe>
     </section>
-    
-    
-    
+
 
     <!-- ***** Footer Area Start ***** -->
     <% include ../partials/footer.ejs %>
     <!-- ***** Footer Area End ***** -->
 
-    </script>
     <!-- jQuery (Necessary for All JavaScript Plugins) -->
     <script src="js/jquery/jquery-2.2.4.min.js"></script>
     <!-- Popper js -->
@@ -134,6 +121,41 @@
     <!-- Active js -->
     <script src="js/active.js"></script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= gmap_api_key %>"></script>
+    <script>
+		function initialize() {
+            var mapCanvas = document.getElementById('gmap');
+            var mapOptions = {
+                center: new google.maps.LatLng(<%= content.mapLatitude %>, <%= content.mapLongitude %>),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                scrollwheel: false
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions)
+        }
+		google.maps.event.addDomListener(window, 'load', initialize);
+
+        // submit form
+        $('#submitData').click(function(event) {
+            event.preventDefault();
+            $.ajax({
+                global: false,
+                type: 'POST',
+                url: '/subscribe',
+                dataType: 'html',
+                data: {
+                    email: $("#newsletterEmail").val(),
+                },
+                success: function (data){
+                    alert('the mail has been sent');
+                },
+                error: function (request, status, error){
+                    serviceError();
+                }
+            });
+        });
+	</script>
+    <% include ../partials/subscribe-script.ejs %>
 </body>
 
 </html>

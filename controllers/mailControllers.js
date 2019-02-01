@@ -18,32 +18,34 @@ exports.messages = (req,res,next) =>{
 }
 
 exports.reply =(req, res, next)=>{
-  // let Transport = nodemailer.createTransport({
-  //     service: "gmail",
-  //     secure: false,
-  //     port: 25,
-  //     auth: {
-  //       user: "phawazzzy@gmail.com",
-  //       pass: keys.keys.password
-  //     },
-  //     tls: {
-  //       rejectUnauthorized: false
-  //     }
-  //   });
-
-    let Transport = nodemailer.createTransport({
-      host: "smtp.mailtrap.io",
-      port: 2525,
+  let Transport = nodemailer.createTransport({
+      service: "gmail",
+      secure: false,
+      port: 25,
       auth: {
-        user: "f95012fff7abb4",
-        pass: "01752e418f9181"
+        user: "phawazzzy@gmail.com",
+        pass: keys.keys.password
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
+
+    // let Transport = nodemailer.createTransport({
+    //   host: "smtp.mailtrap.io",
+    //   port: 2525,
+    //   auth: {
+    //     user: "f95012fff7abb4",
+    //     pass: "01752e418f9181"
+    //   }
+    // });
 
     //sending email with SMTP, configuration using SMTP settings
     let mailOptions = {
       from: "lasu CITSE - <lasu_citse@gmail.com>", //sender adress
-      to: req.body.userMail,
+      // to: req.body.userMail,
+      to: '6582c11462-624e8d@inbox.mailtrap.io',
+
       subject: "LASU CITSE",
       html: req.body.reply
     };
