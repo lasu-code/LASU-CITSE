@@ -563,7 +563,7 @@ router.route('/dashboard/contact-us')
         let failure = req.flash('failure');
         Contact.find({})
             .then((data) => {
-                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', activeParent: 'about' })
+                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', usrInfo ,activeParent: 'about' })
             })
             .catch((err) => {
                 console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
