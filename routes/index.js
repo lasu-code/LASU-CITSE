@@ -336,7 +336,36 @@ router.route('/dashboard/sponsors/add')
         let failure = req.flash('failure');
         res.render("backend/sponsors-form", {upload, failure})
 })
-//sponsors Ends here
+
+//sponsors ends here
+
+//centre leaders
+router.route('/dashboard/leaders')
+    .all(isLoggedIn)
+    .get(function (req, res, next) {
+        let failure = req.flash('failure');
+        let success = req.flash('success');
+        let uploaded = req.flash('uploaded');
+
+        sponsor.find({}).then((result) => {
+            if (result) {
+                res.render('backend/center-leaders', { result, failure, success, uploaded })
+            } else {
+                res.render('backend/center-leaders')
+            }
+        })
+    })
+
+router.route('/dashboard/leaders/add')
+    .all( adminLoggedIn) 
+    .get ((req, res, next)=>{
+        let upload = req.flash('upload');
+        let failure = req.flash('failure');
+        res.render("backend/center-leadersForm", {upload, failure})
+})
+
+//center leadres ends here
+//-----
 // Vc Speech
 //------
 

@@ -118,7 +118,7 @@
                         <a class="nav-link <%= (page == 'implementation-timeline') ? 'text-primary' : '' %>" href="/dashboard/industrial-advisory-boards">Industrial Advisory Board</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link <%= (page == 'centre-leaders') ? 'text-primary' : '' %>" href="/dashboard/centre-leaders">Centre Leaders</a>
+                        <a class="nav-link <%= (page == 'centre-leaders') ? 'text-primary' : '' %>" href="/dashboard/leaders">Centre Leaders</a>
                     </li>
                 </ul>
             </li>
@@ -129,6 +129,10 @@
             <li class="nav-item">
                 <a class="nav-link <%= (page == 'stafflist') ? 'active' : '' %>" href="/dashboard/stafflist">
                     <span data-feather="users"></span> Staff List </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <%= (page == 'sponsors') ? 'text-primary' : '' %>" href="/dashboard/sponsors">
+                    <span data-feather="thumbs-up"></span> Sponsors </a>
             </li>
             <li class="nav-item d-none">
                 <a class="nav-link <%= (page == 'users messages') ? 'text-primary' : '' %>" href="/dashboard/messages">
