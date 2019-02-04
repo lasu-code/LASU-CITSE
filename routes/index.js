@@ -390,7 +390,15 @@ router.route('/dashboard/slider/add')
     .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
         removeOldImage();
         pageData = {
-            
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_active: true,
+        } 
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
         }
 
         Slider.create(pageData)
@@ -409,22 +417,26 @@ router.route('/dashboard/slider/add')
 
         res.render('backend/editslider', { upload, failure, id, content: {} })
     })
-
-    router.post('/dashboad/slider/edit/:id', upload.single('postImage'), function(req, res, next){
+    
+ router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
         console.log(req.file.secure_url)
         console.log(req.file.public_id)
         
-        removeOldImage();
         let idd = req.params.id;
-        console.log(id)
+        let oldSliderImage = await Slider.findOne({_id: idd});
+
+        (function removeSliderOldImage() {
+            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
+        })()
+
+        console.log(idd)
         sliderData = {
             name: req.body.name,
             text_on_img: req.body.text_on_img,
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
             is_active: true,
-            postImage: req.file.secure_url,
-            postid: req.file.public_id
+            
         }
         if (req.file) {
             sliderData.postImage = req.file.secure_url;
@@ -435,7 +447,7 @@ router.route('/dashboard/slider/add')
             .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
             .then(() => {
                 req.flash('upload', "Slider has been updated successfully");
-                res.redirect('/dashboard/slider/edit/:id');
+                res.redirect("/dashboard/slider");
             })
     })
 // -----
