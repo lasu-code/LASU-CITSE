@@ -6,6 +6,7 @@ let nodemailer= require('nodemailer')
 let keys = require('../config/keys.js')
 let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
+let Mail = require('../models/contactaddress')
 
 
 let f = require('../config/frontNav');
@@ -117,79 +118,25 @@ exports.teamPage = function (req, res, next) {
     })
 };
 
-exports.post_contactPage =(req, res, next)=>{
-    let messageData = {
-        name: req.body.name,
-        email: req.body.email,
-        subject: req.body.subject,
-        message: req.body.message
-
-    }
-    let newData = new message(messageData);
-    newData.save()
-    Page.find({name: "contactus"}).then((file)=>{
-        if (file){
-            News.find({}).then((doc)=>{
-                if(doc){
-                    res.render('frontend/contact', {file, doc, activeNav: 'about'});
-                }
-            })
-        }else{
-            res.render('frontend/contact');
-        }
-    })
-
-    // res.render('frontend/contact', {activeNav: 'about'})
-    let Transport = nodemailer.createTransport({
-        service: "gmail",
-        secure: false,
-        port: 25,
-        auth: {
-          user: "phawazzzy@gmail.com",
-          pass: keys.keys.password
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-
-      // let Transport = nodemailer.createTransport({
-      //   host: "smtp.mailtrap.io",
-      //   port: 2525,
-      //   auth: {
-      //     user: "f95012fff7abb4",
-      //     pass: "01752e418f9181"
-      //   }
-      // });
-
-      //sending email with SMTP, configuration using SMTP settings
-      let mailOptions = {
-        from: "LASU ACEITSE - <lasu_citse@gmail.com>", //sender adress
-        // to: req.body.userMail,
-        to: 'phawazzzy@gmail.com',
-
-        subject: "LASU CITSE",
-        html: req.body.message
-      };
-
-      Transport.sendMail(mailOptions, (error, info)=>{
-        if (error) {
-          console.log(error);
-          console.log(mailOptions.html);
-
-          //res.send("email could not send due to error:" + error);
-        } else {
-          console.log(info);
-          console.log(mailOptions.html);
-
-          // res.send("email has been sent successfully");
-        }
-        res.redirect("/contact")
-      });
-
-    res.redirect('/contact')
-
-
+exports.post_contactPage = async function (req, res, next) {
+    let result = await Mail.find({})
+    let address = result.map((val, index, arr) => val.email);
+   
+    (function sendMail() {
+        const mailOptions = {
+            to: address,
+            subject: req.body.subject,
+            text: req.body.message
+        };
+        
+        smtpTransport.sendMail(mailOptions, function (err) {
+            console.log('An e-mail has been sent to  with further instructions.');
+            
+        });
+            
+    })();
+           
+    res.redirect('/contact');
 }
 
 exports.subscribe = function (req, res, next){

@@ -28,6 +28,14 @@
 
                                         <%- include('../fields/button', { fieldvalue: 'Upload settings'}); %>
                         </form>
+
+                         <form action="/postaddress" method="POST"  class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                            <%- include('../fields/email', { fieldname: 'email', fieldplaceholder: 'Recipient Email Address', fieldlabel: 'Recipient Email Address', valueField: ''}); %>
+
+                                
+                                        <%- include('../fields/button', { fieldvalue: 'Upload Address'}); %>
+                        </form>
+
                         <span style="display: none" id="upload">
               <%=upload%>
           </span>
