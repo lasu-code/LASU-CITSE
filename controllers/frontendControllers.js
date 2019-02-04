@@ -3,7 +3,7 @@ let Slider = require('../models/slider');
 let News = require('../models/news');
 let Page = require('../models/page');
 let nodemailer= require('nodemailer')
-let keys = require('../config/keys.js')
+// let keys = require('../config/keys.js')
 let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
 

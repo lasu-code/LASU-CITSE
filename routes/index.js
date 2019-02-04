@@ -20,7 +20,7 @@ let sponsor = require('../models/sponsor');
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
 let n = require('../config/cmsNav');
-const keys = require("../config/keys");
+// const keys = require("../config/keys");
 global.usrInfo = {};
 let oldImage = '';
 
