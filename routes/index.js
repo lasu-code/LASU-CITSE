@@ -309,8 +309,6 @@ router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, nex
         })
 })
 
-router.post('/reply', mailController.reply);
-
 //sponsors
 //----
 router.route('/dashboard/sponsors')
@@ -330,7 +328,7 @@ router.route('/dashboard/sponsors')
     })
 
 router.route('/dashboard/sponsors/add')
-    .all( adminLoggedIn) 
+    .all( adminLoggedIn)
     .get ((req, res, next)=>{
         let upload = req.flash('upload');
         let failure = req.flash('failure');
@@ -357,7 +355,7 @@ router.route('/dashboard/leaders')
     })
 
 router.route('/dashboard/leaders/add')
-    .all( adminLoggedIn) 
+    .all( adminLoggedIn)
     .get ((req, res, next)=>{
         let upload = req.flash('upload');
         let failure = req.flash('failure');
@@ -623,7 +621,7 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
 
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
-    
+
     bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
         if (err) {
             console.log(err)
@@ -641,7 +639,7 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
         else {
             console.log('unmatch');
             res.redirect('/dashboard/adminSettings');
-            
+
         }
     });
 
