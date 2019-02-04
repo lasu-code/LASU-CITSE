@@ -390,12 +390,7 @@ router.route('/dashboard/slider/add')
     .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
         removeOldImage();
         pageData = {
-            name: req.body.name,
-            text_on_img: req.body.text_on_img,
-            img_link: req.body.img_link,
-            img_link_text: req.body.img_link_text,
-            is_active: true,
-            postImage: req.file.path.substring(6)
+            
         }
 
         Slider.create(pageData)
@@ -406,79 +401,43 @@ router.route('/dashboard/slider/add')
             })
     })
 
-router.post("/uploadslider", function (req, res) {
-    upload(req, res, (err) => {
-        if (err) {
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files);
-            Slider.findOne({ name: "slider" }).then(function (result) {
-                if (result) {
-                    req.flash('failure', "Sorry You can only update sliders not create new ones");
-                    res.redirect("/dashboard/slider");
-                } else if (!result) {
-                    let newSlider = new Slider();
-                    newSlider.slider1.name = req.files['slider1'][0].fieldname;
-                    newSlider.slider1.path = '/uploads/' + req.files['slider1'][0].filename;
-                    newSlider.slider2.name = req.files['slider2'][0].fieldname;
-                    newSlider.slider2.path = '/uploads/' + req.files['slider2'][0].filename;
-                    newSlider.slider3.name = req.files['slider3'][0].fieldname;
-                    newSlider.slider3.path = '/uploads/' + req.files['slider3'][0].filename;
-                    newSlider.name = "slider";
+    router.get('/dashboard/slider/edit/:id', function(req, res, next){
+        let upload = req.flash('upload');
+        let failure = req.flash('flash');
+        let id = req.params.id;
+        console.log(id);
 
-                    newSlider.save().then((result) => {
-                        if (result) {
-                            console.log(result)
-                            req.flash('uploaded', "Slider has been uploaded successfully");
-                            res.redirect("/dashboard/slider");
-                        } else {
-                            res.send("err")
-                        }
-                    })
+        res.render('backend/editslider', { upload, failure, id, content: {} })
+    })
 
-                    // console.log("sorry cannot save new data")
-                }
-                // res.send("test")
+    router.post('/dashboad/slider/edit/:id', upload.single('postImage'), function(req, res, next){
+        console.log(req.file.secure_url)
+        console.log(req.file.public_id)
+        
+        removeOldImage();
+        let idd = req.params.id;
+        console.log(id)
+        sliderData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_active: true,
+            postImage: req.file.secure_url,
+            postid: req.file.public_id
+        }
+        if (req.file) {
+            sliderData.postImage = req.file.secure_url;
+            sliderData.publicid = req.file.public_id;
+        }
+
+        Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
+            .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
+            .then(() => {
+                req.flash('upload', "Slider has been updated successfully");
+                res.redirect('/dashboard/slider/edit/:id');
             })
-        }
     })
-})
-
-router.put("/update/uploadslider", function (req, res) {
-
-    upload(req, res, (err) => {
-        if (err) {
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files);
-            Slider.findOneAndUpdate(
-                { "name": "slider" },
-                {
-                    $set: {
-                        "slider1.name": req.files['slider1'][0].fieldname,
-                        "slider1.path": '/uploads/' + req.files['slider1'][0].filename,
-                        "slider2.name": req.files['slider2'][0].fieldname,
-                        "slider2.path": '/uploads/' + req.files['slider2'][0].filename,
-                        "slider3.name": req.files['slider3'][0].fieldname,
-                        "slider3.path": '/uploads/' + req.files['slider3'][0].filename,
-                    }
-                },
-                { new: true })
-                .then((result) => {
-                    if (result) {
-                        req.flash('success', "Slider has been updated");
-                        res.redirect("/dashboard/slider")
-                    } else {
-                        res.send("error")
-                    }
-                })
-            // res.send("test")
-        }
-    })
-})
-
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
