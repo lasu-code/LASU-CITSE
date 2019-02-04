@@ -7,6 +7,9 @@ const fse = require('fs-extra');
 const async = require('async');
 const crypto = require('crypto');
 const bcrypt = require("bcrypt-nodejs");
+const nodemailer= require('nodemailer');
+const cloudinary = require('cloudinary');
+const cloudinaryStorage = require("multer-storage-cloudinary")
 
 let mailSender = require('../config/mailer');
 let User = require('../models/users');
@@ -15,7 +18,8 @@ let Slider = require('../models/slider');
 let Page = require('../models/page');
 let Contact = require('../models/contact');
 let Settings = require('../models/settings');
-let sponsor = require('../models/sponsor');
+let Sponsor = require('../models/sponsor');
+let Mail = require('../models/contactaddress');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -23,15 +27,34 @@ let n = require('../config/cmsNav');
 global.usrInfo = {};
 let oldImage = '';
 
+//cloudinary Storage
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME, //"dyieekcre"
+  api_key:  process.env.CLOUD_KEY, //"732513327822775"
+  api_secret: process.env.CLOUD_SECRET //"HzlXLGG447c9m92q6a8vhWoiR-c"
+});
+const storage = cloudinaryStorage({
+  cloudinary: cloudinary,
+  folder: "citse",
+  allowedFormats: ["jpg", "png"],
+});
+
+const upload = multer({ storage: storage,
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+});
+
 // HANDLE IMAGES
 // -----
 // Set multer storage config
-const storage = multer.diskStorage({
-    destination: './public/uploads',
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: './public/uploads',
+//     filename: function (req, file, cb) {
+//         cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+//     }
+// })
+
 // Set multer runtime options
 const multerOpts = {
     storage: storage,
@@ -40,6 +63,8 @@ const multerOpts = {
         checkFileType(file, cb);
     }
 }
+
+
 //check file type
 function checkFileType(file, cb) {
     // Allowed ext
@@ -56,7 +81,7 @@ function checkFileType(file, cb) {
     }
 }
 // Multer execute
-const upload = multer(multerOpts);
+// const upload = multer(multerOpts);
 
 
 // AUTH MIDDLEWARE, HELPER FUNCTIONS
@@ -104,12 +129,14 @@ async function getOldSliderImage(req, res, next) {
 }
 
 // remove old uploaded image
-function removeOldImage() {
+async function removeOldImage() {
     if (oldImage) {
-        fse.remove('\public' + oldImage.postImage)
-            .catch(err => {
-                console.error(err)
-            })
+        console.log(oldImage.publicid)
+        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log(result) });
+    //     fse.remove('\public' + oldImage.postImage)
+    //         .catch(err => {
+    //             console.error(err)
+    //         })
     }
 }
 
@@ -243,7 +270,7 @@ router.get('/dashboard', isLoggedIn, function (req, res, next) {
 // -----
 // Admin
 router.get('/dashboard/authorizeadmins', adminLoggedIn, function (req, res, next) {
-    User.find({ }).then((result) => {
+    User.find({}).then((result) => {
         if (result) {
             res.render('backend/authorize', { result })
         } else {
@@ -291,6 +318,26 @@ router.get('/dashboard/settings', adminLoggedIn, function (req, res) {
 
     res.render('backend/settings', { upload, usrInfo, page: "settings" })
 })
+
+//sent contact messages to mails 
+router.post('/postaddress', function (req, res, next) {
+    let newMail = new Mail();
+    newMail.email = req.body.email;
+    console.log(req.body.email)
+    newMail.save().then((result) => {
+        if (result) {
+            console.log(result)
+            res.redirect('/dashboard/settings')
+            req.flash('upload', "Address has been saved successfully");
+        }
+    })
+})
+
+//sent contact messages to mails 
+router.post('/post_contact', function (req, res, next) {
+
+})
+
 
 router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, next) => {
     pageData = {
@@ -425,7 +472,7 @@ router.route('/dashboard/slider/add')
         let upload = req.flash('upload');
         let failure = req.flash('flash');
 
-        res.render('backend/slider-form', {upload, failure, content: {} })
+        res.render('backend/slider-form', { upload, failure, content: {} })
     })
     .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
         removeOldImage();
@@ -435,7 +482,10 @@ router.route('/dashboard/slider/add')
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
             is_active: true,
-            postImage: req.file.path.substring(6)
+        } 
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
         }
 
         Slider.create(pageData)
@@ -446,79 +496,47 @@ router.route('/dashboard/slider/add')
             })
     })
 
-router.post("/uploadslider", function (req, res) {
-    upload(req, res, (err) => {
-        if (err) {
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files);
-            Slider.findOne({ name: "slider" }).then(function (result) {
-                if (result) {
-                    req.flash('failure', "Sorry You can only update sliders not create new ones");
-                    res.redirect("/dashboard/slider");
-                } else if (!result) {
-                    let newSlider = new Slider();
-                    newSlider.slider1.name = req.files['slider1'][0].fieldname;
-                    newSlider.slider1.path = '/uploads/' + req.files['slider1'][0].filename;
-                    newSlider.slider2.name = req.files['slider2'][0].fieldname;
-                    newSlider.slider2.path = '/uploads/' + req.files['slider2'][0].filename;
-                    newSlider.slider3.name = req.files['slider3'][0].fieldname;
-                    newSlider.slider3.path = '/uploads/' + req.files['slider3'][0].filename;
-                    newSlider.name = "slider";
+    router.get('/dashboard/slider/edit/:id', function(req, res, next){
+        let upload = req.flash('upload');
+        let failure = req.flash('flash');
+        let id = req.params.id;
+        console.log(id);
 
-                    newSlider.save().then((result) => {
-                        if (result) {
-                            console.log(result)
-                            req.flash('uploaded', "Slider has been uploaded successfully");
-                            res.redirect("/dashboard/slider");
-                        } else {
-                            res.send("err")
-                        }
-                    })
+        res.render('backend/editslider', { upload, failure, id, content: {} })
+    })
+    
+ router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
+        console.log(req.file.secure_url)
+        console.log(req.file.public_id)
+        
+        let idd = req.params.id;
+        let oldSliderImage = await Slider.findOne({_id: idd});
 
-                    // console.log("sorry cannot save new data")
-                }
-                // res.send("test")
+        (function removeSliderOldImage() {
+            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
+        })()
+
+        console.log(idd)
+        sliderData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_active: true,
+            
+        }
+        if (req.file) {
+            sliderData.postImage = req.file.secure_url;
+            sliderData.publicid = req.file.public_id;
+        }
+
+        Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
+            .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
+            .then(() => {
+                req.flash('upload', "Slider has been updated successfully");
+                res.redirect("/dashboard/slider");
             })
-        }
     })
-})
-
-router.put("/update/uploadslider", function (req, res) {
-
-    upload(req, res, (err) => {
-        if (err) {
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files);
-            Slider.findOneAndUpdate(
-                { "name": "slider" },
-                {
-                    $set: {
-                        "slider1.name": req.files['slider1'][0].fieldname,
-                        "slider1.path": '/uploads/' + req.files['slider1'][0].filename,
-                        "slider2.name": req.files['slider2'][0].fieldname,
-                        "slider2.path": '/uploads/' + req.files['slider2'][0].filename,
-                        "slider3.name": req.files['slider3'][0].fieldname,
-                        "slider3.path": '/uploads/' + req.files['slider3'][0].filename,
-                    }
-                },
-                { new: true })
-                .then((result) => {
-                    if (result) {
-                        req.flash('success', "Slider has been updated");
-                        res.redirect("/dashboard/slider")
-                    } else {
-                        res.send("error")
-                    }
-                })
-            // res.send("test")
-        }
-    })
-})
-
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
@@ -534,15 +552,9 @@ router.get('/dashboard/news', function (req, res, next) {
     })
 })
 
-router.post("/handlenews", function (req, res, next) {
+router.post("/handlenews", upload.single('newImg'),  function (req, res, next) {
 
-    upload(req, res, (err) => {
-        if (err) {
-
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files)
+            console.log(req.file)
 
             let newNews = new News();
 
@@ -550,7 +562,7 @@ router.post("/handlenews", function (req, res, next) {
             newNews.writer = req.body.writer;
             newNews.department = req.body.department;
             newNews.content = req.body.content;
-            newNews.newImg = '/uploads/' + req.files["newImg"][0].filename;
+            newNews.newImg = req.file.secure_url;
 
             newNews.save().then((result) => {
                 if (result) {
@@ -561,9 +573,7 @@ router.post("/handlenews", function (req, res, next) {
                     res.send("err")
                 }
             })
-        }
-    })
-})
+        })
 
 // -----
 // Staff    -   NOT USED
@@ -576,11 +586,11 @@ router.get('/dashboard/staffs', function (req, res, next) {
 router.get('/dashboard/adminSettings', function (req, res, next) {
     let success = req.flash('succes');
     let failure = req.flash('failure')
-    res.render('backend/adminSettings', {success, failure, email: req.user.email})
+    res.render('backend/adminSettings', { success, failure, email: req.user.email })
 })
 
 router.put('/dashboard/adminSettings/email', function (req, res, next) {
-    if (req.body.dbEmail == req.user.email ) {
+    if (req.body.dbEmail == req.user.email) {
         User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newEmail })
             .exec()
             .then(() => {
@@ -590,7 +600,7 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
                 console.log(err);
             })
     }
-    else{
+    else {
         req.flash('info', "Incorrect Email!");
         res.redirect('/dashboard/adminSettings');
     }
@@ -666,7 +676,7 @@ router.post('/poststaff', function (req, res, next) {
 
                     newPage.name = req.body.name;
                     newPage.content = req.body.content;
-                    newPage.newImg = '/uploads/' + req.files["newImg"][0].filename;
+                    newPage.newImg = req.file.secure_url;
 
                     newPage.save().then((result) => {
                         if (result) {
@@ -696,7 +706,7 @@ router.route('/dashboard/contact-us')
         let failure = req.flash('failure');
         Contact.find({})
             .then((data) => {
-                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', activeParent: 'about' })
+                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', usrInfo, activeParent: 'about' })
             })
             .catch((err) => {
                 console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
@@ -735,7 +745,6 @@ router.route('/dashboard/:tag')
         let failure = req.flash('failure');
         let page_tag = req.params.tag.trim();
         let page_obj = n[page_tag.replace(/(-)+/gi, '_')];
-
         Page.findOne({ tag: page_tag })
             .then((content) => {
                 res.render('backend/template-one', { upload, failure, req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo })
@@ -745,7 +754,9 @@ router.route('/dashboard/:tag')
             })
     })
     .post(getOldImage, upload.single('postImage'), (req, res, next) => {
-
+        console.log(req.file.secure_url)
+        console.log(req.file.public_id)
+        
         removeOldImage();
 
         let page_tag = req.params.tag.trim();
@@ -760,7 +771,8 @@ router.route('/dashboard/:tag')
             is_active: true
         }
         if (req.file) {
-            pageData.postImage = req.file.path.substring(6)
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
         }
 
         Page.findOneAndUpdate({ tag: page_tag }, pageData, { upsert: true })
@@ -772,12 +784,13 @@ router.route('/dashboard/:tag')
     })
 
 
+
 // WEBSITE ROUTES
 // -----
 router.get('/', controller.homePage);
 router.get('/services', controller.servicesPage);
 router.get('/contact', controller.contactPage);
-router.post('/post_contact', controller.post_contactPage);
+router.post('/post-contact', controller.post_contactPage);
 router.get('/team', controller.teamPage);
 router.get('/news-lists/:id', controller.newsPage);
 router.get('/news-lists', controller.newsListsPage);

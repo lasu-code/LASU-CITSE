@@ -13,6 +13,8 @@ let sliderSchema = new Schema({
 
     img_link_text: {type: String},
 
+    publicid: {type: String},
+
     is_visible: {
         type: Boolean,
         default: true

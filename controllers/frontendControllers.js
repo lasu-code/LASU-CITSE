@@ -4,6 +4,7 @@ let News = require('../models/news');
 let Page = require('../models/page');
 let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
+let Mail = require('../models/contactaddress')
 
 let mailSender = require('../config/mailer');
 let f = require('../config/frontNav');
@@ -116,8 +117,8 @@ exports.teamPage = function (req, res, next) {
     })
 };
 
-exports.post_contactPage =(req, res, next)=>{
-    let messageData = {
+exports.post_contactPage = async function (req, res, next) {
+let messageData = {
         name: req.body.name,
         email: req.body.email,
         subject: req.body.subject,
@@ -125,23 +126,25 @@ exports.post_contactPage =(req, res, next)=>{
 
     }
     let newData = new message(messageData);
-    newData.save();
-
-    let mailOptions = {
-        from: req.body.email,
-        to: 'lasu.aceitse@gmail.com',
-        subject: 'LASU CITSE CONTACT',
-        text: req.body.message
-    };
-    mailSender(mailOptions)
-        .catch((err) => {
-            return next(err);
-        })
-        .then(() => {
-            req.flash('success', 'Your message have been sent!');
-        })
-
-    res.redirect('/contact')
+    newData.save();    
+let result = await Mail.find({})
+    let address = result.map((val, index, arr) => val.email);
+   
+    (function sendMail() {
+        const mailOptions = {
+            to: address,
+            subject: req.body.subject,
+            text: req.body.message
+        };
+        
+        smtpTransport.sendMail(mailOptions, function (err) {
+            console.log('An e-mail has been sent to  with further instructions.');
+            
+        });
+            
+    })();
+           
+    res.redirect('/contact');
 }
 
 exports.subscribe = function (req, res, next){
