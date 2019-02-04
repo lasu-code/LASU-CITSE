@@ -540,11 +540,12 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
 })
 
 router.put('/dashboard/adminSettings/password', function (req, res, next) {
-    bcrypt.compare(req.body.dbPass, req.user.password, function (req, res, err) {
+    bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
         if (err) {
             console.log(err)
+            res.redirect('/dashboard/adminSettings');
         }
-        if (res) {
+        else{
             User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
@@ -554,38 +555,30 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
                     console.log(err);
                 })
         }
-        else {
-            console.log('unmatch');
-            res.redirect('/dashboard/adminSettings');
-
-        }
+        
     });
 })
 
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
-    
-    bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
+    bcrypt.compare(req.body.password, req.user.password, function (err, usr) {
         if (err) {
             console.log(err)
-        }
-        if (res){
-            User.findByIdAndRemove({ _id: req.user._id })
+            res.redirect('/dashboard/adminSettings');
+        } else {
+            User.findByIdAndRemove(req.user._id)
                 .exec()
                 .then(() => {
+                    console.log('deleted')
                     res.redirect('/login');
                 })
                 .catch((err) => {
                     console.log(err);
+                    res.redirect('/dashboard/adminSettings');
                 })
-        }
-        else {
-            console.log('unmatch');
-            res.redirect('/dashboard/adminSettings');
-            
-        }
-    });
 
+        }   
+    })
 })
 
 router.post('/poststaff', function (req, res, next) {
