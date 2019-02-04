@@ -5,35 +5,25 @@
             <h5>Latest News</h5>
             <div class="widget-blog-post">
                 <!-- Single Blog Post -->
-                <div class="widget-single-blog-post d-flex align-items-center">
-                    <div class="widget-post-thumbnail pr-3">
-                        <img src="img/class.jpg" alt="">
-                    </div>
-                    <div class="widget-post-content">
-                        <a href="#">A big discovery for medicine</a>
-                        <p>Dec 02, 2017</p>
-                    </div>
-                </div>
-                <!-- Single Blog Post -->
-                <div class="widget-single-blog-post d-flex align-items-center">
-                    <div class="widget-post-thumbnail pr-3">
-                        <img src="img/g2.jpg" alt="">
-                    </div>
-                    <div class="widget-post-content">
-                        <a href="#">Dentistry for everybody</a>
-                        <p>Dec 02, 2017</p>
-                    </div>
-                </div>
-                <!-- Single Blog Post -->
-                <div class="widget-single-blog-post d-flex align-items-center">
-                    <div class="widget-post-thumbnail pr-3">
-                        <img src="img/class.jpg" alt="">
-                    </div>
-                    <div class="widget-post-content">
-                        <a href="#">When it’s time to take pills</a>
-                        <p>Dec 02, 2017</p>
-                    </div>
-                </div>
+                <% if (doc.length < 1) { %>
+                <h2>No Latest News</h2>
+                <%} else { %>
+                    <% for (var i = 0; i < doc.length; i++) { %>
+                    <a href="/news-lists/<%= doc[i]._id%>">
+                        <div class="widget-single-blog-post d-flex align-items-center">
+                            <div class="widget-post-thumbnail pr-3">
+                                <img src="<%= doc[i].newImg %>" alt="">
+                            </div>
+                            <div class="widget-post-content">
+                                <a href="#"><%= doc[i].title %></a>
+                                <p><%= doc[i].createdDate %></p>
+                            </div>
+                        </div>
+                    </a>
+                    
+                    <% } %>
+                <%} %>
+                
             </div>
         </div>
     </div>
