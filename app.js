@@ -14,6 +14,48 @@ const multer =require("multer");
 // const methodOverride = require("method-override");
 const nodemailer = require("nodemailer")
 
+
+const Email = require('email-templates');
+ 
+const email = new Email({
+  message: {
+    from: 'me@mail.com'
+  },
+  // uncomment below to send emails in development/test env:
+  send: true,
+  transport: {
+    jsonTransport: true,
+    service: "gmail",
+        secure: false,
+        port: 25,
+        auth: {
+          user: "phawazzzy@gmail.com",
+          pass: process.env.Password
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+  },
+  views: {
+    options: {
+      extension: 'ejs' // <---- HERE
+    }
+  }
+});
+ 
+email
+  .send({
+    template: 'emailToSend',
+    message: {
+      to: 'phawazzzy@gmail.com'
+    },
+    locals: {
+      name: 'fawas'
+    }
+  })
+  .then(console.log)
+  .catch(console.error);
+
 var username = 'phawazzzy';
 var name = 'kareem fawas olamilkan';
 

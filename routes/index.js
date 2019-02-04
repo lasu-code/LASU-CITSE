@@ -5,25 +5,56 @@ const passport = require("passport");
 const multer =require("multer");
 // const methodOverride = require("method-override");
 let subscribe = require('../models/subscribe')
-var mail = require('../mailTemplate');
-
-var receiver = 'fawas.kareem170115028@st.lasu.edu.ng';
-var username = 'phawazzzy';
-var name = 'kareem fawas olamilkan';
-let button = mail.sendPasswordReset(receiver, username, name);
-
-
-
-
 let User = require('../models/users');
 let News = require('../models/news');
 let Slider = require('../models/slider');
 let Page = require('../models/page');
 let Contact = require('../models/contact');
-
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
 let n = require('../config/cmsNav');
+const nodemailer = require('nodemailer'),
+    transporter = nodemailer.createTransport({
+            service: "gmail",
+            secure: false,
+            port: 25,
+            auth: {
+              user: "phawazzzy@gmail.com",
+              pass: process.env.Password
+            },
+            tls: {
+              rejectUnauthorized: false
+            }
+    })
+//     const Email = require('email-templates');
+ 
+// const email = new Email({
+//   message: {
+//     from: 'me@mail.com'
+//   },
+//   // uncomment below to send emails in development/test env:
+//   send: true,
+//   transport: {
+//     jsonTransport: true
+//   }
+// });
+ 
+// email
+//   .send({
+//     template: '../../emailToSend',
+//     message: {
+//       to: 'phawazzzy@gmail.com'
+//     },
+//     locals: {
+//       name: 'fawas'
+//     }
+//   })
+//   .then(console.log)
+//   .catch(console.error);
+
+
+
+
 
 
 // HANDLE IMAGES

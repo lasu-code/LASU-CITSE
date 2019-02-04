@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.2.1",
     "ckeditor": "^4.11.1",
