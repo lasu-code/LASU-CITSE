@@ -141,7 +141,10 @@ router.get('/logout', function (req, res, next) {
 })
 
 router.get('/dashboard', isLoggedIn, function (req, res, next) {
-    res.render('backend/dashboard');
+    let success = req.flash('success');
+    let error = req.flash('error')
+
+    res.render('backend/dashboard', {success, error});
 });
 
 // -----
@@ -517,9 +520,9 @@ router.get('/dashboard/staffs', function (req, res, next) {
 })
 
 router.get('/dashboard/adminSettings', function (req, res, next) {
-    let success = req.flash('succes');
-    let failure = req.flash('failure')
-    res.render('backend/adminSettings', {success, failure, email: req.user.email})
+    let success = req.flash('success');
+    let error = req.flash('error')
+    res.render('backend/adminSettings', {success, error,  email: req.user.email})
 })
 
 router.put('/dashboard/adminSettings/email', function (req, res, next) {
@@ -527,6 +530,7 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
         User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newEmail })
             .exec()
             .then(() => {
+                req.flash('success', 'Email Successfully changed')
                 res.redirect('/dashboard');
             })
             .catch((err) => {
@@ -534,21 +538,23 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
             })
     }
     else{
-        req.flash('info', "Incorrect Email!");
+        req.flash('error', "Incorrect Email!");
         res.redirect('/dashboard/adminSettings');
     }
 })
 
 router.put('/dashboard/adminSettings/password', function (req, res, next) {
     bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
-        if (err) {
-            console.log(err)
+        if (!usr) {
+            
+            req.flash('error', 'Incorrect password')
             res.redirect('/dashboard/adminSettings');
         }
         else{
             User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
+                    req.flash('success', 'Password Successfully changed')
                     res.redirect('/dashboard');
                 })
                 .catch((err) => {
@@ -570,6 +576,7 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
                 .exec()
                 .then(() => {
                     console.log('deleted')
+                    
                     res.redirect('/login');
                 })
                 .catch((err) => {
