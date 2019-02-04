@@ -2,13 +2,12 @@ let message = require('../models/message')
 let Slider = require('../models/slider');
 let News = require('../models/news');
 let Page = require('../models/page');
-let nodemailer= require('nodemailer')
-let keys = require('../config/keys.js')
 let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
 
-
+let mailSender = require('../config/mailer');
 let f = require('../config/frontNav');
+
 let allNews = News.find({});
 
 exports.homePage = function (req, res, next) {
@@ -126,70 +125,23 @@ exports.post_contactPage =(req, res, next)=>{
 
     }
     let newData = new message(messageData);
-    newData.save()
-    Page.find({name: "contactus"}).then((file)=>{
-        if (file){
-            News.find({}).then((doc)=>{
-                if(doc){
-                    res.render('frontend/contact', {file, doc, activeNav: 'about'});
-                }
-            })
-        }else{
-            res.render('frontend/contact');
-        }
-    })
+    newData.save();
 
-    // res.render('frontend/contact', {activeNav: 'about'})
-    let Transport = nodemailer.createTransport({
-        service: "gmail",
-        secure: false,
-        port: 25,
-        auth: {
-          user: "phawazzzy@gmail.com",
-          pass: keys.keys.password
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-
-      // let Transport = nodemailer.createTransport({
-      //   host: "smtp.mailtrap.io",
-      //   port: 2525,
-      //   auth: {
-      //     user: "f95012fff7abb4",
-      //     pass: "01752e418f9181"
-      //   }
-      // });
-
-      //sending email with SMTP, configuration using SMTP settings
-      let mailOptions = {
-        from: "LASU ACEITSE - <lasu_citse@gmail.com>", //sender adress
-        // to: req.body.userMail,
-        to: 'phawazzzy@gmail.com',
-
-        subject: "LASU CITSE",
-        html: req.body.message
-      };
-
-      Transport.sendMail(mailOptions, (error, info)=>{
-        if (error) {
-          console.log(error);
-          console.log(mailOptions.html);
-
-          //res.send("email could not send due to error:" + error);
-        } else {
-          console.log(info);
-          console.log(mailOptions.html);
-
-          // res.send("email has been sent successfully");
-        }
-        res.redirect("/contact")
-      });
+    let mailOptions = {
+        from: req.body.email,
+        to: 'lasu.aceitse@gmail.com',
+        subject: 'LASU CITSE CONTACT',
+        text: req.body.message
+    };
+    mailSender(mailOptions)
+        .catch((err) => {
+            return next(err);
+        })
+        .then(() => {
+            req.flash('success', 'Your message have been sent!');
+        })
 
     res.redirect('/contact')
-
-
 }
 
 exports.subscribe = function (req, res, next){

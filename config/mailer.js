@@ -6,7 +6,7 @@ let smtpTransport = nodemailer.createTransport({
     port: process.env.MAIL_PORT || 25,
     auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PWD || keys.keys.password
+        pass: process.env.MAIL_PWD
     },
     // tls: {
     //     rejectUnauthorized: false
