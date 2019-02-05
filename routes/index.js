@@ -15,6 +15,7 @@ let Slider = require('../models/slider');
 let Page = require('../models/page');
 let Contact = require('../models/contact');
 let Settings = require('../models/settings');
+let sponsor = require('../models/sponsor');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -310,6 +311,66 @@ router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, nex
 
 router.post('/reply', mailController.reply);
 
+//sponsors
+//----
+router.route('/dashboard/sponsors')
+    .all(isLoggedIn)
+    .get(function (req, res, next) {
+        let failure = req.flash('failure');
+        let success = req.flash('success');
+        let uploaded = req.flash('uploaded');
+
+        sponsor.find({}).then((result) => {
+            if (result) {
+                res.render('backend/sponsors', { result, failure, success, uploaded })
+            } else {
+                res.render('backend/sponsors')
+            }
+        })
+    })
+
+router.route('/dashboard/sponsors/add')
+    .all( adminLoggedIn) 
+    .get ((req, res, next)=>{
+        let upload = req.flash('upload');
+        let failure = req.flash('failure');
+        res.render("backend/sponsors-form", {upload, failure})
+})
+//sponsors Ends here
+// Vc Speech
+//------
+
+router.route('/dashboard/speech')
+    .all(isLoggedIn, function (req, res, next) {
+        oldImage = null
+        return next()
+    })
+    .get(function (req, res, next) {
+        let upload = req.flash('upload');
+        let failure = req.flash('failure');
+
+        res.render('backend/speech', {upload, failure, content: {} })
+    })
+    .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
+        removeOldImage();
+        pageData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_active: true,
+            postImage: req.file.path.substring(6)
+        }
+
+        Slider.create(pageData)
+            .catch((err) => { console.error(`Error occured during POST(/dashboard/speech): ${err}`); })
+            .then(() => {
+                req.flash('upload', `VC's speech Creation Successful!`);
+                res.redirect('/dashboard/speech');
+            })
+    })
+
+
 // -----
 // Slider
 router.route('/dashboard/slider')
@@ -508,32 +569,52 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
     }
 })
 
+router.put('/dashboard/adminSettings/password', function (req, res, next) {
+    bcrypt.compare(req.body.dbPass, req.user.password, function (req, res, err) {
+        if (err) {
+            console.log(err)
+        }
+        if (res) {
+            User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newPass })
+                .exec()
+                .then(() => {
+                    res.redirect('/dashboard');
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+        else {
+            console.log('unmatch');
+            res.redirect('/dashboard/adminSettings');
+
+        }
+    });
+})
+
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
-    User.findByIdAndRemove({ _id: req.user._id })
-        .exec()
-        .then(() => {
-            res.redirect('/login');
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    // let pwd = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10))
-    // if (pwd == req.user.password) {
-    //     User.deleteOne({ _id: req.user._id }).then((result) => {
-    //         if (result) {
-    //             if (result) {
-    //                 res.redirect('/login')
-    //             } else {
-    //                 console.log('err')
-    //             }
-    //         }
-    //     })
-    // }
-    // else{
-    //     console.log('error')
-    //     res.redirect('/dashboard/adminSettings')
-    // }
+    
+    bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
+        if (err) {
+            console.log(err)
+        }
+        if (res){
+            User.findByIdAndRemove({ _id: req.user._id })
+                .exec()
+                .then(() => {
+                    res.redirect('/login');
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+        else {
+            console.log('unmatch');
+            res.redirect('/dashboard/adminSettings');
+            
+        }
+    });
 
 })
 
