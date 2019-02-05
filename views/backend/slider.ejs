@@ -38,7 +38,11 @@
                                 <div class="card p-3 mb-2 justify-content-middle">
                                     <img src="<%= result[i].postImage %>" alt="image" width="100%" height="100%">
                                 </div>
-                                <a href="/dashboard/slider/edit/<%= result[i]._id %>">Edit Image</a>
+                                <a class="btn btn-primary" href="/dashboard/slider/edit/<%= result[i]._id %>">edit slider</a>
+                                <form action="/dashboard/slider/delete/<%= result[i]._id %>?_method=DELETE" method="POST">
+                                <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                <input type="submit" class="btn btn-danger" value="delete slider">
+                                </form>
                             </div>
                         <% }%>
                         </div>

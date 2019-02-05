@@ -9,7 +9,8 @@ const crypto = require('crypto');
 const bcrypt = require("bcrypt-nodejs");
 const nodemailer= require('nodemailer');
 const cloudinary = require('cloudinary');
-const cloudinaryStorage = require("multer-storage-cloudinary")
+const cloudinaryStorage = require("multer-storage-cloudinary");
+var methodOverride = require('method-override');
 
 let mailSender = require('../config/mailer');
 let User = require('../models/users');
@@ -450,6 +451,29 @@ router.route('/dashboard/slider/add')
                 res.redirect("/dashboard/slider");
             })
     })
+
+    //delete Slider
+router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
+    let idd = req.params.id;
+    let oldSliderImage = await Slider.findOne({_id: idd});
+
+        (function removeSliderOldImage() {
+            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
+        })()
+
+    Slider.deleteOne({ _id: req.body.id }).then((result) => {
+        if (result) {
+            if (result) {
+                console.log(result)
+                res.redirect('/dashboard/slider')
+            } else {
+                console.log('err')
+            }
+        }
+    })
+
+})
+
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
