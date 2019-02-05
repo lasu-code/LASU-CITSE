@@ -464,7 +464,6 @@ router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
     Slider.deleteOne({ _id: req.body.id }).then((result) => {
         if (result) {
             if (result) {
-                console.log(result)
                 res.redirect('/dashboard/slider')
             } else {
                 console.log('err')
