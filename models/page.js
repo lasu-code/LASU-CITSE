@@ -30,6 +30,9 @@ let PageSchema = new Schema({
         type: Boolean,
         default: true
     },
+    publicid: {
+        type: String
+    },
     createdDate: {
         type: Date,
         default: Date.now

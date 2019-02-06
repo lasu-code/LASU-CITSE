@@ -1,17 +1,16 @@
-const keys = require("../config/keys");
 const nodemailer = require('nodemailer');
 
 let smtpTransport = nodemailer.createTransport({
-    host: process.env.MAIL_HOST,
-    // secure: process.env.MAIL_SECURITY || false,
-    port: process.env.MAIL_PORT || 25,
+    host: process.env.MAIL_HOST || "smtp.gmail.com",
+    secure: process.env.MAIL_SECURITY || false,
+    port: process.env.MAIL_PORT || 465,
     auth: {
         user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PWD || keys.keys.password
+        pass: process.env.MAIL_PWD
     },
-    // tls: {
-    //     rejectUnauthorized: false
-    // }
+    tls: {
+        rejectUnauthorized: false
+    }
 });
 
 let mailOptions = {
