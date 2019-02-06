@@ -8,7 +8,8 @@ const async = require('async');
 const crypto = require('crypto');
 const bcrypt = require("bcrypt-nodejs");
 const cloudinary = require('cloudinary');
-const cloudinaryStorage = require("multer-storage-cloudinary")
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const methodOverride = require('method-override');
 
 let mailSender = require('../config/mailer');
 let User = require('../models/users');
@@ -522,7 +523,6 @@ router.route('/dashboard/slider/add')
                 res.redirect("/dashboard/slider");
             })
     })
-
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
