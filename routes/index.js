@@ -19,6 +19,7 @@ let Contact = require('../models/contact');
 let Settings = require('../models/settings');
 let Mail = require('../models/contactaddress');
 let Sponsor = require('../models/sponsor');
+let Speech = require('../models/speech');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -474,37 +475,40 @@ router.route('/dashboard/leaders/add')
 //-----
 // Vc Speech
 //------
-
-router.route('/dashboard/speech')
-    .all(isLoggedIn, function (req, res, next) {
-        oldImage = null
-        return next()
-    })
-    .get(function (req, res, next) {
-        let upload = req.flash('upload');
+router.get('/dashboard/speech', isLoggedIn, function(req, res, next){
+     let upload = req.flash('upload');
         let failure = req.flash('failure');
 
-        res.render('backend/speech', {upload, failure, content: {} })
-    })
-    .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
-        removeOldImage();
-        pageData = {
-            name: req.body.name,
-            text_on_img: req.body.text_on_img,
-            img_link: req.body.img_link,
-            img_link_text: req.body.img_link_text,
-            is_active: true,
-            postImage: req.file.path.substring(6)
+    Speech.findOne({const: "VC"}).then((result)=>{
+            res.render('backend/speech', {upload, failure, content: {}, result })  
+    })        
+})
+
+router.post('/dashboard/speech', upload.single('postImage'), async function(req, res, next){
+        let oldSpeechImage = await Speech.findOne({const: "VC"});
+
+        (function removeSpeechOldImage() {
+            cloudinary.uploader.destroy( oldSpeechImage.publicid, function(result) { console.log(result) });
+        })()
+    let speechData = {
+        name: req.body.name,
+        text_on_img: req.body.text_on_img,
+        const: "VC"
+    }
+
+    if (req.file) {
+            speechData.postImage = req.file.secure_url;
+            speechData.publicid = req.file.public_id;
         }
 
-        Slider.create(pageData)
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/speech): ${err}`); })
-            .then(() => {
-                req.flash('upload', `VC's speech Creation Successful!`);
-                res.redirect('/dashboard/speech');
+    Speech.findOneAndUpdate({const: "VC"  }, speechData, { upsert: true })
+            .catch((err) => { console.error("Error occured during POST /dashboad/speech") })
+            .then((result) => {
+                console.log(result)
+                req.flash('upload', "VC Speech has been updated successfully");
+                res.redirect("/dashboard/speech");
             })
-    })
-
+})
 
 // -----
 // Slider

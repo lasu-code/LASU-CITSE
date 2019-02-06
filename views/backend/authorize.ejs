@@ -68,7 +68,7 @@
                     <td><%= result[i].email %></td>
                     <td><%= result[i].position %></td>
                     <td>
-                      <form action="/deleteadmin" method="POST">
+                      <form action="/deleteadmin?_method=DELETE" method="POST">
                         <input type="hidden" name="id" value="<%=result[i]._id%>">
                         <button type="submit" class="btn btn-dark">Delete</button>
                       </form>
