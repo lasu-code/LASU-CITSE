@@ -18,7 +18,7 @@ let Page = require('../models/page');
 let Contact = require('../models/contact');
 let Settings = require('../models/settings');
 let Mail = require('../models/contactaddress');
-let sponsor = require('../models/sponsor');
+let Sponsor = require('../models/sponsor');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -352,7 +352,7 @@ router.route('/dashboard/sponsors')
         let success = req.flash('success');
         let uploaded = req.flash('uploaded');
 
-        sponsor.find({}).then((result) => {
+        Sponsor.find({}).then((result) => {
             if (result) {
                 res.render('backend/sponsors', { result, failure, success, uploaded })
             } else {
@@ -360,15 +360,89 @@ router.route('/dashboard/sponsors')
             }
         })
     })
-
-router.route('/dashboard/sponsors/add')
-    .all( adminLoggedIn)
-    .get ((req, res, next)=>{
-        let upload = req.flash('upload');
+      
+router.get('/dashboard/sponsors/add', isLoggedIn, function(req, res, next){
+     let upload = req.flash('upload');
         let failure = req.flash('failure');
         res.render("backend/sponsors-form", {upload, failure})
 })
 
+router.post('/dasboard/sponsor/add', upload.single('postImage'), function(req, res, next){
+    pageData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+             }
+
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        Sponsor.create(pageData)
+            .catch((err) => { console.error(`Error occured during POST(/dashboard/sponsors): ${err}`); })
+            .then((result) => {
+                console.log(result)
+                req.flash('upload', `Sponsor Creation Successful!`);
+                res.redirect('/dashboard/sponsors');
+            })    
+})
+
+    router.get('/dashboard/sponsor/edit/:id', function(req, res, next){
+        let upload = req.flash('upload');
+        let failure = req.flash('flash');
+        let id = req.params.id;
+        console.log(id);
+
+        res.render('backend/editSponsor', { upload, failure, id, content: {} })
+    })
+
+ router.post('/dashboad/sponsor/edit/:id', upload.single('postImage'), async function(req, res, next){
+
+        let idd = req.params.id;
+        let oldSponsorImage = await Sponsor.findOne({_id: idd});
+
+        (function removeSponsorOldImage() {
+            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
+        })()
+
+        sponsorData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            
+        }
+        if (req.file) {
+            sponsorData.postImage = req.file.secure_url;
+            sponsorData.publicid = req.file.public_id;
+        }
+
+        Sponsor.findOneAndUpdate({_id: idd  }, sponsorData, { upsert: true })
+            .catch((err) => { console.error("Error occured during POST /dashboad/sponsor/edit/:id") })
+            .then(() => {
+                req.flash('upload', "Sponsor has been updated successfully");
+                res.redirect("/dashboard/sponsors");
+            })
+    })
+
+      //delete Sponsor
+router.delete('/dashboard/sponsor/delete/:id', async function (req, res, next) {
+    let idd = req.params.id;
+    let oldSponsorImage = await Sponsor.findOne({_id: idd});
+
+        (function removeSponsorOldImage() {
+            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
+        })()
+
+        Sponsor.deleteOne({ _id: req.body.id }).then((result) => {
+        if (result) {
+            if (result) {
+                res.redirect('/dashboard/sponsors')
+            } else {
+                console.log('err')
+            }
+        }
+    })
+
+})
 //sponsors ends here
 
 //centre leaders
@@ -521,6 +595,27 @@ router.route('/dashboard/slider/add')
                 res.redirect("/dashboard/slider");
             })
     })
+
+      //delete Slider
+router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
+    let idd = req.params.id;
+    let oldSliderImage = await Slider.findOne({_id: idd});
+
+        (function removeSliderOldImage() {
+            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
+        })()
+
+    Slider.deleteOne({ _id: req.body.id }).then((result) => {
+        if (result) {
+            if (result) {
+                res.redirect('/dashboard/slider')
+            } else {
+                console.log('err')
+            }
+        }
+    })
+
+})
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {

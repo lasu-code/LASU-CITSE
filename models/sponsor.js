@@ -1,6 +1,6 @@
-let mongoose = require('mongoose');
+let mongoose = require("mongoose");
 
-let Schema= mongoose.Schema;
+let Schema = mongoose.Schema;
 
 let sponsorSchema = new Schema({
     name: { type: String },
@@ -9,10 +9,8 @@ let sponsorSchema = new Schema({
 
     text_on_img: {type: String},
 
-    CreatedDate: {
-        type: Date,
-        default: Date.now,
-    },
-});
+    publicid: {type: String},
 
-module.exports = mongoose.model("sponsor", {sponsorSchema})
+})
+
+module.exports = mongoose.model("Sponsor", sponsorSchema)
