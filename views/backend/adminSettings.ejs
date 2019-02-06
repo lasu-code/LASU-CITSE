@@ -61,7 +61,7 @@
                                     <h4 class="modal-title">Confirm Email Change</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <h3>Are you Sure you wanna change your email?</h3>
+                                    <h3>Are you Sure you want to change your email?</h3>
                                     <form action="/dashboard/adminSettings/email?_method=PUT" method="post">
                                         <input type="hidden" id="newEmail" name="newEmail">
                                         <input type="hidden" id="dbEmail" name="dbEmail" value="<%= email%>">
@@ -110,10 +110,10 @@
                                     <h4 class="modal-title">Confirm Passowrd Change</h4>
                                 </div>
                                 <div class="modal-body">
-                                    <h3>Are you Sure you wanna change your Password?</h3>
+                                    <h3>Are you Sure you want to change your Password?</h3>
                                     <form action="/settings/edit/password?_method=PUT" method="post">
                                         <input type="hidden" id="newPass" name="newPass">
-                                        <input type="hidden" id="dbPass" name="dbPass" value="">
+                                        <input type="hidden" id="dbPass" name="dbPass" >
                                         <button class="btn btn-success">Yes</button>
                                         <button class="btn btn-danger" data-dismiss="modal">No</button>
                                     </form>
@@ -130,10 +130,11 @@
                     <form action="/dashboard/adminSettings/delete?_method=DELETE" method="post">
                         <div class="form-group col-sm-offset-1 col-sm-4">
                             <label for="comment">Leave a comment:</label>
-                            <textarea class="form-control" rows="5" id="comment"></textarea><br>
+                            <textarea class="form-control" rows="5" id="comment" ></textarea><br>
                             <label for="comment">Password:</label>
-                            <input type="password" class="form-control" placeholder="Enter password">
+                            <input type="password" class="form-control" placeholder="Enter password" name="password" id="password" onclick="deleteAcc()">
                         </div>
+                        <p id="msgD" style="color:red"> </p>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
                                 <button type="submit" class="btn btn-primary"><Span class="fa fa-trash"></Span> Delete account</button>
@@ -141,11 +142,28 @@
                         </div>
                     </form>
                 </div>
+
+
                 
                 
 
                 
                 <br> <br>
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
+                            aria-controls="nav-home" aria-selected="true">Home</a>
+                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+                            aria-controls="nav-profile" aria-selected="false">Profile</a>
+                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab"
+                            aria-controls="nav-contact" aria-selected="false">Contact</a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>
+                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
+                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
+                </div>
             </main>
         </div>
     </div>
@@ -165,6 +183,30 @@
                     document.getElementById('newEmail').value = document.getElementById('email2').value;
                     $('#emailModal').modal('show');
                 }
+        }
+
+        function passwordCheck() {
+                if (document.getElementById('pass1').value == '' || document.getElementById('pass2').value == '' || document.getElementById('pass3').value == '') {
+                    document.getElementById('msg2').innerHTML = 'Empty fields';
+                }
+                else if (document.getElementById('pass2').value !== document.getElementById('pass3').value) {
+                    document.getElementById('msg2').innerHTML = 'Password Mismatch';
+                }
+                else {
+                    document.getElementById('newPass').value = document.getElementById('pass2').value;
+                    document.getElementById('dbPass').value = document.getElementById('pass1').value;
+                    $('#passwordModal').modal('show');
+                }
+            }
+
+        function deleteAcc() {
+            if (document.getElementById('comment').value == '') {
+                document.getElementById('msgD').innerHTML = 'Leave a comment';
+            }
+            else{
+                document.getElementById('msgD').innerHTML = '';
+            }
+
         }
 
         openCity("email")

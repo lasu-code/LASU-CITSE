@@ -110,7 +110,7 @@ exports.teamPage = function (req, res, next) {
 
     News.find({}).then((doc)=>{
         if (doc){
-            res.render('frontend/team', {doc});
+            res.render('frontend/team', { doc, activeNav: 'management' });
             console.log(doc)
         }else{
             res.render('frontend/team', {});
