@@ -189,19 +189,9 @@
             }
 
         }
-
-        openCity("email")
-        function openCity(cityName) {
-            var i;
-            var x = document.getElementsByClassName("city");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            document.getElementById(cityName).style.display = "block";
-        }
-
     </script>
     <%- include('../partials/dashboard-scripts') %>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         if ("<%-success%>") {
             swal({

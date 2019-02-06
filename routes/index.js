@@ -538,7 +538,7 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
             })
     }
     else{
-        req.flash('error', "Incorrect Email!");
+        req.flash('info', "Incorrect Email!");
         res.redirect('/dashboard/adminSettings');
     }
 })
@@ -546,7 +546,7 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
 router.put('/dashboard/adminSettings/password', function (req, res, next) {
     bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
         if (!usr) {
-            
+            console.log(err)
             req.flash('error', 'Incorrect password')
             res.redirect('/dashboard/adminSettings');
         }
@@ -568,8 +568,9 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
     bcrypt.compare(req.body.password, req.user.password, function (err, usr) {
-        if (err) {
+        if (!usr) {
             console.log(err)
+            req.flash('error', 'Incorrect password')
             res.redirect('/dashboard/adminSettings');
         } else {
             User.findByIdAndRemove(req.user._id)
@@ -581,6 +582,7 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
                 })
                 .catch((err) => {
                     console.log(err);
+                    req.flash('success', 'Your account has been deleted')
                     res.redirect('/dashboard/adminSettings');
                 })
 

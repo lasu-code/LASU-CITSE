@@ -20,8 +20,8 @@ require("./config/passport");
 
 var app = express();
 
-let db_uri = process.env.DB_URI;
-// let db_uri = 'mongodb://localhost:27017/dashboard'
+// let db_uri = process.env.DB_URI;
+let db_uri = 'mongodb://localhost:27017/dashboard'
 mongoose.connect(db_uri, { useNewUrlParser: true, useCreateIndex: true }).then(console.log("database connected")).catch(err=>console.log(err));
 
 // view engine setup
