@@ -199,9 +199,21 @@
             }
             document.getElementById(cityName).style.display = "block";
         }
+
     </script>
     <%- include('../partials/dashboard-scripts') %>
-    
+    <script>
+        if ("<%-success%>") {
+            swal({
+                text: "<%=success%>",
+            });
+        }
+        else if ("<%-error%>") {
+            swal({
+                text: "<%=error%>",
+            });
+        }
+    </script>
 </body>
 
 </html>

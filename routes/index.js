@@ -160,9 +160,9 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/login');
 })
 
-router.get('/forgot', function (req, res, next) {
-    let success = req.flash('success');
-    let error = req.flash('error')
+router.get('/dashboard', isLoggedIn, function (req, res, next) {
+    res.render('backend/dashboard');
+});
 
     res.render('backend/forgot', { success, error })
 })
@@ -569,7 +569,7 @@ router.get('/dashboard/staffs', function (req, res, next) {
 router.get('/dashboard/adminSettings', function (req, res, next) {
     let success = req.flash('succes');
     let failure = req.flash('failure')
-    res.render('backend/adminSettings', { success, failure, email: req.user.email })
+    res.render('backend/adminSettings', {success, failure, email: req.user.email})
 })
 
 router.put('/dashboard/adminSettings/email', function (req, res, next) {
@@ -577,28 +577,54 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
         User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newEmail })
             .exec()
             .then(() => {
+                req.flash('success', 'Email Change Successfull!')
                 res.redirect('/dashboard');
             })
             .catch((err) => {
                 console.log(err);
             })
-    }
-    else {
+    } else {
         req.flash('info', "Incorrect Email!");
         res.redirect('/dashboard/adminSettings');
     }
 })
 
 router.put('/dashboard/adminSettings/password', function (req, res, next) {
-    bcrypt.compare(req.body.dbPass, req.user.password, function (req, res, err) {
-        if (err) {
-            console.log(err)
-        }
-        if (res) {
+    bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
+				if (err) {
+            console.log(err);
+						req.flash('error', 'An error occured, try again');
+        }        
+				if (!usr) {
+            req.flash('error', 'Incorrect password')
+            res.redirect('/dashboard/adminSettings');
+        } else {
             User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
+                    req.flash('success', 'Password Successfully changed')
                     res.redirect('/dashboard');
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+        }
+        
+    });
+})
+
+router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
+
+    
+    bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
+        if (err) {
+            console.log(err)
+        }
+        if (res){
+            User.findByIdAndRemove({ _id: req.user._id })
+                .exec()
+                .then(() => {
+                    res.redirect('/login');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -607,33 +633,7 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
         else {
             console.log('unmatch');
             res.redirect('/dashboard/adminSettings');
-
-        }
-    });
-})
-
-router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
-
-    bcrypt.compare(req.body.password, req.user.password, function (usr, err) {
-        if (err) {
-            console.log(err)
-        }
-        if (usr){
-            User.findByIdAndRemove({ _id: req.user._id })
-                .exec()
-                .then(() => {
-                    res.flash('success', "Account was deleted successfully!");
-                    res.redirect('/login');
-                })
-                .catch((err) => {
-                    console.log(err);
-                    res.flash('error', `An error occured: ${err}`);
-                    res.redirect('/dashboard/adminSettings');
-                })
-        }
-        else {
-            res.flash('error', `Password mismatch, try again!`);
-            res.redirect('/dashboard/adminSettings');
+            
         }
     });
 

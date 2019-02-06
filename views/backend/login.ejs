@@ -5,14 +5,13 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
-	<link rel="icon" type="image/png" href="/login/images/icons/favicon.ico"/>
+	<link rel="icon" type="image/png" href="/img/icons/favicon.ico"/>
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="/login/css/util.css">
-	<link rel="stylesheet" type="text/css" href="/login/css/main.css">
+	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
 <!--===============================================================================================-->
 </head>
 <body>
@@ -21,6 +20,7 @@
 			<div class="wrap-login100">
 
 				<form class="login100-form validate-form" action="/login/admin" method="POST">
+					<%- include('../partials/error') %>
 					<span class="login100-form-title p-b-34">
 						Admin Login
 					</span>
@@ -35,24 +35,27 @@
 					</div>
 
 					<div class="w-full text-center p-t-27 p-b-239">
-						<div class="container-login100-form-btn mb-3">
-							<button class="login100-form-btn">
-								Sign in
-							</button>
-						</div>
+						<span >
+							<a href="/forgot">Forgot password?</a>
+						</span>
 
-						<a href="/forgot" class="txt2 text-warning">
-							Forgot password?
+
+					<div class="container-login100-form-btn">
+						<button class="login100-form-btn">
+							Sign in
+						</button>
+					</div>
+
+						<a href="#" class="d-none txt2">
+							User name / password?
 						</a>
 					</div>
 
-					<%#
-						<div class="d-none w-full text-center">
-							<a href="#" class="txt3">
-								Sign Up
-							</a>
-						</div>
-					%>
+					<div class="d-none w-full text-center">
+						<a href="#" class="txt3">
+							Sign Up
+						</a>
+					</div>
 				</form>
 
 				<div class="login100-more" style="background-image: url('/login/images/africa.jpg');"></div>
