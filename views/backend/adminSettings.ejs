@@ -111,7 +111,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <h3>Are you Sure you want to change your Password?</h3>
-                                    <form action="/settings/edit/password?_method=PUT" method="post">
+                                    <form action="/dashboard/adminSettings/password?_method=PUT" method="post">
                                         <input type="hidden" id="newPass" name="newPass">
                                         <input type="hidden" id="dbPass" name="dbPass" >
                                         <button class="btn btn-success">Yes</button>
@@ -143,27 +143,8 @@
                     </form>
                 </div>
 
-
-                
-                
-
-                
                 <br> <br>
-                <nav>
-                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                        <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab"
-                            aria-controls="nav-home" aria-selected="true">Home</a>
-                        <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
-                            aria-controls="nav-profile" aria-selected="false">Profile</a>
-                        <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab"
-                            aria-controls="nav-contact" aria-selected="false">Contact</a>
-                    </div>
-                </nav>
-                <div class="tab-content" id="nav-tabContent">
-                    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>
-                    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
-                    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">...</div>
-                </div>
+                
             </main>
         </div>
     </div>
@@ -218,9 +199,21 @@
             }
             document.getElementById(cityName).style.display = "block";
         }
+
     </script>
     <%- include('../partials/dashboard-scripts') %>
-    
+    <script>
+        if ("<%-success%>") {
+            swal({
+                text: "<%=success%>",
+            });
+        }
+        else if ("<%-error%>") {
+            swal({
+                text: "<%=error%>",
+            });
+        }
+    </script>
 </body>
 
 </html>

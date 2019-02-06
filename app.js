@@ -1,4 +1,4 @@
-
+// APP.JS
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -10,7 +10,7 @@ const passport = require('passport');
 const MongoStore = require('connect-mongodb-session')(session);
 const flash = require("express-flash");
 const dotenv = require('dotenv');
-let methodOverride = require('method-override');
+const methodOverride = require('method-override');
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ app.use(methodOverride('_method'));
 
 const oneDay = 86400000; // in milliseconds
 app.use(express.static(path.join(__dirname, 'public'), {
-  maxage: oneDay
+    maxage: oneDay
 }));
 
 app.use(session({

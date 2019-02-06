@@ -3,14 +3,12 @@ const express = require('express');
 const router = express.Router();
 const passport = require("passport");
 const multer = require("multer");
-const fse = require('fs-extra');
+// const fse = require('fs-extra');
 const async = require('async');
 const crypto = require('crypto');
 const bcrypt = require("bcrypt-nodejs");
-const nodemailer= require('nodemailer');
 const cloudinary = require('cloudinary');
 const cloudinaryStorage = require("multer-storage-cloudinary");
-var methodOverride = require('method-override');
 
 let mailSender = require('../config/mailer');
 let User = require('../models/users');
@@ -25,47 +23,40 @@ let sponsor = require('../models/sponsor');
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
 let n = require('../config/cmsNav');
-let keys = require('../config/keys.js');
 global.usrInfo = {};
 let oldImage = '';
 
-//cloudinary Storage
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME, //"dyieekcre"
-  api_key:  process.env.CLOUD_KEY, //"732513327822775"
-  api_secret: process.env.CLOUD_SECRET //"HzlXLGG447c9m92q6a8vhWoiR-c"
-});
-const storage = cloudinaryStorage({
-  cloudinary: cloudinary,
-  folder: "citse",
-  allowedFormats: ["jpg", "png"],
-});
-
-const upload = multer({ storage: storage,
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-});
 
 // HANDLE IMAGES
 // -----
-// Set multer storage config
-// const storage = multer.diskStorage({
-//     destination: './public/uploads',
-//     filename: function (req, file, cb) {
-//         cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-//     }
-// })
+//  CLOUDINARY STORAGE
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,     //"dyieekcre"
+    api_key:  process.env.CLOUD_KEY,        //"732513327822775"
+    api_secret: process.env.CLOUD_SECRET    //"HzlXLGG447c9m92q6a8vhWoiR-c"
+});
+const cloudStorage = cloudinaryStorage({
+    cloudinary: cloudinary,
+    folder: "citse",
+    allowedFormats: ["jpg", "png"],
+});
+
+// DISK STORAGE CONFIG
+const diskStorage = multer.diskStorage({
+    destination: './public/uploads',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    }
+})
 
 // Set multer runtime options
 const multerOpts = {
-    storage: storage,
+    storage: cloudStorage,
     //limits: {fileSize: 10},
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
     }
 }
-
 
 //check file type
 function checkFileType(file, cb) {
@@ -83,7 +74,7 @@ function checkFileType(file, cb) {
     }
 }
 // Multer execute
-// const upload = multer(multerOpts);
+const upload = multer(multerOpts);
 
 
 // AUTH MIDDLEWARE, HELPER FUNCTIONS
@@ -92,12 +83,11 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated() || req.user) {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-
         return next()
     } else {
-        console.error('Login to continue')
-        req.flash('error', 'Login to continue!')
-        res.redirect('/login')
+        console.error('Login to continue');
+        req.flash('error', 'Login to continue!');
+        res.redirect('/login');
     }
 }
 
@@ -105,12 +95,11 @@ function adminLoggedIn(req, res, next) {
     if (req.isAuthenticated() && req.user.position == "head") {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-
         return next()
     } else {
-        console.error('Login to continue')
-        req.flash('error', 'Permission denied!')
-        res.redirect('/dashboard')
+        console.error('Login to continue');
+        req.flash('error', 'Permission denied!');
+        res.redirect('/dashboard');
     }
 }
 
@@ -120,12 +109,12 @@ function capitalize(str) {
 
 // Get old image path
 async function getOldImage(req, res, next) {
-    oldImage = await Page.findOne({ tag: req.params.tag.trim() })
-    return next()
+    oldImage = await Page.findOne({ tag: req.params.tag.trim() });
+    return next();
 }
 async function getOldSliderImage(req, res, next) {
     if (oldImage != null) {
-        oldImage = await Slider.findOne({ _id: isUpdate })
+        oldImage = await Slider.findOne({ _id: isUpdate });
     }
     return next();
 }
@@ -133,12 +122,14 @@ async function getOldSliderImage(req, res, next) {
 // remove old uploaded image
 async function removeOldImage() {
     if (oldImage) {
-        console.log(oldImage.publicid)
+        // Cloudinary
         cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log(result) });
-    //     fse.remove('\public' + oldImage.postImage)
-    //         .catch(err => {
-    //             console.error(err)
-    //         })
+
+        // Disk
+        // fse.remove('\public' + oldImage.postImage)
+        //      .catch(err => {
+        //          console.error(err)
+        //      })
     }
 }
 
@@ -169,11 +160,12 @@ router.get('/logout', function (req, res, next) {
     res.redirect('/login');
 })
 
-router.get('/forgot', function (req, res, next) {
-    let success = req.flash('success');
-    let error = req.flash('error')
+router.get('/dashboard', isLoggedIn, function (req, res, next) {
+    res.render('backend/dashboard');
+});
 
-    res.render('backend/forgot', { success, error })
+router.get('/forgot',function (req, res, next) {
+    res.render('backend/forgot');
 })
 
 router.post('/forgot', function (req, res, next) {
@@ -301,12 +293,12 @@ router.post('/createAccount', function (req, res, next) {
 router.delete('/deleteadmin', function (req, res, next) {
     User.deleteOne({ _id: req.body.id }).then((result) => {
         if (result) {
-            if (result) {
-                res.redirect('/dashboard/authorizeadmins')
-            } else {
-                console.log('err')
-            }
+            req.flash('success', 'Admin deleted successfully');
+        } else {
+            console.log('err')
+            req.flash('error', `An error occured, try again: ${err}`);
         }
+        res.redirect('/dashboard/authorizeadmins')
     })
 
 })
@@ -320,26 +312,6 @@ router.get('/dashboard/settings', adminLoggedIn, function (req, res) {
 
     res.render('backend/settings', { upload, usrInfo, page: "settings" })
 })
-
-//sent contact messages to mails 
-router.post('/postaddress', function (req, res, next) {
-    let newMail = new Mail();
-    newMail.email = req.body.email;
-    console.log(req.body.email)
-    newMail.save().then((result) => {
-        if (result) {
-            console.log(result)
-            res.redirect('/dashboard/settings')
-            req.flash('upload', "Address has been saved successfully");
-        }
-    })
-})
-
-//sent contact messages to mails 
-router.post('/post_contact', function (req, res, next) {
-
-})
-
 
 router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, next) => {
     pageData = {
@@ -358,7 +330,18 @@ router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, nex
         })
 })
 
-router.post('/reply', mailController.reply);
+router.post('/postaddress', function (req, res, next) {
+    let newMail = new Mail();
+    newMail.email = req.body.email;
+    newMail.save().then((result) => {
+        if (result) {
+            console.log(result)
+            res.redirect('/dashboard/settings')
+            req.flash('upload', "Address has been saved successfully");
+        }
+    })
+})
+
 
 //sponsors
 //----
@@ -379,13 +362,42 @@ router.route('/dashboard/sponsors')
     })
 
 router.route('/dashboard/sponsors/add')
-    .all( adminLoggedIn) 
+    .all( adminLoggedIn)
     .get ((req, res, next)=>{
         let upload = req.flash('upload');
         let failure = req.flash('failure');
         res.render("backend/sponsors-form", {upload, failure})
 })
-//sponsors Ends here
+
+//sponsors ends here
+
+//centre leaders
+router.route('/dashboard/leaders')
+    .all(isLoggedIn)
+    .get(function (req, res, next) {
+        let failure = req.flash('failure');
+        let success = req.flash('success');
+        let uploaded = req.flash('uploaded');
+
+        sponsor.find({}).then((result) => {
+            if (result) {
+                res.render('backend/center-leaders', { result, failure, success, uploaded })
+            } else {
+                res.render('backend/center-leaders')
+            }
+        })
+    })
+
+router.route('/dashboard/leaders/add')
+    .all( adminLoggedIn)
+    .get ((req, res, next)=>{
+        let upload = req.flash('upload');
+        let failure = req.flash('failure');
+        res.render("backend/center-leadersForm", {upload, failure})
+})
+
+//center leadres ends here
+//-----
 // Vc Speech
 //------
 
@@ -457,7 +469,7 @@ router.route('/dashboard/slider/add')
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
             is_active: true,
-        } 
+        }
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
@@ -479,11 +491,9 @@ router.route('/dashboard/slider/add')
 
         res.render('backend/editslider', { upload, failure, id, content: {} })
     })
-    
+
  router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
-        console.log(req.file.secure_url)
-        console.log(req.file.public_id)
-        
+
         let idd = req.params.id;
         let oldSliderImage = await Slider.findOne({_id: idd});
 
@@ -491,14 +501,13 @@ router.route('/dashboard/slider/add')
             cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
         })()
 
-        console.log(idd)
         sliderData = {
             name: req.body.name,
             text_on_img: req.body.text_on_img,
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
             is_active: true,
-            
+
         }
         if (req.file) {
             sliderData.postImage = req.file.secure_url;
@@ -512,28 +521,6 @@ router.route('/dashboard/slider/add')
                 res.redirect("/dashboard/slider");
             })
     })
-
-    //delete Slider
-router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
-    let idd = req.params.id;
-    let oldSliderImage = await Slider.findOne({_id: idd});
-
-        (function removeSliderOldImage() {
-            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-        })()
-
-    Slider.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            if (result) {
-                res.redirect('/dashboard/slider')
-            } else {
-                console.log('err')
-            }
-        }
-    })
-
-})
-
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
@@ -542,7 +529,6 @@ router.get('/dashboard/news', function (req, res, next) {
     News.find({}).then((doc) => {
         if (doc) {
             res.render('backend/news', { upload, doc, page: 'news', activeParent: 'news' })
-            console.log(doc)
         } else {
             res.render('backend/news')
         }
@@ -550,27 +536,28 @@ router.get('/dashboard/news', function (req, res, next) {
 })
 
 router.post("/handlenews", upload.single('newImg'),  function (req, res, next) {
+    let newNews = new News();
 
-            console.log(req.file)
+    newNews.title = req.body.title;
+    newNews.writer = req.body.writer;
+    newNews.department = req.body.department;
+    newNews.content = req.body.content;
+    newNews.newImg = req.file.secure_url;
 
-            let newNews = new News();
-
-            newNews.title = req.body.title;
-            newNews.writer = req.body.writer;
-            newNews.department = req.body.department;
-            newNews.content = req.body.content;
-            newNews.newImg = req.file.secure_url;
-
-            newNews.save().then((result) => {
-                if (result) {
-                    console.log(result)
-                    req.flash('upload', "News has been uploaded successfully");
-                    res.redirect('dashboard/news');
-                } else {
-                    res.send("err")
-                }
-            })
+    newNews.save()
+        .then((result) => {
+            if (result) {
+                req.flash('upload', "News has been uploaded successfully");
+            } else {
+                res.flash('error', "An error occured, try again")
+            }
         })
+        .catch((err) => {
+            res.flash('error', `An error occured: ${err}`);
+        })
+
+        res.redirect('dashboard/news');
+})
 
 // -----
 // Staff    -   NOT USED
@@ -583,7 +570,7 @@ router.get('/dashboard/staffs', function (req, res, next) {
 router.get('/dashboard/adminSettings', function (req, res, next) {
     let success = req.flash('succes');
     let failure = req.flash('failure')
-    res.render('backend/adminSettings', { success, failure, email: req.user.email })
+    res.render('backend/adminSettings', {success, failure, email: req.user.email})
 })
 
 router.put('/dashboard/adminSettings/email', function (req, res, next) {
@@ -591,44 +578,45 @@ router.put('/dashboard/adminSettings/email', function (req, res, next) {
         User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newEmail })
             .exec()
             .then(() => {
+                req.flash('success', 'Email Change Successfull!')
                 res.redirect('/dashboard');
             })
             .catch((err) => {
                 console.log(err);
             })
-    }
-    else {
+    } else {
         req.flash('info', "Incorrect Email!");
         res.redirect('/dashboard/adminSettings');
     }
 })
 
 router.put('/dashboard/adminSettings/password', function (req, res, next) {
-    bcrypt.compare(req.body.dbPass, req.user.password, function (req, res, err) {
-        if (err) {
-            console.log(err)
+    bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
+				if (err) {
+            console.log(err);
+						req.flash('error', 'An error occured, try again');
         }
-        if (res) {
-            User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newPass })
+				if (!usr) {
+            req.flash('error', 'Incorrect password')
+            res.redirect('/dashboard/adminSettings');
+        } else {
+            User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
+                    req.flash('success', 'Password Successfully changed')
                     res.redirect('/dashboard');
                 })
                 .catch((err) => {
                     console.log(err);
                 })
         }
-        else {
-            console.log('unmatch');
-            res.redirect('/dashboard/adminSettings');
 
-        }
     });
 })
 
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
-    
+
     bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
         if (err) {
             console.log(err)
@@ -646,7 +634,7 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
         else {
             console.log('unmatch');
             res.redirect('/dashboard/adminSettings');
-            
+
         }
     });
 
@@ -751,9 +739,6 @@ router.route('/dashboard/:tag')
             })
     })
     .post(getOldImage, upload.single('postImage'), (req, res, next) => {
-        console.log(req.file.secure_url)
-        console.log(req.file.public_id)
-        
         removeOldImage();
 
         let page_tag = req.params.tag.trim();
