@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const bcrypt = require("bcrypt-nodejs");
 const cloudinary = require('cloudinary');
 const cloudinaryStorage = require("multer-storage-cloudinary");
-const methodOverride = require('method-override');
 
 let mailSender = require('../config/mailer');
 let User = require('../models/users');
@@ -36,23 +35,23 @@ cloudinary.config({
     api_key:  process.env.CLOUD_KEY,        //"732513327822775"
     api_secret: process.env.CLOUD_SECRET    //"HzlXLGG447c9m92q6a8vhWoiR-c"
 });
-const storage = cloudinaryStorage({
+const cloudStorage = cloudinaryStorage({
     cloudinary: cloudinary,
     folder: "citse",
     allowedFormats: ["jpg", "png"],
 });
 
 // DISK STORAGE CONFIG
-// const storage = multer.diskStorage({
-//     destination: './public/uploads',
-//     filename: function (req, file, cb) {
-//         cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-//     }
-// })
+const diskStorage = multer.diskStorage({
+    destination: './public/uploads',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    }
+})
 
 // Set multer runtime options
 const multerOpts = {
-    storage: storage,
+    storage: cloudStorage,
     //limits: {fileSize: 10},
     fileFilter: function (req, file, cb) {
         checkFileType(file, cb);
@@ -84,12 +83,11 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated() || req.user) {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-
         return next()
     } else {
-        console.error('Login to continue')
-        req.flash('error', 'Login to continue!')
-        res.redirect('/login')
+        console.error('Login to continue');
+        req.flash('error', 'Login to continue!');
+        res.redirect('/login');
     }
 }
 
@@ -97,12 +95,11 @@ function adminLoggedIn(req, res, next) {
     if (req.isAuthenticated() && req.user.position == "head") {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-
         return next()
     } else {
-        console.error('Login to continue')
-        req.flash('error', 'Permission denied!')
-        res.redirect('/dashboard')
+        console.error('Login to continue');
+        req.flash('error', 'Permission denied!');
+        res.redirect('/dashboard');
     }
 }
 
@@ -112,12 +109,12 @@ function capitalize(str) {
 
 // Get old image path
 async function getOldImage(req, res, next) {
-    oldImage = await Page.findOne({ tag: req.params.tag.trim() })
-    return next()
+    oldImage = await Page.findOne({ tag: req.params.tag.trim() });
+    return next();
 }
 async function getOldSliderImage(req, res, next) {
     if (oldImage != null) {
-        oldImage = await Slider.findOne({ _id: isUpdate })
+        oldImage = await Slider.findOne({ _id: isUpdate });
     }
     return next();
 }
