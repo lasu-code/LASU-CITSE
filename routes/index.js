@@ -164,7 +164,8 @@ router.get('/dashboard', isLoggedIn, function (req, res, next) {
     res.render('backend/dashboard');
 });
 
-    res.render('backend/forgot', { success, error })
+router.get('/forgot',function (req, res, next) {
+    res.render('backend/forgot');
 })
 
 router.post('/forgot', function (req, res, next) {
@@ -594,7 +595,7 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
 				if (err) {
             console.log(err);
 						req.flash('error', 'An error occured, try again');
-        }        
+        }
 				if (!usr) {
             req.flash('error', 'Incorrect password')
             res.redirect('/dashboard/adminSettings');
@@ -609,13 +610,13 @@ router.put('/dashboard/adminSettings/password', function (req, res, next) {
                     console.log(err);
                 })
         }
-        
+
     });
 })
 
 router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 
-    
+
     bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
         if (err) {
             console.log(err)
@@ -633,7 +634,7 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
         else {
             console.log('unmatch');
             res.redirect('/dashboard/adminSettings');
-            
+
         }
     });
 
