@@ -9,7 +9,7 @@ let Mail = require('../models/contactaddress')
 let mailSender = require('../config/mailer');
 let f = require('../config/frontNav');
 
-let allNews = News.find({});
+let allNews = News.find({}).sort({'createdDate': -1}).limit(3);
 
 exports.homePage = function (req, res, next) {
     (async () => {
@@ -126,24 +126,24 @@ let messageData = {
 
     }
     let newData = new message(messageData);
-    newData.save();    
+    newData.save();
 let result = await Mail.find({})
     let address = result.map((val, index, arr) => val.email);
-   
+
     (function sendMail() {
         const mailOptions = {
             to: address,
             subject: req.body.subject,
             text: req.body.message
         };
-        
+
         smtpTransport.sendMail(mailOptions, function (err) {
             console.log('An e-mail has been sent to  with further instructions.');
-            
+
         });
-            
+
     })();
-           
+
     res.redirect('/contact');
 }
 

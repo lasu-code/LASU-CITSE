@@ -2,21 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-    <!-- Title  -->
-    <title>Contact | CITSE - Africa Centre of Excellence</title>
-
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/Africa.png">
-
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/w3.css">
+    <%- include('../paritals/frontend-head', { title: 'Contact' })
 </head>
 
 <body>
@@ -35,7 +21,7 @@
                 <div class="col-12 col-lg-8">
                     <div class="contact-form">
                         <h5 class="mb-50">Get in touch</h5>
-       
+
                         <form action="/post-contact" method="POST">
                             <div class="form-group">
                                 <input type="text" class="form-control" id="contact-name" placeholder="Name" name="name" required>
@@ -100,24 +86,26 @@
         </div>
     </section>
 
-
-    <!-- ***** Footer Area Start ***** -->
     <% include ../partials/footer.ejs %>
-    <!-- ***** Footer Area End ***** -->
 
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
+    <% include ../partials/frontend-scripts.ejs %>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=<%= gmap_api_key %>"></script>
-   
+    <script>
+        function initialize() {
+            var mapCanvas = document.getElementById('gmap');
+            var mapOptions = {
+                center: new google.maps.LatLng(<%= content.mapLatitude %>, <%= content.mapLongitude %>),
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                scrollwheel: false
+            }
+            var map = new google.maps.Map(mapCanvas, mapOptions)
+        }
+		google.maps.event.addDomListener(window, 'load', initialize);
+	</script>
+    <% include ../partials/subscribe-script.ejs %>
+
 </body>
 
 </html>

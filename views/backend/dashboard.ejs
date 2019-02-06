@@ -6,7 +6,7 @@
 
     <body>
         <%- include('../partials/dashboard-nav') %>
-    
+
         <div class="container-fluid">
             <div class="row">
 
@@ -34,18 +34,5 @@
         </div>
 
         <%- include('../partials/dashboard-scripts') %>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-        <script>
-            if ("<%-success%>") {
-                swal({
-                    text: "<%=success%>",
-                });
-            }
-            if ("<%-error%>") {
-                swal({
-                    text: "<%=error%>",
-                });
-            }
-        </script>
     </body>
 </html>

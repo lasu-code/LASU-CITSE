@@ -1,32 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <%- include('../partials/frontend-head') %>
 
-    <!-- Title  -->
-    <title>LASU-ACEITSE :: Home</title>
-
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-
-    <!-- Style CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha256-UhQQ4fxEeABh4JrcmAJ1+16id/1dnlOEVCFOxDef9Lw=" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha256-kksNxjDRxd/5+jGurZUJd1sdR2v+ClrCl3svESBaJqw=" crossorigin="anonymous" />
-    <link rel="stylesheet" href="css/w3.css">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="css/index.css">
 </head>
 
 <body>
     <!-- Preloader -->
-    <% include ../partials/navbar.ejs %>
+    <% include ../partials/navbar %>
 
-    <!-- ***** Hero Area Start ***** -->
-        <section class="hero-area">
+    <!-- ***** Slideshow ***** -->
+    <section class="hero-area">
         <div class="hero-slides owl-carousel">
             <% for(let i=0; i < result.length; i++) { %>
                 <!-- Single Hero Slide -->
@@ -44,44 +31,41 @@
                 </div>
             <% } %>
         </div>
-        </section>
-        <!-- ***** Hero Area End ***** -->
+    </section>
 
-
-    <!-- ***** About Us Area Start ***** -->
+    <!-- ***** VC Speech ***** -->
     <section class="medica-about-us-area section-padding-50">
         <div class="container">
-        <div class="row">
-            <div class="col-12 col-lg-8">
-                <div class=" w3-container w3-pale-blue w3-leftbar w3-border-blue"><br>
-                    <h5 style="font-style:italic;">
-                        <span class="fa fa-quote-left"></span>
-                        Within the enterprise of teacher education, science, technology, engineering and mathematics (STEM) teacher education has occupied a respectable niche. This prominence derives from the critical role that science and technology play in development. Throughout history, processes and products of science and technology have been the drivers of improvement in quality of life on the planet. While some offshoots of such processes and products have impacted deleteriously, it is not in doubt that in such diverse areas as food security, health security, transportation, housing and national security, science and technology have exerted significant footprints. The future of humanity, it is often claimed, is inextricably linked to science and technology (Okebukola, Shabani, Sambo & Ramon-Yusuf, 2007). This elevates the status of STEM teachers since they are concerned with preparing future scientists who in turn, will drive the engine of science and technology for society’s growth and development. The key development challenge that the proposed Centre will address is improving the quality of STEM education in West Africa through innovative and transformative teacher training and leadership. The enduring logic is: fix the teacher factor in the education enterprise and not less than 30% of the potency of education in addressing developmental challenges would have been fixed (Nagata, 2013; Olsen, 2012).
-                        <span class="fa fa-quote-right"></span><br>
-                        - Prof. Fagbohun
-                    </h5>
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class=" w3-container w3-pale-blue w3-leftbar w3-border-blue"><br>
+                        <h5 style="font-style:italic;">
+                            <span class="fa fa-quote-left"></span>
+                            Within the enterprise of teacher education, science, technology, engineering and mathematics (STEM) teacher education has occupied a respectable niche. This prominence derives from the critical role that science and technology play in development. Throughout history, processes and products of science and technology have been the drivers of improvement in quality of life on the planet. While some offshoots of such processes and products have impacted deleteriously, it is not in doubt that in such diverse areas as food security, health security, transportation, housing and national security, science and technology have exerted significant footprints. The future of humanity, it is often claimed, is inextricably linked to science and technology (Okebukola, Shabani, Sambo & Ramon-Yusuf, 2007). This elevates the status of STEM teachers since they are concerned with preparing future scientists who in turn, will drive the engine of science and technology for society’s growth and development. The key development challenge that the proposed Centre will address is improving the quality of STEM education in West Africa through innovative and transformative teacher training and leadership. The enduring logic is: fix the teacher factor in the education enterprise and not less than 30% of the potency of education in addressing developmental challenges would have been fixed (Nagata, 2013; Olsen, 2012).
+                            <span class="fa fa-quote-right"></span><br>
+                            - Prof. Fagbohun
+                        </h5>
+                    </div>
                 </div>
-            </div>
 
-            <div class="col-12 col-lg-4">
-                <div class="row">
-                    <!-- Single Service Area -->
-                    <div class="col-12 col-sm-12">
-                        <img class="img-responsive" src="img/fagbohun.jpg" alt="oke">
-                    </div>
-                    <!-- Single Service Area -->
-                    <div class="col-12 col-sm-12"><br>
-                        <h4>Olanrewaju  A. Fagbohun</h4>
-                        <h5>DSc, PhD, SAN</h5>
+                <div class="col-12 col-lg-4">
+                    <div class="row">
+                        <!-- Single Service Area -->
+                        <div class="col-12 col-sm-12">
+                            <img class="img-responsive" src="img/fagbohun.jpg" alt="oke">
+                        </div>
+                        <!-- Single Service Area -->
+                        <div class="col-12 col-sm-12"><br>
+                            <h4>Olanrewaju  A. Fagbohun</h4>
+                            <h5>DSc, PhD, SAN</h5>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </section>
-    <!-- ***** About Us Area End ***** -->
 
-    <!-- ***** Gallery Area Start ***** -->
+    <!-- ***** Gallery ***** -->
     <div class="medilife-gallery-area owl-carousel">
         <!-- Single Gallery Item -->
         <div class="single-gallery-item">
@@ -100,9 +84,8 @@
             <img src="img/gallery-4.jpg" alt="">
         </div>
     </div>
-    <!-- ***** Gallery Area End ***** -->
-    <br>
-    <!-- ***** vision,mision ***** -->
+
+    <!-- ***** Vision, Mision ***** -->
     <div class="container-fluid bg-light p-5">
         <div  class="container my-5">
             <div class="row slideanim">
@@ -149,123 +132,9 @@
         </div>
     </div>
 
-    <!-- ***** Features Area Start ***** -->
-    <div class="medilife-features-area section-padding-50 d-none">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-12 col-lg-6">
-                    <div class="features-content">
-                        <h2>Science Technology Education Mathematics</h2>
-                        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-                        laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet, consectetuer adipiscing eli.Lorem
-                        ipsum dolor sit amet, consec tetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet
-                        dolore magna aliquam erat volutpat. Lorem ipsum dolor..</p>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-6">
-                    <div class="features-thumbnail">
-                        <img src="img/bg-img/pie-chart-2.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ***** Features Area End ***** -->
+    <% include ../partials/footer %>
 
-    <!-- ***** Tabs Area Start ***** -->
-    <section class="medilife-tabs-area section-padding-100 d-none">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="medilife-tabs-content">
-                        <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link" id="institution-tab" data-toggle="tab" href="#institution" role="tab" aria-controls="institution"
-                                aria-selected="false">Education</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="faq-tab" data-toggle="tab" href="#faq" role="tab" aria-controls="faq"
-                                aria-selected="false">Teaching</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link active" id="specialities-tab" data-toggle="tab" href="#specialities" role="tab"
-                                aria-controls="specialities" aria-selected="true">Learning Activities</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content" id="myTabContent">
-                            <div class="tab-pane fade" id="institution" role="tabpanel" aria-labelledby="institution-tab">
-                                <div class="medilife-tab-content d-md-flex align-items-center">
-                                <p>An innovative and transformative education paradigm will be the adopted practice of education for the proposed
-                                    Centre.
-                                    This is the Culturo-Techno-Contextual Approach (CTCA) selected based on its efficacy for training exemplary STEM
-                                    teachers (Smith and Adebayo, 2013). The increasing incursion of technology to teaching and learning especially in the
-                                    last five years has brought a new and exciting dimension which science classrooms in Africa are taking advantage.
-                                    Africa has one of the fastest growing rates of use of internet-enabled mobile devices making technology-mediated
-                                    teaching and learning to take an upward swing (Uwadiae, 2015). The science classrooms have not been left out as many
-                                    students at all levels and their teachers are using new and emerging technologies in class interaction. A survey by
-                                    Okebukola (2013) documents high rates of e-learning readiness of students and teachers in Nigerian schools.
-
-                                    The over 30 years of inquiry as to how best to present science to African students in a way to enhance meaningful
-                                    learning, bolster achievement and improve interest and attitude has resulted in pockets of approaches now needing
-                                    connecting threads. It now needs isolating the elements of the individual approaches which research has confirmed to
-                                    be
-                                    potent and blending these into a simple but elegant approach that is flexible and adaptable to the different cultural
-                                    contexts in Africa. This led to the emergence of the Culturo-Techno-Contextual Approach (CTCA).</p>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="faq" role="tabpanel" aria-labelledby="faq-tab">
-                                <div class="medilife-tab-content d-md-flex align-items-center">
-                                    <!-- Medilife Tab Text  -->
-                                    <div class="medilife-tab-text">
-                                        <p>A participatory, student-centred, technology-mediated and culturally-relevant teaching method will be the minimum
-                                        standard for delivering the curriculum in the proposed Centre. This is consistent with the CTC Approach.</p>
-                                    </div>
-                                    <!-- Medilife Tab Img  -->
-                                    <div class="medilife-tab-img">
-                                        <img src="img/bg-img/CONTACT.jpg" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade show active" id="specialities" role="tabpanel" aria-labelledby="specialities-tab">
-                                <div class="medilife-tab-content d-md-flex align-items-center">
-                                    <!-- Medilife Tab Text  -->
-                                    <div class="medilife-tab-text">
-                                        <p>To ensure that the master STEM teachers to be produced from the Centre are not weak in STEM content and pedagogical
-                                        practical skills as many produced in the typical training institutions in Nigeria and the West Africa sub-region, the
-                                        learning activities for teacher trainees will be laden with practical work. Field trips and laboratory sessions and use
-                                        of community resources will provide environments for learning in a practical way.</p>
-                                    </div>
-                                    <!-- Medilife Tab Img  -->
-                                    <div class="medilife-tab-img">
-                                        <img src="img/bg-img/ttt.jpg" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- ***** Tabs Area End ***** -->
-
-    <!-- ***** Footer Area Start ***** -->
-    <% include ../partials/footer.ejs %>
-    <!-- ***** Footer Area End ***** -->
-
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha256-pTxD+DSzIwmwhOqTFN+DB+nHjO4iAsbgfyFq5K5bcE0=" crossorigin="anonymous"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
+    <% include ../partials/frontend-scripts %>
 
 </body>
 </html>

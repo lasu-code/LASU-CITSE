@@ -1,37 +1,37 @@
+<div class="container-fluid bg-light p-5">
+    <h2 class="text-center mb-5">Our Partners</h2>
+    <div class="row mb-3">
+        <div class="col-sm text-center">
+            <img src="img/core-img/p1.jpg" class="img-thumbnail" alt="">
+        </div>
+        <div class="col-sm text-center">
+            <img src="img/core-img/p2.jpg" class="img-thumbnail" alt="">
+        </div>
+        <div class="col-sm text-center">
+            <img src="img/core-img/p3.jpg" class="img-thumbnail" alt="">
+        </div>
+        <div class="col-sm text-center">
+            <img src="img/core-img/p4.jpg" class="img-thumbnail" alt="">
+        </div>
+        <div class="col-sm text-center">
+            <img src="img/core-img/p5.jpg" class="img-thumbnail" alt="">
+        </div>
+        <div class="col-sm text-center">
+            <img src="img/core-img/p6.jpg" class="img-thumbnail" alt="">
+        </div>
+    </div>
+</div>
+
 <footer class="footer-area section-padding-50">
-    
-    <!-- Main Footer Area -->
     <div class="main-footer-area">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-sm-1">
-                    <img src="img/core-img/p1.jpg" alt="">
-                </div>
-                <div class="col-sm-1">
-                    <img src="img/core-img/p2.jpg" alt="">
-                </div>
-                <div class="col-sm-1">
-                    <img src="img/core-img/p3.jpg" alt="">
-                </div>
-                <div class="col-sm-1">
-                    <img src="img/core-img/p4.jpg" alt="">
-                </div>
-                <div class="col-sm-1">
-                    <img src="img/core-img/p5.jpg" alt="">
-                </div>
-                <div class="col-sm-1">
-                    <img src="img/core-img/p6.jpg" alt="">
-                </div>
-            </div>
-            <br><br>
-            <div class="row">
-
-                <div class="col-12 col-sm-6 col-xl-3">
+                <div class="col-12 col-lg-4 col-sm-6 px-4">
                     <div class="footer-widget-area">
                         <div class="footer-logo">
                             <img src="img/core-img/logo.png" alt="" class="bg-white p-3">
                         </div>
-                        <p>Centre of Excellence In Innovative and Transformative STEM Education (CITSE)</p>
+                        <p class="col-10 p-0">Centre of Excellence In Innovative and Transformative STEM Education (CITSE)</p>
                         <div class="footer-social-info">
                             <a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a>
                             <a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a>
@@ -41,31 +41,28 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6 col-xl-4">
+                <div class="col-12 col-lg-4 col-sm-6 px-5">
                     <div class="footer-widget-area">
                         <div class="widget-title">
                             <h6>Latest News</h6>
                         </div>
                         <div class="widget-blog-post">
-                                 <% for(var i=0; i < doc.length; i++) { %>
-                                    <!-- Single Blog Post -->
-                            <div class="widget-single-blog-post d-flex">
-                                <div class="widget-post-thumbnail">
-                                    <img src="<%=doc[i].newImg%>" alt="">
+                            <% for(let i=0; i < doc.length; i++) { %>
+                                <div class="widget-single-blog-post d-flex">
+                                    <div class="widget-post-thumbnail text-right">
+                                        <i class="fa fa-3x text-secondary fa-newspaper-o"></i>
+                                    </div>
+                                    <div class="widget-post-content">
+                                        <a href="/news"><%=doc[i].title%></a>
+                                        <p><%= new Date(doc[i].createdDate).toLocaleString() %></p>
+                                    </div>
                                 </div>
-                                <div class="widget-post-content">
-                                    <a href="/news"><%=doc[i].title%></a>
-                                    <p>Dec 02, 2017</p>
-                                </div>
-                            </div>
-                                    <%}%>
-
-
+                            <%}%>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-12 col-sm-6 col-xl-5">
+                <div class="col-12 col-lg-4 col-sm-6 px-5">
                     <div class="footer-widget-area">
                         <div class="widget-title">
                             <h6>News Letter</h6>
@@ -86,21 +83,17 @@
             </div>
         </div>
     </div>
-    <!-- Bottom Footer Area -->
+
     <div class="bottom-footer-area">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="bottom-footer-content">
-                        <!-- Copywrite Text -->
                         <div class="copywrite-text">
                             <p>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                                 Copyright &copy;
                                 <script>document.write(new Date().getFullYear());</script> All rights reserved | This
-                                website was built with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                                    target="_blank">LASUCODES TEAM</a>
-                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                                website was built with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://github.com/lasu-code" target="_blank">LASUCODES TEAM</a>
                             </p>
                         </div>
                     </div>
@@ -109,25 +102,3 @@
         </div>
     </div>
 </footer>
-
-<!-- <script>
-$('#submitData').click(function(event) {
-    event.preventDefault();
-
-    $.ajax({
-        global: false,
-        type: 'POST',
-        url: '/subscribe',
-        dataType: 'html',
-        data: {
-            email: $("#newsletterEmail").val(),
-        },
-        success: function (result){
-            console.log(result);
-        },
-        error: function (request, status, error){
-            serviceError();
-        }
-    });
-});
-</script> -->
