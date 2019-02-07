@@ -4,26 +4,19 @@
 	<title>Login : Dashboard</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="/img/icons/favicon.ico"/>
-<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-<!--===============================================================================================-->
-	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="/css/util.css">
 	<link rel="stylesheet" type="text/css" href="/css/main.css">
-<!--===============================================================================================-->
 </head>
 <body>
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-
 				<form class="login100-form validate-form" action="/login/admin" method="POST">
 					<%- include('../partials/error') %>
-					<span class="login100-form-title p-b-34">
-						Admin Login
-					</span>
+
+					<span class="login100-form-title p-b-34"> Admin Login </span>
 
 					<div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Type user name">
 						<input id="first-name" class="input100" type="text" name="email" placeholder="Email">
@@ -35,30 +28,23 @@
 					</div>
 
 					<div class="w-full text-center p-t-27 p-b-239">
-						<span >
-							<a href="/forgot">Forgot password?</a>
-						</span>
+						<div class="container-login100-form-btn">
+							<button class="login100-form-btn">Sign in</button>
+						</div>
 
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
-							Sign in
-						</button>
+						<a href="/forgot" class="txt2 text-warning"> Forgot password? </a>
 					</div>
 
-						<a href="#" class="d-none txt2">
-							User name / password?
-						</a>
-					</div>
-
-					<div class="d-none w-full text-center">
-						<a href="#" class="txt3">
-							Sign Up
-						</a>
-					</div>
+					<%#
+						<div class="d-none w-full text-center">
+							<a href="#" class="txt3">
+								Sign Up
+							</a>
+						</div>
+					%>
 				</form>
 
-				<div class="login100-more" style="background-image: url('/login/images/africa.jpg');"></div>
+				<div class="login100-more" style="background-image: url('/img/africa.jpg');"></div>
 			</div>
 		</div>
 	</div>
