@@ -1,79 +1,154 @@
-<!doctype html>
-<html lang="en">
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', { pagename: 'Edit' + title.toUpperCase() }) %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <title>'Edit' + title.toUpperCase()</title>
+    <!-- Custom CSS -->
+    <link href="../../assets/libs/flot/css/float-chart.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../dist/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 </head>
 
 <body>
-    <%- include('../partials/dashboard-nav') %>
-
-    <div class="container-fluid">
-        <div class="row">
-
-            <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs') %>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2 rw"> Edit Page Content: <span class="text-info"><%= title.toUpperCase() %></span></h1>
-                </div>
-
-                <form action="<%= req_url %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
-                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Post Header Image', valueField: (content) ? content.postImage : false }); %>
-
-                    <%- include('../fields/textarea', { fieldname: 'postImageCaption', fieldlabel: 'Post Image Caption', valueField: (content) ? content.postImageCaption : ''}); %>
-
-                    <hr class="my-4"/>
-                    <%- include('../fields/textarea', { fieldname: 'summary', fieldlabel: 'Post Content Summary', valueField: (content) ? content.summary : ''}); %>
-                    <div class="col mb-4"></div>
-
-                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'Post Content', valueField: (content) ? content.content : ''}); %>
-
-                    <%- include('../fields/hidden', { fieldname: 'name', valueField: page }); %>
-                    <%- include('../fields/hidden', { fieldname: 'tag', valueField: page }); %>
-
-                    <hr class="my-4"/>
-                    <%- include('../fields/text', { fieldname: 'meta_key', fieldlabel: 'SEO Keyword', valueField: (content) ? content.meta_key : ''}); %>
-
-                    <%- include('../fields/textarea', { fieldname: 'meta_desc', fieldlabel: 'SEO Description', valueField: (content) ? content.meta_desc : ''}); %>
-
-                    <div class="col-sm-10 ml-md-auto pl-0">
-                        <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
-                    </div>
-
-                </form>
-                <span style="display: none" id="upload">
-                    <%=upload%>
-                </span>
-
-                 <span style="display: none" id="failure">
-                    <%=failure%>
-                </span>
-
-                <br> <br>
-            </main>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
         </div>
     </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/navbar') %>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/aside') %>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">Edit Page Content: <span class="text-info"><%= title.toUpperCase() %></span></h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+                <div class="container">
+                    <div class="card">
+                        <form class="form-horizontal" action="<%= req_url %>" method="post" enctype="multipart/form-data" >
+                            <div class="card-body">
+                                <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Post Header Image', valueField: (content) ? content.postImage : false }); %>
+                                
+                                <%- include('../fields/textarea', { fieldname: 'postImageCaption', fieldlabel: 'Post Image Caption', valueField: (content) ? content.postImageCaption : ''}); %>
+                                <hr>
 
-    <%- include('../partials/dashboard-scripts') %>
+                                <%- include('../fields/textarea', { fieldname: 'summary', fieldlabel: 'Post Content Summary', valueField: (content) ? content.summary : ''}); %>
+                                <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'Post Content', valueField: (content) ? content.content : ''}); %>
+                                
+                                <%- include('../fields/hidden', { fieldname: 'name', valueField: page }); %>
+                                <%- include('../fields/hidden', { fieldname: 'tag', valueField: page }); %>
+
+                                <hr>
+                                <%- include('../fields/text', { fieldname: 'meta_key', fieldlabel: 'SEO Keyword', valueField: (content) ? content.meta_key : ''}); %>
+                                
+                                <%- include('../fields/textarea', { fieldname: 'meta_desc', fieldlabel: 'SEO Description', valueField: (content) ? content.meta_desc : ''}); %>
+                            </div>
+
+                            <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+            </div>
+            <br>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Matrix-admin. Designed and Developed by <a href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         // Init Ckeditor
         CKEDITOR.replace('summary', {
             toolbar: [
-				{name:'basic', items:['Bold','Italic','Underline','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','NumberedList','BulletedList','-','SelectAll','RemoveFormat','Undo','Redo']},
-			],
+                { name: 'basic', items: ['Bold', 'Italic', 'Underline', '-', 'Copy', 'Cut', 'Paste', 'PasteText', 'PasteFromWord', '-', 'NumberedList', 'BulletedList', '-', 'SelectAll', 'RemoveFormat', 'Undo', 'Redo'] },
+            ],
             height: '200'
         });
         CKEDITOR.replace('content', {
             toolbar: [
-                {name:'basic', items:['Font','Format','FontSize','TextColor','BGColor','-','Bold','Italic','Underline','Strike','Subscript','Superscript','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','Image','-','NumberedList','BulletedList']},
+                { name: 'basic', items: ['Font', 'Format', 'FontSize', 'TextColor', 'BGColor', '-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Copy', 'Cut', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Image', '-', 'NumberedList', 'BulletedList'] },
                 '/',
-                {name:'insert', items: ['Link','Unlink','Outdent', 'Indent','SpecialChar','InsertPre','HorizontalRule','PageBreak','-','Image','-','SelectAll','RemoveFormat','Undo','Redo','Maximize']},
+                { name: 'insert', items: ['Link', 'Unlink', 'Outdent', 'Indent', 'SpecialChar', 'InsertPre', 'HorizontalRule', 'PageBreak', '-', 'Image', '-', 'SelectAll', 'RemoveFormat', 'Undo', 'Redo', 'Maximize'] },
             ],
-            height: 350 });
+            height: 350
+        });
 
         // Show POST success alert
         if ($.trim($('#upload').text()).length !== 0) {
@@ -81,11 +156,36 @@
         }
 
         // Show POST error alert
-        if($.trim($('#failure').text()).length !== 0) {
+        if ($.trim($('#failure').text()).length !== 0) {
             alert("<%=failure%>")
         }
 
     </script>
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../../assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="../../dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="../../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../../dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <!-- <script src="../../dist/js/pages/dashboards/dashboard1.js"></script> -->
+    <!-- Charts js Files -->
+    <script src="../../assets/libs/flot/excanvas.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.pie.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.time.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.stack.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.crosshair.js"></script>
+    <script src="../../assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+    <script src="../../dist/js/pages/chart/chart-page-init.js"></script>
+
+
 </body>
 
 </html>

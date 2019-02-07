@@ -1,4 +1,3 @@
-
 const nodemailer = require('nodemailer');
 
 let smtpTransport = nodemailer.createTransport({
@@ -18,7 +17,7 @@ let mailOptions = {
     from: 'info.acetise@lasu.edu.ng'
 };
 
-function setMailOptions(optionObj) {
+function setMailOptions (optionObj) {
     for (let key in optionObj) {
         mailOptions[key] = optionObj[key];
     }

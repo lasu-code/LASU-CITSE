@@ -162,7 +162,9 @@ router.get('/logout', function (req, res, next) {
 })
 
 router.get('/dashboard', isLoggedIn, function (req, res, next) {
-    res.render('backend/dashboard');
+    let success = req.flash('success');
+    let error = req.flash('error');
+    res.render('backend/dashboard', { success, error });
 });
 
 router.get('/forgot',function (req, res, next) {

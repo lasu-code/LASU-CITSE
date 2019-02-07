@@ -1,207 +1,318 @@
-<!doctype html>
-<html lang="en">
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', { pagename: 'Edit slider' }) %>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" href="img/core-img/favicon.ico">
+    <title>Matrix Template - The Ultimate Multipurpose admin template</title>
+    <!-- Custom CSS -->
+    <link href="../../assets/libs/flot/css/float-chart.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="../../dist/css/style.min.css" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
 </head>
 
 <body>
-    <%- include('../partials/dashboard-nav') %>
-
-    <div class="container-fluid">
-        <div class="row">
-
-            <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs', {page: 'dashboard'}) %>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2 rw">Admin Settings </h1>
-                </div>
-
-                <ul class="w3-navbar w3-blue">
-                    <li><a href="#" onclick="openCity('email')">Change Email</a></li>
-                    <li><a href="#" onclick="openCity('password')">Change Password</a></li>
-                    <li><a href="#" onclick="openCity('delete')">Delete Account</a></li>
-                </ul>
-                
-                <div id="email" class="w3-container city">
-                    <h2>Change Email</h2>
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="email">Old Email:</label>
-                            <div class="col-sm-4">
-                                <input type="email" class="form-control" id="email1" placeholder="Enter old email">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="email">New Email:</label>
-                            <div class="col-sm-4">
-                                <input type="hidden" id="dbEmail" name="" value="<%= email%>">
-                                <input type="email" class="form-control" id="email2" placeholder="Enter new email"><br>
-                                <input type="email" class="form-control" id="email3" placeholder="Enter new email to confirm">
-                                <p id="msg" style="color:red"> </p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class=" btn btn-primary" onclick="emailCheck()">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Modal -->
-                    <div id="emailModal" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                    
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Confirm Email Change</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <h3>Are you Sure you want to change your email?</h3>
-                                    <form action="/dashboard/adminSettings/email?_method=PUT" method="post">
-                                        <input type="hidden" id="newEmail" name="newEmail">
-                                        <input type="hidden" id="dbEmail" name="dbEmail" value="<%= email%>">
-                                        <button class="btn btn-success">Yes</button>
-                                        <button class="btn btn-danger" data-dismiss="modal">No</button>
-                                    </form>
-                    
-                                </div>
-                            </div>
-                    
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="password" class="w3-container city">
-                    <h2>Change Password</h2>
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="">Old Password:</label>
-                            <div class="col-sm-4">
-                                <input type="password" id="pass1" class="form-control" placeholder="Enter old password">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="">New Password:</label>
-                            <div class="col-sm-4">
-                                <input type="password" id="pass2" class="form-control" placeholder="Enter new password"><br>
-                                <input type="password" id="pass3" class="form-control" placeholder="Enter new password to confirm">
-                                <p id="msg2" style="color:red"> </p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary" onclick="passwordCheck()">Submit</button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="passwordModal" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                    
-                            <!-- Modal content-->
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Confirm Passowrd Change</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <h3>Are you Sure you want to change your Password?</h3>
-                                    <form action="/dashboard/adminSettings/password?_method=PUT" method="post">
-                                        <input type="hidden" id="newPass" name="newPass">
-                                        <input type="hidden" id="dbPass" name="dbPass" >
-                                        <button class="btn btn-success">Yes</button>
-                                        <button class="btn btn-danger" data-dismiss="modal">No</button>
-                                    </form>
-                    
-                                </div>
-                            </div>
-                    
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="delete" class="w3-container city">
-                    <h2>Delete Account</h2>
-                    <form action="/dashboard/adminSettings/delete?_method=DELETE" method="post">
-                        <div class="form-group col-sm-offset-1 col-sm-4">
-                            <label for="comment">Leave a comment:</label>
-                            <textarea class="form-control" rows="5" id="comment" ></textarea><br>
-                            <label for="comment">Password:</label>
-                            <input type="password" class="form-control" placeholder="Enter password" name="password" id="password" onclick="deleteAcc()">
-                        </div>
-                        <p id="msgD" style="color:red"> </p>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button type="submit" class="btn btn-primary"><Span class="fa fa-trash"></Span> Delete account</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <br> <br>
-                
-            </main>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
         </div>
     </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/navbar') %>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/aside') %>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">Adinistrator's Settings</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+                <div class="card">
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item"> <a class="nav-link active show font-weight-bold" data-toggle="tab" href="#email"
+                                role="tab" aria-selected="true"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Change
+                                    Email</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link font-weight-bold" data-toggle="tab" href="#password"
+                                role="tab" aria-selected="false"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Change
+                                    Password</span></a> </li>
+                        <li class="nav-item"> <a class="nav-link font-weight-bold" data-toggle="tab" href="#delete"
+                                role="tab" aria-selected="false"><span class="hidden-sm-up"></span> <span class="hidden-xs-down">Delete
+                                    Account</span></a> </li>
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content tabcontent-border">
+                        <div class="tab-pane active show" id="email" role="tabpanel">
+                            <div class="card">
+                                <form class="form-horizontal">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">Old
+                                                Email</label>
+                                            <div class="col-sm-9">
+                                                <input type="email" class="form-control" id="email1" placeholder="Old Email Here">
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <input type="hidden" id="dbEmail" name="" value="<%= email%>">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">New
+                                                Email</label>
+                                            <div class="col-sm-9">
+                                                <input type="email" class="form-control" id="email2" placeholder="New Email Here">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">Confirm
+                                                Email</label>
+                                            <div class="col-sm-9">
+                                                <input type="email" class="form-control" id="email3" placeholder="Enter New Email To Confirm">
+                                            </div>
+                                        </div>
+                                        <p id="msg" class="text-danger font-weight-bold"> </p>
+                                    </div>
 
+                                    <div class="border-top">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-primary" onclick="emailCheck()">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="emailModal" role="dialog" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation Message</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3>Are you Sure you want to change your email?</h3>
+                                            <form action="/dashboard/adminSettings/email?_method=PUT" method="post">
+                                                <input type="hidden" id="newEmail" name="newEmail">
+                                                <input type="hidden" id="dbEmail" name="dbEmail" value="<%= email%>">
+                                                <button class="btn btn-primary">Yes</button>
+                                                <button class="btn btn-secondary" data-dismiss="modal">No</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane p-20" id="password" role="tabpanel">
+                            <div class="card">
+                                <form class="form-horizontal">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">Old
+                                                Password</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" id="pass1" placeholder="Old Password Here">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">New
+                                                Password</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" id="pass2" placeholder="New Password Here">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">Confirm
+                                                Password</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" id="pass3" placeholder="Enter New Password To Confirm">
+                                            </div>
+                                        </div>
+                                        <p id="msg2" class="text-danger font-weight-bold"> </p>
+                                    </div>
+                                    <div class="border-top">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-primary" onclick="passwordCheck()">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="passwordModal" role="dialog" aria-labelledby="exampleModalLabel"
+                                aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Confirmation Message</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3>Are you Sure you want to change your Password?</h3>
+                                            <form action="/dashboard/adminSettings/password?_method=PUT" method="post">
+                                                <input type="hidden" id="newPass" name="newPass">
+                                                <input type="hidden" id="dbPass" name="dbPass">
+                                                <button class="btn btn-success">Yes</button>
+                                                <button class="btn btn-danger" data-dismiss="modal">No</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane p-20" id="delete" role="tabpanel">
+                            <div class="card">
+                                <form class="form-horizontal">
+                                    <div class="card-body">
+                                        <div class="form-group row">
+                                            <label for="cono1" class="col-sm-3 text-right control-label col-form-label">Leave
+                                                a message</label>
+                                            <div class="col-sm-9">
+                                                <textarea class="form-control" id="comment"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="fname" class="col-sm-3 text-right control-label col-form-label">Password</label>
+                                            <div class="col-sm-9">
+                                                <input type="password" class="form-control" name="password" id="password"
+                                                    placeholder="Password Here" onclick="deleteAcc()">
+                                            </div>
+                                        </div>
+                                        <p id="msgD" class="text-danger font-weight-bold"> </p>
+                                    </div>
+                                    <div class="border-top">
+                                        <div class="card-body">
+                                            <button type="button" class="btn btn-primary">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+            </div>
+            <br>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Matrix-admin. Designed and Developed by <a href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
     <script>
         function emailCheck() {
-                if (document.getElementById('email2').value == '' || document.getElementById('email3').value == '') {
-                    document.getElementById('msg').innerHTML = 'Empty fields';
-                }
-                else if (document.getElementById('email2').value !== document.getElementById('email3').value) {
-                    document.getElementById('msg').innerHTML = 'Email Mismatch';
-                }
-                else if (document.getElementById('email1').value !== document.getElementById('dbEmail').value) {
-                    document.getElementById('msg').innerHTML = 'Invalid Email';
-                }
-                else {
-                    document.getElementById('newEmail').value = document.getElementById('email2').value;
-                    $('#emailModal').modal('show');
-                }
+            if (document.getElementById('email2').value == '' || document.getElementById('email3').value == '') {
+                document.getElementById('msg').innerHTML = 'Empty fields';
+            }
+            else if (document.getElementById('email2').value !== document.getElementById('email3').value) {
+                document.getElementById('msg').innerHTML = 'Email Mismatch';
+            }
+            else if (document.getElementById('email1').value !== document.getElementById('dbEmail').value) {
+                document.getElementById('msg').innerHTML = 'Invalid Email';
+            }
+            else {
+                document.getElementById('newEmail').value = document.getElementById('email2').value;
+                $('#emailModal').modal('show');
+            }
         }
 
         function passwordCheck() {
-                if (document.getElementById('pass1').value == '' || document.getElementById('pass2').value == '' || document.getElementById('pass3').value == '') {
-                    document.getElementById('msg2').innerHTML = 'Empty fields';
-                }
-                else if (document.getElementById('pass2').value !== document.getElementById('pass3').value) {
-                    document.getElementById('msg2').innerHTML = 'Password Mismatch';
-                }
-                else {
-                    document.getElementById('newPass').value = document.getElementById('pass2').value;
-                    document.getElementById('dbPass').value = document.getElementById('pass1').value;
-                    $('#passwordModal').modal('show');
-                }
+            if (document.getElementById('pass1').value == '' || document.getElementById('pass2').value == '' || document.getElementById('pass3').value == '') {
+                document.getElementById('msg2').innerHTML = 'Empty fields';
             }
+            else if (document.getElementById('pass2').value !== document.getElementById('pass3').value) {
+                document.getElementById('msg2').innerHTML = 'Password Mismatch';
+            }
+            else {
+                document.getElementById('newPass').value = document.getElementById('pass2').value;
+                document.getElementById('dbPass').value = document.getElementById('pass1').value;
+                $('#passwordModal').modal('show');
+            }
+        }
 
         function deleteAcc() {
             if (document.getElementById('comment').value == '') {
                 document.getElementById('msgD').innerHTML = 'Leave a comment';
             }
-            else{
+            else {
                 document.getElementById('msgD').innerHTML = '';
             }
 
         }
 
-        openCity("email")
-        function openCity(cityName) {
-            var i;
-            var x = document.getElementsByClassName("city");
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            document.getElementById(cityName).style.display = "block";
-        }
-
     </script>
-    <%- include('../partials/dashboard-scripts') %>
+    
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         if ("<%-success%>") {
             swal({
@@ -214,6 +325,31 @@
             });
         }
     </script>
+    <script src="../../assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../../assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <script src="../../dist/js/waves.js"></script>
+    <!--Menu sidebar -->
+    <script src="../../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../../dist/js/custom.min.js"></script>
+    <!--This page JavaScript -->
+    <!-- <script src="../../dist/js/pages/dashboards/dashboard1.js"></script> -->
+    <!-- Charts js Files -->
+    <script src="../../assets/libs/flot/excanvas.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.pie.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.time.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.stack.js"></script>
+    <script src="../../assets/libs/flot/jquery.flot.crosshair.js"></script>
+    <script src="../../assets/libs/flot.tooltip/js/jquery.flot.tooltip.min.js"></script>
+    <script src="../../dist/js/pages/chart/chart-page-init.js"></script>
+
+
 </body>
 
 </html>
