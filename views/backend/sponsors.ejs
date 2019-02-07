@@ -38,11 +38,13 @@
                                 <div class="card p-3 mb-2 justify-content-middle">
                                     <img src="<%= result[i].postImage %>" alt="image" width="100%" height="100%">
                                 </div>
-                                 <a class="btn btn-primary" href="/dashboard/sponsor/edit/<%= result[i]._id %>">edit sponsor</a>
-                                <form action="/dashboard/sponsor/delete/<%= result[i]._id %>?_method=DELETE" method="POST">
-                                <input type="hidden" name="id" value="<%=result[i]._id%>">
-                                <input type="submit" class="btn btn-danger" value="delete sponsor">
-                                </form>
+                                <div class="row d-flex align-content-center flex-wrap">
+                                    <a class="btn btn-primary" href="/dashboard/sponsor/edit/<%= result[i]._id %>">edit</a> <br>
+                                    <form action="/dashboard/sponsor/delete/<%= result[i]._id %>?_method=DELETE" method="POST">
+                                    <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                    <input type="submit" class="btn btn-danger" value="delete">
+                                    </form>
+                                </div>
                             </div>
                         <% }%>
                         </div>

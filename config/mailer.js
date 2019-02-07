@@ -1,4 +1,4 @@
-const keys = require("../config/keys");
+// const keys = require("../config/keys");
 const nodemailer = require('nodemailer');
 
 let smtpTransport = nodemailer.createTransport({
