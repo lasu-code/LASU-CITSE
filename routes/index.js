@@ -18,8 +18,7 @@ let Page = require('../models/page');
 let Contact = require('../models/contact');
 let Settings = require('../models/settings');
 let Mail = require('../models/contactaddress');
-let Sponsor = require('../models/sponsor');
-let Speech = require('../models/speech');
+let Partner = require('../models/partner');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -108,6 +107,15 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function logError(method, path, err) {
+    console.error(`An error occured during ${method} (${path}): ${err}`);
+}
+
+function showError(m, p, e) {
+    logError(m, p, e);
+    return req.flash('error', 'An error occured, try again or contact web admin!');
+}
+
 // Get old image path
 async function getOldImage(req, res, next) {
     oldImage = await Page.findOne({ tag: req.params.tag.trim() });
@@ -124,8 +132,7 @@ async function getOldSliderImage(req, res, next) {
 async function removeOldImage() {
     if (oldImage) {
         // Cloudinary
-        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log("Removed image at ", oldImage.postImage) });
-        oldImage = {};
+        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log("Removed image at", oldImage.postImage) });
 
         // Disk
         // fse.remove('\public' + oldImage.postImage)
@@ -345,102 +352,102 @@ router.post('/postaddress', function (req, res, next) {
 })
 
 
+// Partners
 // ----
-// Sponsors
-router.route('/dashboard/sponsors')
+router.route('/dashboard/partners')
     .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
+    .get(async function (req, res) {
+        let result = '';
+        try {
+            result = await Partner.find({})
+        } catch (err) {
+            result = '';
+            showError('GET', 'dashboard/partners', err);
+        }
 
-        Sponsor.find({}).then((result) => {
-            if (result) {
-                res.render('backend/sponsors', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/sponsors')
-            }
-        })
+        res.render('backend/partner', { result });
     })
 
-router.get('/dashboard/sponsors/add', isLoggedIn, function(req, res, next){
-     let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        res.render("backend/sponsors-form", {upload, failure})
-})
-
-router.post('/dasboard/sponsor/add', upload.single('postImage'), function(req, res, next){
-    pageData = {
+router.route('/dashboard/partner/add')
+    .all(isLoggedIn)
+    .get (function(req, res){
+        try {
+            res.render("backend/partner-add")
+        } catch (err) {
+            showError('GET', 'dashboard/partners/add', err);
+            res.redirect('/dashboard')
+        }
+    })
+    .post( upload.single('postImage'), async function(req, res){
+        let pageData = {
             name: req.body.name,
-            text_on_img: req.body.text_on_img,
-             }
-
+            content: req.body.content
+        }
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Sponsor.create(pageData)
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/sponsors): ${err}`); })
-            .then((result) => {
-                console.log(result)
-                req.flash('upload', `Sponsor Creation Successful!`);
-                res.redirect('/dashboard/sponsors');
-            })
-})
-
-router.get('/dashboard/sponsor/edit/:id', function(req, res, next){
-    let upload = req.flash('upload');
-    let failure = req.flash('flash');
-    let id = req.params.id;
-
-    res.render('backend/editSponsor', { upload, failure, id, content: {} })
-})
-
- router.post('/dashboad/sponsor/edit/:id', upload.single('postImage'), async function(req, res, next){
-
-    let idd = req.params.id;
-    let oldSponsorImage = await Sponsor.findOne({_id: idd});
-
-    (function removeSponsorOldImage() {
-        cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
-    })()
-
-    sponsorData = {
-        name: req.body.name,
-        text_on_img: req.body.text_on_img,
-
-    }
-    if (req.file) {
-        sponsorData.postImage = req.file.secure_url;
-        sponsorData.publicid = req.file.public_id;
-    }
-
-    Sponsor.findOneAndUpdate({_id: idd  }, sponsorData, { upsert: true })
-        .catch((err) => { console.error("Error occured during POST /dashboad/sponsor/edit/:id") })
-        .then(() => {
-            req.flash('upload', "Sponsor has been updated successfully");
-            res.redirect("/dashboard/sponsors");
-        })
-})
-
-router.delete('/dashboard/sponsor/delete/:id', async function (req, res, next) {
-    let idd = req.params.id;
-    let oldSponsorImage = await Sponsor.findOne({_id: idd});
-
-        (function removeSponsorOldImage() {
-            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
-        })()
-
-        Sponsor.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            if (result) {
-                res.redirect('/dashboard/sponsors')
-            } else {
-                console.log('err')
-            }
+        try {
+            await Partner.create(pageData)
+            req.flash('success', `Partner Creation Successful!`);
+        } catch(err) {
+            showError('POST', '/dashboard/partner/add', err);
         }
+
+        res.redirect('/dashboard/partners');
     })
+
+router.route('/dashboard/partner/edit/:id')
+    .all(isLoggedIn)
+    .get(async function(req, res){
+        let id = req.params.id, result;
+        try {
+            result = await Partner.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError('GET', 'dashboard/partners', err);
+        }
+        res.render('backend/partner-add', { result, action: req.originalUrl })
+    })
+    .post(upload.single('postImage'), async function(req, res){
+        let idd = req.params.id;
+
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+        }
+        if (req.file) {
+            oldImage = await Partner.findOne({ _id: idd });
+            removeOldImage();
+
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        console.table(pageData)
+
+        try {
+            await Partner.findOneAndUpdate({_id: idd}, pageData, { upsert: true })
+            req.flash('success', "Partner updated successfully");
+        } catch(err) {
+            showError('POST', `/dashboard/partner/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/partners");
+    })
+
+router.delete('/dashboard/partner/delete/:id', async function (req, res) {
+    let idd = req.params.id;
+
+    oldImage = await Partner.findOne({ _id: idd });
+    removeOldImage()
+
+    try {
+        await Partner.deleteOne({ _id: req.body.id })
+        req.flash('success', 'Partner deleted successfully!');
+    } catch(err) {
+        showError('DELETE', `/dashboard/delete/${idd}`, err)
+    }
+    res.redirect('/dashboard/partners')
 
 })
 

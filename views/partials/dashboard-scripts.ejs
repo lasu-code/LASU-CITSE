@@ -29,6 +29,22 @@
             text: "<%= messages.error %>"
         });
     <% } %>
+    $('.delete-item').click(function(event) {
+        event.preventDefault();
+        let delForm = $(this).parents('form');
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, there is no recovery possible!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+               delForm.submit();
+            }
+        });
+    });
 
     // Apply Ckeditor
     function CKfull(fieldname) {
