@@ -90,18 +90,6 @@
                 </ul>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" data-target="#recruitment">
-                    <span data-feather="book"></span> Recruitment Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
-                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'recruit') ? '' : 'collapse navbar-collapse' %>" id="recruitment">
-                    <li class="nav-item">
-                        <a class="nav-link <%= (page == 'retention-support') ? 'text-primary' : '' %>" href="/dashboard/retention-support"> Retention and Support </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= (page == 'student-recruitment') ? 'text-primary' : '' %>" href="/dashboard/student-recruitment"> Student Recruitment</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" data-toggle="collapse" data-target="#mgtnav">
                     <span data-feather="book"></span> Management Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
                 <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'management') ? '' : 'collapse navbar-collapse' %>" id="mgtnav">
@@ -120,13 +108,19 @@
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'centre-leaders') ? 'text-primary' : '' %>" href="/dashboard/leaders">Centre Leaders</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'retention-support') ? 'text-primary' : '' %>" href="/dashboard/retention-support"> Retention and Support </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'student-recruitment') ? 'text-primary' : '' %>" href="/dashboard/student-recruitment"> Student Recruitment</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item">
                 <a class="nav-link <%= (page == 'news') ? 'text-primary' : '' %>" href="/dashboard/news">
                     <span data-feather="radio"></span> News </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item d-none">
                 <a class="nav-link <%= (page == 'stafflist') ? 'active' : '' %>" href="/dashboard/stafflist">
                     <span data-feather="users"></span> Staff List </a>
             </li>
@@ -139,7 +133,7 @@
                     <span data-feather="message-square"></span> Contact Messages </a>
             </li>
             <% if(usrInfo.pos == "head") { %>
-                <li class="nav-item"><hr/></li>
+                <li class="nav-item pt-1"><hr/></li>
                 <li id="admin" class="nav-item">
                     <a class="nav-link <%= (page == 'admin') ? 'text-primary' : '' %>" href="/dashboard/authorizeadmins">
                         <span data-feather="lock"></span> CMS Admins </a>
