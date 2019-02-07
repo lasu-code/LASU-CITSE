@@ -671,7 +671,8 @@ router.get('/dashboard/staffs', function (req, res, next) {
 router.get('/dashboard/adminSettings', function (req, res, next) {
     let success = req.flash('succes');
     let failure = req.flash('failure')
-    res.render('backend/adminSettings', {success, failure, email: req.user.email})
+    let error = req.flash('error')
+    res.render('backend/adminSettings', {success, failure, error, email: req.user.email})
 })
 
 router.put('/dashboard/adminSettings/email', function (req, res, next) {
