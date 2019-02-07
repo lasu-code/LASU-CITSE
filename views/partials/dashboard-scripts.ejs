@@ -41,4 +41,13 @@
             height: 350
         });
     }
+
+    function CKbasic(fieldname) {
+        CKEDITOR.replace(fieldname, {
+            toolbar: [
+				{name:'basic', items:['Bold','Italic','Underline','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','NumberedList','BulletedList','-','SelectAll','RemoveFormat','Undo','Redo']},
+			],
+            height: '200'
+        });
+    }
 </script>

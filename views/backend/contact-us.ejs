@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <%- include('../partials/dashboard-head', { pagename: 'Edit Contact Us' }) %>
 </head>
-
 <body>
     <%- include('../partials/dashboard-nav') %>
 
@@ -32,45 +30,19 @@
 
                     <%- include('../fields/hidden', { fieldname: 'id', valueField: (content) ? content._id : '' }); %>
 
+                    <hr class="my-4"/>
                     <div class="col-sm-10 ml-md-auto pl-0">
                         <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
                     </div>
 
                 </form>
-                <span style="display: none" id="upload">
-                    <%=upload%>
-                </span>
-
-                 <span style="display: none" id="failure">
-                    <%=failure%>
-                </span>
-
-                <br> <br>
             </main>
         </div>
     </div>
 
     <%- include('../partials/dashboard-scripts') %>
-    <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
-        // Init Ckeditor
-        CKEDITOR.replace('address', {
-            toolbar: [
-				{name:'basic', items:['Bold','Italic','Underline','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','NumberedList','BulletedList','-','SelectAll','RemoveFormat','Undo','Redo']},
-			],
-            height: '200'
-        });
-
-        // Show POST success alert
-        if ($.trim($('#upload').text()).length !== 0) {
-            alert("<%=upload%>")
-        }
-
-        // Show POST error alert
-        if($.trim($('#failure').text()).length !== 0) {
-            alert("<%=failure%>")
-        }
-
+        CKbasic('address')
     </script>
 </body>
 </html>

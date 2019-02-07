@@ -502,7 +502,7 @@ router.post('/dashboard/speech', upload.single('postImage'), async function(req,
 
     try {
         await Page.findOneAndUpdate({tag: "vc_speech"}, speechData, { upsert: true });
-        req.flash('success', "VC Speech has been updated successfully");
+        req.flash('success', "PAGE (VC Speech) - Content Update Successful!");
     } catch(err) {
         console.error("Error occured during POST /dashboard/speech", err)
         req.flash('error', "Error occured while updating 'VC Speech', try again or contact the web admin");
@@ -785,19 +785,21 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
 // Contact
 router.route('/dashboard/contact-us')
     .all(isLoggedIn)
-    .get((req, res, next) => {
+    .get(async (req, res, next) => {
         let req_url = req.originalUrl;
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        Contact.find({})
-            .then((data) => {
-                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', usrInfo, activeParent: 'about' })
-            })
-            .catch((err) => {
-                console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
-            })
+        let data = '';
+
+        try {
+            data = await Contact.find({});
+        } catch(err) {
+            data = [];
+            console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
+            req.flash('error', 'An error occured, try again or contact web admin!')
+        }
+
+        res.render('backend/contact-us', { req_url, content: data[0], page: 'contact-us', usrInfo, activeParent: 'about' })
     })
-    .post((req, res, next) => {
+    .post( async (req, res, next) => {
         pageData = {
             address: req.body.address,
             phone: req.body.phone,
@@ -808,12 +810,14 @@ router.route('/dashboard/contact-us')
             // _id = (req.body.id) ? req.body.id : ''
         }
 
-        Contact.findOneAndUpdate({}, pageData, { upsert: true })
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/contact-us): ${err}`); })
-            .then(() => {
-                req.flash('upload', `PAGE (Contact Us) - Content Update Successful!`);
-                res.redirect('/dashboard/contact-us');
-            })
+        try {
+            await Contact.findOneAndUpdate({}, pageData, { upsert: true })
+            req.flash('success', `PAGE (Contact Us) - Content Update Successful!`);
+        } catch(err) {
+            console.error(`Error occured during POST(/dashboard/contact-us): ${err}`);
+            req.flash('error', "Error occured while updating 'Contact Page', try again or contact the web admin");
+        }
+        res.redirect('/dashboard/contact-us');
     })
 
 // -----
