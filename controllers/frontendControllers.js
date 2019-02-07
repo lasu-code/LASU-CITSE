@@ -6,6 +6,7 @@ let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
 let Mail = require('../models/contactaddress')
 let Partner = require('../models/partner');
+let People = require('../models/people');
 
 let mailSender = require('../config/mailer');
 let f = require('../config/frontNav');
@@ -13,7 +14,7 @@ let f = require('../config/frontNav');
 let allNews = News.find({}).sort({'createdDate': -1}).limit(3);
 let allPartners = Partner.find({});
 
-exports.homePage = function (req, res, next) {
+exports.homePage = function (req, res) {
     (async () => {
         let sliders = Slider.find({})
         let mission = Page.find({ tag: 'mission' })
@@ -30,7 +31,7 @@ exports.homePage = function (req, res, next) {
     })()
 }
 
-exports.renderPage = function (req, res, next) {
+exports.renderPage = function (req, res) {
     let navIndex = req.path.substr(1);
     if (typeof f[navIndex] === 'undefined') {
         (async () => {
@@ -54,11 +55,11 @@ exports.renderPage = function (req, res, next) {
     }
 }
 
-exports.servicesPage = function (req, res, next) {
+exports.servicesPage = function (req, res) {
     res.render('extras/services', {});
 };
 
-exports.contactPage = function (req, res, next) {
+exports.contactPage = function (req, res) {
     (async () => {
         let subscribeData = {
             email: req.body.newsletterEmail1,
@@ -79,24 +80,18 @@ exports.contactPage = function (req, res, next) {
     })()
 };
 
-exports.newsPage = function (req, res, next) {
+exports.newsPage = async function (req, res) {
     let newsID = req.params.id;
-    News.findOne({ _id: newsID })
-        .exec()
-        .then((oneNews) => {
-            News.find({}).exec().then((doc) => {
-                if (doc) {
-                    res.render('extras/news', {oneNews, doc, activeNav: 'news' })
-                } else {
-                    res.render('extras/news')
-                }
-            })
-        })
+    let oneNews = News.findOne({ _id: newsID })
+
+    const [news, ptn] =
+        await Promise.all(
+            [oneNews, allPartners]
+        );
+    res.render('extras/news', {oneNews, doc: news, partners: ptn, activeNav: 'news' })
 };
 
-
-
-exports.newsListsPage = async function (req, res, next) {
+exports.newsListsPage = async function (req, res) {
 
     const [news, ptn] =
         await Promise.all(
@@ -107,19 +102,18 @@ exports.newsListsPage = async function (req, res, next) {
 
 };
 
-exports.teamPage = function (req, res, next) {
+exports.teamPage = async function (req, res) {
 
-    News.find({}).then((doc)=>{
-        if (doc){
-            res.render('frontend/team', { doc, activeNav: 'management' });
-            console.log(doc)
-        }else{
-            res.render('frontend/team', {});
-        }
-    })
+    let team = People.find({is_active: 1, tag: 'centre-leaders'})
+    const [news, ptn, tm] =
+        await Promise.all(
+            [allNews, allPartners, team]
+        );
+
+    res.render('frontend/team', { doc: news, partners: ptn, team: tm, activeNav: 'management' });
 };
 
-exports.post_contactPage = async function (req, res, next) {
+exports.post_contactPage = async function (req, res) {
 let messageData = {
         name: req.body.name,
         email: req.body.email,
@@ -149,7 +143,7 @@ let result = await Mail.find({})
     res.redirect('/contact');
 }
 
-exports.subscribe = function (req, res, next){
+exports.subscribe = function (req, res){
     let subscribeData = {
         email: req.body.newsletterEmail,
     }

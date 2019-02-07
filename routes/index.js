@@ -19,6 +19,7 @@ let Contact = require('../models/contact');
 let Settings = require('../models/settings');
 let Mail = require('../models/contactaddress');
 let Partner = require('../models/partner');
+let People = require('../models/people');
 
 let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
@@ -406,7 +407,7 @@ router.route('/dashboard/partner/edit/:id')
             result = await Partner.findById(id);
         } catch (err) {
             result = undefined;
-            showError('GET', 'dashboard/partners', err);
+            showError('GET', `dashboard/partner/edit/${id}`, err);
         }
         res.render('backend/partner-add', { result, action: req.originalUrl })
     })
@@ -424,7 +425,6 @@ router.route('/dashboard/partner/edit/:id')
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
-        console.table(pageData)
 
         try {
             await Partner.findOneAndUpdate({_id: idd}, pageData, { upsert: true })
@@ -445,36 +445,115 @@ router.delete('/dashboard/partner/delete/:id', async function (req, res) {
         await Partner.deleteOne({ _id: req.body.id })
         req.flash('success', 'Partner deleted successfully!');
     } catch(err) {
-        showError('DELETE', `/dashboard/delete/${idd}`, err)
+        showError('DELETE', `/dashboard/partner/delete/${idd}`, err)
     }
     res.redirect('/dashboard/partners')
-
 })
 
 // ----
 // Center Leaders
 router.route('/dashboard/leaders')
     .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
-
-        sponsor.find({}).then((result) => {
-            if (result) {
-                res.render('backend/center-leaders', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/center-leaders')
-            }
-        })
+    .get(async function (req, res) {
+        let result = '';
+        try {
+            result = await People.find({tag: 'centre-leaders'});
+        } catch(err) {
+            showError('GET', '/dashboard/leaders', err)
+        }
+        res.render('backend/leaders', { result })
     })
 
-router.route('/dashboard/leaders/add')
+router.route('/dashboard/leader/add')
     .all( adminLoggedIn)
-    .get ((req, res, next)=>{
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        res.render("backend/center-leadersForm", {upload, failure})
+    .get ((req, res) => {
+        res.render("backend/leader-add");
+    })
+    .post(upload.single('postImage'), async function (req, res) {
+        let pageData = {
+            name: req.body.name,
+            work_at: req.body.work_at,
+            position: req.body.position,
+            email: req.body.email,
+            phone: req.body.phone,
+            work_info_1: req.body.work_info_1,
+            work_info_2: req.body.work_info_2,
+            tag: 'centre-leaders',
+            is_active: 1,
+
+        }
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await People.create(pageData)
+            req.flash('success', `Centre Leader Creation Successful!`);
+        } catch (err) {
+            showError('POST', '/dashboard/leader/add', err);
+        }
+
+        res.redirect('/dashboard/leaders');
+    })
+
+router.route('/dashboard/leader/edit/:id')
+    .all(isLoggedIn)
+    .get(async function (req, res) {
+        let id = req.params.id, result;
+        try {
+            result = await People.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError('GET', `dashboard/leader/edit/${id}`, err);
+        }
+        res.render('backend/leader-add', { result, action: req.originalUrl })
+    })
+    .post(upload.single('postImage'), async function (req, res) {
+        let idd = req.params.id;
+
+        let pageData = {
+            name: req.body.name,
+            work_at: req.body.work_at,
+            position: req.body.position,
+            email: req.body.email,
+            phone: req.body.phone,
+            work_info_1: req.body.work_info_1,
+            work_info_2: req.body.work_info_2,
+            is_active: req.body.is_active,
+            tag: 'centre-leaders'
+        }
+        if (req.file) {
+            oldImage = await Partner.findOne({ _id: idd });
+            removeOldImage();
+
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await People.findOneAndUpdate({ _id: idd }, pageData, { upsert: true })
+            req.flash('success', "Centre Leader updated successfully");
+        } catch (err) {
+            showError('POST', `/dashboard/leader/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/leaders");
+    })
+
+router.delete('/dashboard/leader/delete/:id', async function (req, res) {
+    let idd = req.params.id;
+
+    oldImage = await People.findOne({ _id: idd });
+    removeOldImage()
+
+    try {
+        await People.deleteOne({ _id: req.body.id })
+        req.flash('success', 'Centre Leader record deleted successfully!');
+    } catch (err) {
+        showError('DELETE', `/dashboard/leader/delete/${idd}`, err)
+    }
+    res.redirect('/dashboard/leaders')
+
 })
 
 // ----
@@ -884,8 +963,8 @@ router.get('/services', controller.servicesPage);
 router.get('/contact', controller.contactPage);
 router.post('/post-contact', controller.post_contactPage);
 router.get('/team', controller.teamPage);
-router.get('/news-lists/:id', controller.newsPage);
-router.get('/news-lists', controller.newsListsPage);
+router.get('/news/:id', controller.newsPage);
+router.get('/news', controller.newsListsPage);
 router.get('/:page_name', controller.renderPage);
 router.post('/subscribe', controller.subscribe)
 
