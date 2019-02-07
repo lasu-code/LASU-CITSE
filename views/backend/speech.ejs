@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <%- include('../partials/dashboard-head', { pagename: 'Edit VCs Speech' }) %>
 </head>
-
 <body>
     <%- include('../partials/dashboard-nav') %>
 
@@ -21,15 +19,13 @@
 
                 <form action="/dashboard/speech" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
 
-
                     <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: "VC's Image", valueField: (result) ? result.postImage : "" }); %>
 
-                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Image caption', valueField: (result) ? result.name : ""}); %>
+                    <%- include('../fields/text', { fieldname: 'postImageCaption', fieldlabel: 'Image caption', valueField: (result) ? result.postImageCaption : "" }); %>
 
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: "VC's Speech", valueField: (result) ? result.content : "" }); %>
 
-                    <%- include('../fields/textarea', { fieldname: 'text_on_img', fieldlabel: "VC's Speech", valueField: (result) ? result.text_on_img : ""}); %>
-                  
-                   
+                    <%- include('../fields/text', { fieldname: 'vc_name', fieldlabel: "VC's Name", valueField: (result) ? result.summary : "" }); %>
 
                     <hr class="my-4"/>
                     <div class="col-sm-10 ml-md-auto pl-0">
@@ -37,43 +33,13 @@
                     </div>
 
                 </form>
-                <span style="display: none" id="upload">
-                    <%=upload%>
-                </span>
-
-                 <span style="display: none" id="failure">
-                    <%=failure%>
-                </span>
-
-                <br> <br>
             </main>
         </div>
     </div>
 
     <%- include('../partials/dashboard-scripts') %>
-    <script src="/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        // Init Ckeditor
-        CKEDITOR.replace('text_on_img', {
-            toolbar: [
-                {name:'basic', items:['Font','Format','FontSize','TextColor','BGColor','-','Bold','Italic','Underline','Strike','Subscript','Superscript','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','Image','-','NumberedList','BulletedList']},
-                '/',
-                {name:'insert', items: ['Link','Unlink','Outdent','Indent','SpecialChar','InsertPre','HorizontalRule','PageBreak','-','Image','-','SelectAll','RemoveFormat','Undo','Redo','Maximize']},
-            ],
-            height: 350
-        });
-
-        // Show POST success alert
-        if ($.trim($('#upload').text()).length !== 0) {
-            alert("<%=upload%>")
-        }
-
-        // Show POST error alert
-        if($.trim($('#failure').text()).length !== 0) {
-            alert("<%=failure%>")
-        }
-
+    <script>
+        CKfull('content')
     </script>
 </body>
-
 </html>

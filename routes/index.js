@@ -25,12 +25,12 @@ let controller = require('../controllers/frontendControllers')
 let mailController = require('../controllers/mailControllers');
 let n = require('../config/cmsNav');
 global.usrInfo = {};
-let oldImage = '';
+let oldImage = {};
 
 
 // HANDLE IMAGES
 // -----
-//  CLOUDINARY STORAGE
+// CLOUDINARY STORAGE
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,     //"dyieekcre"
     api_key:  process.env.CLOUD_KEY,        //"732513327822775"
@@ -124,7 +124,8 @@ async function getOldSliderImage(req, res, next) {
 async function removeOldImage() {
     if (oldImage) {
         // Cloudinary
-        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log(result) });
+        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log("Removed image at ", oldImage.postImage) });
+        oldImage = {};
 
         // Disk
         // fse.remove('\public' + oldImage.postImage)
@@ -344,8 +345,8 @@ router.post('/postaddress', function (req, res, next) {
 })
 
 
-//sponsors
-//----
+// ----
+// Sponsors
 router.route('/dashboard/sponsors')
     .all(isLoggedIn)
     .get(function (req, res, next) {
@@ -361,7 +362,7 @@ router.route('/dashboard/sponsors')
             }
         })
     })
-      
+
 router.get('/dashboard/sponsors/add', isLoggedIn, function(req, res, next){
      let upload = req.flash('upload');
         let failure = req.flash('failure');
@@ -385,46 +386,44 @@ router.post('/dasboard/sponsor/add', upload.single('postImage'), function(req, r
                 console.log(result)
                 req.flash('upload', `Sponsor Creation Successful!`);
                 res.redirect('/dashboard/sponsors');
-            })    
+            })
 })
 
-    router.get('/dashboard/sponsor/edit/:id', function(req, res, next){
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-        let id = req.params.id;
-        console.log(id);
+router.get('/dashboard/sponsor/edit/:id', function(req, res, next){
+    let upload = req.flash('upload');
+    let failure = req.flash('flash');
+    let id = req.params.id;
 
-        res.render('backend/editSponsor', { upload, failure, id, content: {} })
-    })
+    res.render('backend/editSponsor', { upload, failure, id, content: {} })
+})
 
  router.post('/dashboad/sponsor/edit/:id', upload.single('postImage'), async function(req, res, next){
 
-        let idd = req.params.id;
-        let oldSponsorImage = await Sponsor.findOne({_id: idd});
+    let idd = req.params.id;
+    let oldSponsorImage = await Sponsor.findOne({_id: idd});
 
-        (function removeSponsorOldImage() {
-            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
-        })()
+    (function removeSponsorOldImage() {
+        cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
+    })()
 
-        sponsorData = {
-            name: req.body.name,
-            text_on_img: req.body.text_on_img,
-            
-        }
-        if (req.file) {
-            sponsorData.postImage = req.file.secure_url;
-            sponsorData.publicid = req.file.public_id;
-        }
+    sponsorData = {
+        name: req.body.name,
+        text_on_img: req.body.text_on_img,
 
-        Sponsor.findOneAndUpdate({_id: idd  }, sponsorData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/sponsor/edit/:id") })
-            .then(() => {
-                req.flash('upload', "Sponsor has been updated successfully");
-                res.redirect("/dashboard/sponsors");
-            })
-    })
+    }
+    if (req.file) {
+        sponsorData.postImage = req.file.secure_url;
+        sponsorData.publicid = req.file.public_id;
+    }
 
-      //delete Sponsor
+    Sponsor.findOneAndUpdate({_id: idd  }, sponsorData, { upsert: true })
+        .catch((err) => { console.error("Error occured during POST /dashboad/sponsor/edit/:id") })
+        .then(() => {
+            req.flash('upload', "Sponsor has been updated successfully");
+            res.redirect("/dashboard/sponsors");
+        })
+})
+
 router.delete('/dashboard/sponsor/delete/:id', async function (req, res, next) {
     let idd = req.params.id;
     let oldSponsorImage = await Sponsor.findOne({_id: idd});
@@ -444,9 +443,9 @@ router.delete('/dashboard/sponsor/delete/:id', async function (req, res, next) {
     })
 
 })
-//sponsors ends here
 
-//centre leaders
+// ----
+// Center Leaders
 router.route('/dashboard/leaders')
     .all(isLoggedIn)
     .get(function (req, res, next) {
@@ -471,43 +470,44 @@ router.route('/dashboard/leaders/add')
         res.render("backend/center-leadersForm", {upload, failure})
 })
 
-//center leadres ends here
-//-----
-// Vc Speech
-//------
-router.get('/dashboard/speech', isLoggedIn, function(req, res, next){
-     let upload = req.flash('upload');
-        let failure = req.flash('failure');
-
-    Speech.findOne({const: "VC"}).then((result)=>{
-            res.render('backend/speech', {upload, failure, content: {}, result })  
-    })        
+// ----
+// VC Speech
+router.get('/dashboard/speech', isLoggedIn, function(req, res){
+    Page.findOne({tag: "vc_speech"}).then((result) => {
+        res.render('backend/speech', { result })
+    })
 })
 
-router.post('/dashboard/speech', upload.single('postImage'), async function(req, res, next){
-        let oldSpeechImage = await Speech.findOne({const: "VC"});
+router.post('/dashboard/speech', upload.single('postImage'), async function(req, res){
 
-        (function removeSpeechOldImage() {
-            cloudinary.uploader.destroy( oldSpeechImage.publicid, function(result) { console.log(result) });
-        })()
     let speechData = {
-        name: req.body.name,
-        text_on_img: req.body.text_on_img,
-        const: "VC"
+        postImageCaption: req.body.postImageCaption,
+        summary: req.body.vc_name,
+        content: req.body.content
     }
 
     if (req.file) {
-            speechData.postImage = req.file.secure_url;
-            speechData.publicid = req.file.public_id;
+        // remove old image
+        try {
+            oldImage = await Page.findOne({tag: "vc_speech"});
+            removeOldImage();
+        } catch(err) {
+            console.error('Error occured during delete of old image: ', err);
         }
 
-    Speech.findOneAndUpdate({const: "VC"  }, speechData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/speech") })
-            .then((result) => {
-                console.log(result)
-                req.flash('upload', "VC Speech has been updated successfully");
-                res.redirect("/dashboard/speech");
-            })
+        // write new image info
+        speechData.postImage = req.file.secure_url;
+        speechData.publicid = req.file.public_id;
+    }
+
+    try {
+        await Page.findOneAndUpdate({tag: "vc_speech"}, speechData, { upsert: true });
+        req.flash('success', "VC Speech has been updated successfully");
+    } catch(err) {
+        console.error("Error occured during POST /dashboard/speech", err)
+        req.flash('error', "Error occured while updating 'VC Speech', try again or contact the web admin");
+    }
+    res.redirect("/dashboard/speech");
 })
 
 // -----
@@ -561,46 +561,44 @@ router.route('/dashboard/slider/add')
             })
     })
 
-    router.get('/dashboard/slider/edit/:id', function(req, res, next){
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-        let id = req.params.id;
-        console.log(id);
+router.get('/dashboard/slider/edit/:id', function(req, res, next){
+    let upload = req.flash('upload');
+    let failure = req.flash('flash');
+    let id = req.params.id;
 
-        res.render('backend/editslider', { upload, failure, id, content: {} })
-    })
+    res.render('backend/editslider', { upload, failure, id, content: {} })
+})
 
  router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
 
-        let idd = req.params.id;
-        let oldSliderImage = await Slider.findOne({_id: idd});
+    let idd = req.params.id;
+    let oldSliderImage = await Slider.findOne({_id: idd});
 
-        (function removeSliderOldImage() {
-            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-        })()
+    (function removeSliderOldImage() {
+        cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
+    })()
 
-        sliderData = {
-            name: req.body.name,
-            text_on_img: req.body.text_on_img,
-            img_link: req.body.img_link,
-            img_link_text: req.body.img_link_text,
-            is_active: true,
+    sliderData = {
+        name: req.body.name,
+        text_on_img: req.body.text_on_img,
+        img_link: req.body.img_link,
+        img_link_text: req.body.img_link_text,
+        is_active: true,
 
-        }
-        if (req.file) {
-            sliderData.postImage = req.file.secure_url;
-            sliderData.publicid = req.file.public_id;
-        }
+    }
+    if (req.file) {
+        sliderData.postImage = req.file.secure_url;
+        sliderData.publicid = req.file.public_id;
+    }
 
-        Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
-            .then(() => {
-                req.flash('upload', "Slider has been updated successfully");
-                res.redirect("/dashboard/slider");
-            })
-    })
+    Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
+        .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
+        .then(() => {
+            req.flash('upload', "Slider has been updated successfully");
+            res.redirect("/dashboard/slider");
+        })
+})
 
-      //delete Slider
 router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
     let idd = req.params.id;
     let oldSliderImage = await Slider.findOne({_id: idd});
@@ -620,6 +618,7 @@ router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
     })
 
 })
+
 // -----
 // News
 router.get('/dashboard/news', function (req, res, next) {
@@ -666,6 +665,49 @@ router.get('/dashboard/staffs', function (req, res, next) {
     res.render('backend/staff', { upload, failure })
 })
 
+router.post('/poststaff', function (req, res, next) {
+    upload(req, res, (err) => {
+        if (err) {
+
+            //res.render('students', {msg : err})
+            res.send(err)
+        } else {
+            console.log(req.files);
+            Page.findOne({ name: "staff" }).then(function (result) {
+                if (result) {
+
+                    req.flash('failure', "Sorry You can only update not create new ones");
+                    res.redirect('dashboard/staff');
+
+
+                } else if (!result) {
+
+                    let newPage = new Page();
+
+                    newPage.name = req.body.name;
+                    newPage.content = req.body.content;
+                    newPage.newImg = req.file.secure_url;
+
+                    newPage.save().then((result) => {
+                        if (result) {
+                            console.log(result)
+                            req.flash('upload', "Staff page has been uploaded successfully");
+                            res.redirect('dashboard/staff');
+                        } else {
+                            res.send("err")
+                        }
+                    })
+
+                    // console.log("sorry cannot save new data")
+                }
+                //    // res.send("test")
+            })
+        }
+    })
+})
+
+// ----
+// Admin Settings
 router.get('/dashboard/adminSettings', function (req, res, next) {
     let success = req.flash('succes');
     let failure = req.flash('failure')
@@ -737,47 +779,6 @@ router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
         }
     });
 
-})
-
-router.post('/poststaff', function (req, res, next) {
-    upload(req, res, (err) => {
-        if (err) {
-
-            //res.render('students', {msg : err})
-            res.send(err)
-        } else {
-            console.log(req.files);
-            Page.findOne({ name: "staff" }).then(function (result) {
-                if (result) {
-
-                    req.flash('failure', "Sorry You can only update not create new ones");
-                    res.redirect('dashboard/staff');
-
-
-                } else if (!result) {
-
-                    let newPage = new Page();
-
-                    newPage.name = req.body.name;
-                    newPage.content = req.body.content;
-                    newPage.newImg = req.file.secure_url;
-
-                    newPage.save().then((result) => {
-                        if (result) {
-                            console.log(result)
-                            req.flash('upload', "Staff page has been uploaded successfully");
-                            res.redirect('dashboard/staff');
-                        } else {
-                            res.send("err")
-                        }
-                    })
-
-                    // console.log("sorry cannot save new data")
-                }
-                //    // res.send("test")
-            })
-        }
-    })
 })
 
 // -----
@@ -863,7 +864,6 @@ router.route('/dashboard/:tag')
                 res.redirect('/dashboard/' + page_tag);
             })
     })
-
 
 
 // WEBSITE ROUTES
