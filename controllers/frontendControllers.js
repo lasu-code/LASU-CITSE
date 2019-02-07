@@ -5,11 +5,13 @@ let Page = require('../models/page');
 let subscribe = require('../models/subscribe')
 let Contact = require('../models/contact');
 let Mail = require('../models/contactaddress')
+let Partner = require('../models/partner');
 
 let mailSender = require('../config/mailer');
 let f = require('../config/frontNav');
 
 let allNews = News.find({}).sort({'createdDate': -1}).limit(3);
+let allPartners = Partner.find({});
 
 exports.homePage = function (req, res, next) {
     (async () => {
@@ -19,12 +21,12 @@ exports.homePage = function (req, res, next) {
         let objectives = Page.find({ tag: 'objectives' })
         let speech = Page.find({ tag: 'vc_speech' })
 
-        const [sld, mss, vss, obj, news, spc] =
+        const [sld, mss, vss, obj, news, spc, ptn] =
             await Promise.all(
-                [sliders, mission, vision, objectives, allNews, speech]
+                [sliders, mission, vision, objectives, allNews, speech, allPartners]
             );
 
-        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home', vc_speech: spc[0] });
+        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home', vc_speech: spc[0], partners: ptn });
     })()
 }
 
@@ -42,12 +44,12 @@ exports.renderPage = function (req, res, next) {
         (async () => {
             let pageData = Page.find({ tag: thisPage })
 
-            const [dt, news] =
+            const [dt, news, ptn] =
                 await Promise.all(
-                    [pageData, allNews]
+                    [pageData, allNews, allPartners]
                 );
 
-            res.render('frontend/template', { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, ' '), activeNav });
+            res.render('frontend/template', { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, ' '), activeNav, partners: ptn });
         })()
     }
 }
@@ -68,12 +70,12 @@ exports.contactPage = function (req, res, next) {
 
         let pageData = Contact.find({})
 
-        const [dt, news] =
+        const [dt, news, ptn] =
             await Promise.all(
-                [pageData, allNews]
+                [pageData, allNews, allPartners]
             );
 
-        res.render('frontend/contact', { content: dt[0], doc: news, activeNav: 'about', gmap_api_key: process.env.GMAP_API_KEY });
+        res.render('frontend/contact', { content: dt[0], doc: news, activeNav: 'about', gmap_api_key: process.env.GMAP_API_KEY, partners: ptn });
     })()
 };
 
@@ -94,15 +96,14 @@ exports.newsPage = function (req, res, next) {
 
 
 
-exports.newsListsPage = function (req, res, next) {
+exports.newsListsPage = async function (req, res, next) {
 
-    News.find({}).then((doc) => {
-        if (doc) {
-            res.render('extras/news-lists', { doc, activeNav: 'news' })
-        } else {
-            res.render('extras/news-lists')
-        }
-    })
+    const [news, ptn] =
+        await Promise.all(
+            [allNews, allPartners]
+        );
+
+    res.render('extras/news-lists', { doc: news, activeNav: 'news', partners: ptn })
 
 };
 
