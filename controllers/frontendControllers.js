@@ -17,13 +17,14 @@ exports.homePage = function (req, res, next) {
         let mission = Page.find({ tag: 'mission' })
         let vision = Page.find({ tag: 'vision' })
         let objectives = Page.find({ tag: 'objectives' })
+        let speech = Page.find({ tag: 'vc_speech' })
 
-        const [sld, mss, vss, obj, news] =
+        const [sld, mss, vss, obj, news, spc] =
             await Promise.all(
-                [sliders, mission, vision, objectives, allNews]
+                [sliders, mission, vision, objectives, allNews, speech]
             );
 
-        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home' });
+        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home', vc_speech: spc[0] });
     })()
 }
 
