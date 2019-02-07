@@ -15,7 +15,7 @@ let peopleSchema = new Schema({
     work_info_3: { type: String },
     tag: { type: String },
     is_active: { type: String, default: true },
-    createdDate: { type: Date, default: Date.now() }
+    createdDate: { type: Date, default: Date.now }
 })
 
 module.exports = mongoose.model("People", peopleSchema);

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/dashboard-head', { pagename: 'Add/Edit slider' }) %>
+</head>
+
+<body>
+    <%- include('../partials/dashboard-nav') %>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <%- include('../partials/sidebar.ejs', {page: 'sliders', activeParent: 'home'}) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2 rw"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %> Page Content: <span class="text-info">SLIDERS</span></h1>
+                </div>
+
+                <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/slider/add' %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Slider Name', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
+
+                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Slider Image', valueField: (typeof result != 'undefined') ? result.postImage : false }); %>
+
+                    <%- include('../fields/textarea', { fieldname: 'text_on_img', fieldlabel: 'Text On Slider', valueField: (typeof result != 'undefined') ? result.text_on_img : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'img_link', fieldlabel: 'Slider On-click URL', valueField: (typeof result != 'undefined') ? result.img_link : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'img_link_text', fieldlabel: 'Slider On-click Label', valueField: (typeof result != 'undefined') ? result.img_link_text : '' }); %>
+
+                    <%- include('../fields/radio', { fieldname: 'is_visible', fieldlabel: 'Is Enabled', valueField: (typeof result != 'undefined') ? result.is_visible : 1 }); %>
+
+                    <hr class="my-4"/>
+                    <div class="col-sm-10 ml-md-auto px-0">
+                        <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE SLIDER' : 'CREATE SLIDER' }); %>
+                        <a href="/dashboard/sliders" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
+                    </div>
+
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/dashboard-scripts') %>
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKbasic('text_on_img');
+    </script>
+</body>
+
+</html>
+

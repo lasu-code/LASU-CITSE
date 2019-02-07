@@ -550,7 +550,7 @@ router.delete('/dashboard/leader/delete/:id', async function (req, res) {
         await People.deleteOne({ _id: req.body.id })
         req.flash('success', 'Centre Leader record deleted successfully!');
     } catch (err) {
-        showError('DELETE', `/dashboard/leader/delete/${idd}`, err)
+        showError('DELETE', `/dashboard/leader/delete/${idd}`, err);
     }
     res.redirect('/dashboard/leaders')
 
@@ -558,151 +558,139 @@ router.delete('/dashboard/leader/delete/:id', async function (req, res) {
 
 // ----
 // VC Speech
-router.get('/dashboard/speech', isLoggedIn, function(req, res){
-    Page.findOne({tag: "vc_speech"}).then((result) => {
-        res.render('backend/speech', { result })
-    })
-})
-
-router.post('/dashboard/speech', upload.single('postImage'), async function(req, res){
-
-    let speechData = {
-        postImageCaption: req.body.postImageCaption,
-        summary: req.body.vc_name,
-        content: req.body.content
-    }
-
-    if (req.file) {
-        // remove old image
+router.route('/dashboard/speech')
+    .all(isLoggedIn)
+    .get(async function(req, res) {
+        let result = '';
         try {
-            oldImage = await Page.findOne({tag: "vc_speech"});
-            removeOldImage();
+            result = await Page.findOne({tag: "vc_speech"})
         } catch(err) {
-            console.error('Error occured during delete of old image: ', err);
+            showError('GET', '/dashboard/speech', err);
+        }
+        res.render('backend/speech', { result });
+    })
+    .post(upload.single('postImage'), async function(req, res){
+
+        let speechData = {
+            postImageCaption: req.body.postImageCaption,
+            summary: req.body.vc_name,
+            content: req.body.content
         }
 
-        // write new image info
-        speechData.postImage = req.file.secure_url;
-        speechData.publicid = req.file.public_id;
-    }
+        if (req.file) {
+            // remove old image
+            try {
+                oldImage = await Page.findOne({tag: "vc_speech"});
+                removeOldImage();
+            } catch(err) {
+                console.error('Error occured during delete of old image: ', err);
+            }
 
-    try {
-        await Page.findOneAndUpdate({tag: "vc_speech"}, speechData, { upsert: true });
-        req.flash('success', "PAGE (VC Speech) - Content Update Successful!");
-    } catch(err) {
-        console.error("Error occured during POST /dashboard/speech", err)
-        req.flash('error', "Error occured while updating 'VC Speech', try again or contact the web admin");
-    }
-    res.redirect("/dashboard/speech");
-})
+            // write new image info
+            speechData.postImage = req.file.secure_url;
+            speechData.publicid = req.file.public_id;
+        }
+
+        try {
+            await Page.findOneAndUpdate({tag: "vc_speech"}, speechData, { upsert: true });
+            req.flash('success', "PAGE (VC Speech) - Content Update Successful!");
+        } catch(err) {
+            showError('POST', '/dashboard/speech', err);
+        }
+        res.redirect("/dashboard/speech");
+    })
 
 // -----
 // Slider
-router.route('/dashboard/slider')
+router.route('/dashboard/sliders')
     .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
-
-        Slider.find({}).then((result) => {
-            if (result) {
-                res.render('backend/slider', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/slider')
-            }
-        })
+    .get(async function (req, res) {
+        let result = '';
+        try {
+            result = await Slider.find().sort({_id: -1})
+        } catch(err) {
+            showError('GET', '/dashboard/slider', err);
+        }
+        res.render('backend/sliders', { result })
     })
 
 router.route('/dashboard/slider/add')
-    .all(isLoggedIn, function (req, res, next) {
-        oldImage = null
-        return next()
+    .all(isLoggedIn)
+    .get(function (req, res) {
+        res.render('backend/slider-add')
     })
-    .get(function (req, res, next) {
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-
-        res.render('backend/slider-form', { upload, failure, content: {} })
-    })
-    .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
-        removeOldImage();
-        pageData = {
+    .post(upload.single('postImage'), async (req, res) => {
+        let pageData = {
             name: req.body.name,
             text_on_img: req.body.text_on_img,
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
-            is_active: true,
+            is_visible: req.body.is_visible
         }
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Slider.create(pageData)
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/slider): ${err}`); })
-            .then(() => {
-                req.flash('upload', `Slider Creation Successful!`);
-                res.redirect('/dashboard/slider');
-            })
-    })
-
-router.get('/dashboard/slider/edit/:id', function(req, res, next){
-    let upload = req.flash('upload');
-    let failure = req.flash('flash');
-    let id = req.params.id;
-
-    res.render('backend/editslider', { upload, failure, id, content: {} })
-})
-
- router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
-
-    let idd = req.params.id;
-    let oldSliderImage = await Slider.findOne({_id: idd});
-
-    (function removeSliderOldImage() {
-        cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-    })()
-
-    sliderData = {
-        name: req.body.name,
-        text_on_img: req.body.text_on_img,
-        img_link: req.body.img_link,
-        img_link_text: req.body.img_link_text,
-        is_active: true,
-
-    }
-    if (req.file) {
-        sliderData.postImage = req.file.secure_url;
-        sliderData.publicid = req.file.public_id;
-    }
-
-    Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
-        .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
-        .then(() => {
-            req.flash('upload', "Slider has been updated successfully");
-            res.redirect("/dashboard/slider");
-        })
-})
-
-router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
-    let idd = req.params.id;
-    let oldSliderImage = await Slider.findOne({_id: idd});
-
-        (function removeSliderOldImage() {
-            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-        })()
-
-    Slider.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            if (result) {
-                res.redirect('/dashboard/slider')
-            } else {
-                console.log('err')
-            }
+        try {
+            await Slider.create(pageData)
+            req.flash('New Slider created successfully!');
+        } catch(err) {
+            showError('POST', '/dashboard/slider', err)
         }
+        res.redirect('/dashboard/sliders');
     })
 
+router.route('/dashboard/slider/edit/:id')
+    .all(isLoggedIn)
+    .get(async function(req, res){
+        let id = req.params.id, result;
+        try {
+            result = await Slider.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError('GET', `dashboard/slider/edit/${id}`, err);
+        }
+        res.render('backend/slider-add', { result, action: req.originalUrl })
+    })
+    .post(upload.single('postImage'), async function(req, res){
+
+        let idd = req.params.id;
+        oldImage = await Slider.findOne({_id: idd});
+        removeOldImage();
+
+        let sliderData = {
+            name: req.body.name,
+            text_on_img: req.body.text_on_img,
+            img_link: req.body.img_link,
+            img_link_text: req.body.img_link_text,
+            is_visible: req.body.is_visible
+
+        }
+        if (req.file) {
+            sliderData.postImage = req.file.secure_url;
+            sliderData.publicid = req.file.public_id;
+        }
+        try {
+            await Slider.findOneAndUpdate({ _id: idd }, sliderData, { upsert: true })
+            req.flash('success', 'Slider updated successfully')
+        } catch(err) {
+            showError('POST', `/dashboad/slider/edit/${id}`, err);
+        }
+        res.redirect("/dashboard/sliders");
+    })
+
+router.delete('/dashboard/slider/delete/:id', async function (req, res) {
+    let idd = req.params.id;
+    let oldImage = await Slider.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await Slider.deleteOne({ _id: req.body.id });
+        req.flash('success', 'Slider deleted successfully!')
+    } catch(err) {
+        showError('DELETE', `/dashboard/slider/delete/${idd}`, err);
+    }
+    res.redirect('/dashboard/sliders');
 })
 
 // -----
