@@ -1,19 +1,19 @@
-let Message = require('../models/message')
+let Message = require("../models/message");
 
-let mailSender = require('../config/mailer')
+let mailSender = require("../config/mailer");
 
-exports.messages = (req, res, next) =>{
+exports.messages = (req, res) =>{
 
     Message.find({}).then((result) => {
         if(result){
-            console.log(result)
-            res.render('backend/messages', {result:result})
+            console.log(result);
+            res.render("backend/messages", {result:result});
         } else {
-            res.render('backend/messages')
+            res.render("backend/messages");
         }
-    })
+    });
 
-}
+};
 
 exports.reply = (req, res, next) => {
 
@@ -21,7 +21,7 @@ exports.reply = (req, res, next) => {
     let mailOptions = {
         from: "lasu CITSE - <lasu_citse@gmail.com>", //sender adress
         // to: req.body.userMail,
-        to: '6582c11462-624e8d@inbox.mailtrap.io',
+        to: "6582c11462-624e8d@inbox.mailtrap.io",
         subject: "LASU CITSE",
         html: req.body.reply
     };
@@ -31,8 +31,8 @@ exports.reply = (req, res, next) => {
             return next(err);
         })
         .then(() => {
-            req.flash('success', 'Your message have been sent!');
-        })
+            req.flash("success", "Your message have been sent!");
+        });
 
-    res.redirect("dashboard/messages")
-}
+    res.redirect("dashboard/messages");
+};
