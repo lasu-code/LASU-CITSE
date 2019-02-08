@@ -1,64 +1,118 @@
-<!doctype html>
-<html lang="en">
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', { pagename: 'Edit VCs Speech' }) %>
+    <%- include('../partials2/head', {pagename: ' VCs Speech'}) %>
 </head>
 
 <body>
-    <%- include('../partials/dashboard-nav') %>
-
-    <div class="container-fluid">
-        <div class="row">
-
-            <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs', {page: "VC Speech", activeParent: 'home'}) %>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2 rw">Edit Page Content: <span class="text-info">VC's Speech</span></h1>
-                </div>
-
-                <form action="/dashboard/speech" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
-
-                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: "VC's Image", valueField: (result) ? result.postImage : "" }); %>
-
-                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Image caption', valueField: (result) ? result.name : ""}); %>
-
-
-                    <%- include('../fields/textarea', { fieldname: 'text_on_img', fieldlabel: "VC's Speech", valueField: (result) ? result.text_on_img : ""}); %>
-                  
-                   
-
-                    <hr class="my-4"/>
-                    <div class="col-sm-10 ml-md-auto pl-0">
-                        <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
-                    </div>
-
-                </form>
-                <span style="display: none" id="upload">
-                    <%=upload%>
-                </span>
-
-                 <span style="display: none" id="failure">
-                    <%=failure%>
-                </span>
-
-                <br> <br>
-            </main>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
         </div>
     </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/navbar') %>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/aside') %>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">Edit Page Content: <span class="text-info">VC's Speech</span></h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+                <div class="container">
+                    <div class="card">
+                        <form class="form-horizontal" action="/dashboard/speech" method="post" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: "VC's Image", valueField: (result) ? result.postImage : "" }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Image caption', valueField: (result) ? result.name : ""}); %>
+                                
+                                
+                                <%- include('../fields/textarea', { fieldname: 'text_on_img', fieldlabel: "VC's Speech", valueField: (result) ? result.text_on_img : ""}); %>
+                            </div>
 
-    <%- include('../partials/dashboard-scripts') %>
+                            <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+            </div>
+            <br>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Matrix-admin. Designed and Developed by <a href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         // Init Ckeditor
         CKEDITOR.replace('text_on_img', {
             toolbar: [
-                {name:'basic', items:['Font','Format','FontSize','TextColor','BGColor','-','Bold','Italic','Underline','Strike','Subscript','Superscript','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','Image','-','NumberedList','BulletedList']},
+                { name: 'basic', items: ['Font', 'Format', 'FontSize', 'TextColor', 'BGColor', '-', 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'Copy', 'Cut', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Image', '-', 'NumberedList', 'BulletedList'] },
                 '/',
-                {name:'insert', items: ['Link','Unlink','Outdent','Indent','SpecialChar','InsertPre','HorizontalRule','PageBreak','-','Image','-','SelectAll','RemoveFormat','Undo','Redo','Maximize']},
+                { name: 'insert', items: ['Link', 'Unlink', 'Outdent', 'Indent', 'SpecialChar', 'InsertPre', 'HorizontalRule', 'PageBreak', '-', 'Image', '-', 'SelectAll', 'RemoveFormat', 'Undo', 'Redo', 'Maximize'] },
             ],
             height: 350
         });
@@ -69,11 +123,14 @@
         }
 
         // Show POST error alert
-        if($.trim($('#failure').text()).length !== 0) {
+        if ($.trim($('#failure').text()).length !== 0) {
             alert("<%=failure%>")
         }
 
     </script>
+    <%- include('../partials2/cmsScripts') %>
+
+
 </body>
 
 </html>

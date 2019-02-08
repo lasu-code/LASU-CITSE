@@ -563,7 +563,7 @@ router.route('/dashboard/slider/add')
             })
     })
 
-    router.get('/dashboard/slider/edit/:id', function(req, res, next){
+    router.get('/dashboard/edit/:id', function(req, res, next){
         let upload = req.flash('upload');
         let failure = req.flash('flash');
         let id = req.params.id;
