@@ -1,87 +1,87 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <%- include('../partials/dashboard-head', {pagename: 'Edit CMS Admin'}) %>
-  </head>
+</head>
 
-  <body>
+<body>
     <%- include('../partials/dashboard-nav') %>
 
     <div class="container-fluid">
-      <div class="row">
+        <div class="row">
 
-        <!-- sidebar -->
-        <%- include('../partials/sidebar.ejs', {page: 'admin'}) %>
+            <!-- sidebar -->
+            <%- include('../partials/sidebar.ejs', {page: 'admin'}) %>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-8 mr-lg-auto px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-            <h1 class="h2">Admin CMS</h1>
-          </div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-8 mr-lg-auto px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2">Admin CMS</h1>
+                </div>
 
-          <form action="/createAccount" method="POST">
-            <div class="form-group row">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
-                <div class="col-sm-10">
-                <input type="text" class="form-control" id="inputEmail3" name="name" placeholder="Name">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Email</label>
-                <div class="col-sm-10">
-                <input type="email" class="form-control" id="inputPassword3" name="email" placeholder="Email">
-                </div>
-            </div>
-            <div class="form-group row">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
-                <div class="col-sm-10">
-                <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="Password">
-                </div>
-            </div>
-            <div class="form-group row d-none">
-                <label for="inputPassword3" class="col-sm-2 col-form-label">Position</label>
-                <div class="col-sm-10">
-                <input type="hidden" class="form-control" id="inputPassword3" name="position" value="member" placeholder="Position">
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Authorize</button>
-                </div>
-            </div>
-          </form>
-          <br> <br>
+                <form action="/createAccount" method="POST">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+                        <div class="col-sm-10">
+                        <input type="text" class="form-control" id="inputEmail3" name="name" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10">
+                        <input type="email" class="form-control" id="inputPassword3" name="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+                        <div class="col-sm-10">
+                        <input type="password" class="form-control" id="inputPassword3" name="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="form-group row d-none">
+                        <label for="inputPassword3" class="col-sm-2 col-form-label">Position</label>
+                        <div class="col-sm-10">
+                        <input type="hidden" class="form-control" id="inputPassword3" name="position" value="member" placeholder="Position">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary">Authorize</button>
+                        </div>
+                    </div>
+                </form>
+                <br> <br>
 
-          <h3>Current Administrators</h3> <hr>
-          <table class="table" >
-            <thead class="thead-dark" style="font-weight:bold">
-              <tr>
-                <th scope="col">Administrator Name</th>
-                <th scope="col">Email</th>
-                <th scope="col">Position</th>
-                <th scope="col">Action</th>
-              </tr>
-            </thead>
-            <tbody style="font-size:15px">
-              <% for(var i=0; i < result.length; i++) { %>
-                <tr>
-                    <td><%= result[i].name%></td>
-                    <td><%= result[i].email %></td>
-                    <td><%= result[i].position %></td>
-                    <td>
-                      <form action="/deleteadmin?_method=DELETE" method="POST">
-                        <input type="hidden" name="id" value="<%=result[i]._id%>">
-                        <button type="submit" class="btn btn-dark">Delete</button>
-                      </form>
-                    </td>
-                  </tr>
-                <% } %>
-            </tbody>
-          </table>
+                <h3>Current Administrators</h3> <hr>
+                <table class="table" >
+                    <thead class="thead-dark" style="font-weight:bold">
+                    <tr>
+                        <th scope="col">Administrator Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody style="font-size:15px">
+                    <% for(var i=0; i < result.length; i++) { %>
+                        <tr>
+                            <td><%= result[i].name%></td>
+                            <td><%= result[i].email %></td>
+                            <td><%= result[i].position %></td>
+                            <td>
+                            <form action="/deleteadmin?_method=DELETE" method="POST">
+                                <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                <button type="submit" class="btn btn-dark">Delete</button>
+                            </form>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
 
-        </main>
-      </div>
+            </main>
+        </div>
     </div>
     <%- include('../partials/dashboard-scripts') %>
 
-  </body>
+</body>
 </html>

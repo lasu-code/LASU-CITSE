@@ -1,10 +1,8 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <%- include('../partials/dashboard-head', { pagename: 'Edit slider' }) %>
 </head>
-
 <body>
     <%- include('../partials/dashboard-nav') %>
 
@@ -24,7 +22,7 @@
                     <li><a href="#" onclick="openCity('password')">Change Password</a></li>
                     <li><a href="#" onclick="openCity('delete')">Delete Account</a></li>
                 </ul>
-                
+
                 <div id="email" class="w3-container city">
                     <h2>Change Email</h2>
                     <div class="form-horizontal">
@@ -49,11 +47,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Modal -->
                     <div id="emailModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
-                    
+
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -68,14 +66,14 @@
                                         <button class="btn btn-success">Yes</button>
                                         <button class="btn btn-danger" data-dismiss="modal">No</button>
                                     </form>
-                    
+
                                 </div>
                             </div>
-                    
+
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="password" class="w3-container city">
                     <h2>Change Password</h2>
                     <div class="form-horizontal">
@@ -99,10 +97,10 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div id="passwordModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
-                    
+
                             <!-- Modal content-->
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -117,14 +115,14 @@
                                         <button class="btn btn-success">Yes</button>
                                         <button class="btn btn-danger" data-dismiss="modal">No</button>
                                     </form>
-                    
+
                                 </div>
                             </div>
-                    
+
                         </div>
                     </div>
                 </div>
-                
+
                 <div id="delete" class="w3-container city">
                     <h2>Delete Account</h2>
                     <form action="/dashboard/adminSettings/delete?_method=DELETE" method="post">
@@ -144,40 +142,41 @@
                 </div>
 
                 <br> <br>
-                
+
             </main>
         </div>
     </div>
 
+    <%- include('../partials/dashboard-scripts') %>
     <script>
         function emailCheck() {
-                if (document.getElementById('email2').value == '' || document.getElementById('email3').value == '') {
-                    document.getElementById('msg').innerHTML = 'Empty fields';
-                }
-                else if (document.getElementById('email2').value !== document.getElementById('email3').value) {
-                    document.getElementById('msg').innerHTML = 'Email Mismatch';
-                }
-                else if (document.getElementById('email1').value !== document.getElementById('dbEmail').value) {
-                    document.getElementById('msg').innerHTML = 'Invalid Email';
-                }
-                else {
-                    document.getElementById('newEmail').value = document.getElementById('email2').value;
-                    $('#emailModal').modal('show');
-                }
+            if (document.getElementById('email2').value == '' || document.getElementById('email3').value == '') {
+                document.getElementById('msg').innerHTML = 'Empty fields';
+            }
+            else if (document.getElementById('email2').value !== document.getElementById('email3').value) {
+                document.getElementById('msg').innerHTML = 'Email Mismatch';
+            }
+            else if (document.getElementById('email1').value !== document.getElementById('dbEmail').value) {
+                document.getElementById('msg').innerHTML = 'Invalid Email';
+            }
+            else {
+                document.getElementById('newEmail').value = document.getElementById('email2').value;
+                $('#emailModal').modal('show');
+            }
         }
 
         function passwordCheck() {
-                if (document.getElementById('pass1').value == '' || document.getElementById('pass2').value == '' || document.getElementById('pass3').value == '') {
-                    document.getElementById('msg2').innerHTML = 'Empty fields';
-                }
-                else if (document.getElementById('pass2').value !== document.getElementById('pass3').value) {
-                    document.getElementById('msg2').innerHTML = 'Password Mismatch';
-                }
-                else {
-                    document.getElementById('newPass').value = document.getElementById('pass2').value;
-                    document.getElementById('dbPass').value = document.getElementById('pass1').value;
-                    $('#passwordModal').modal('show');
-                }
+            if (document.getElementById('pass1').value == '' || document.getElementById('pass2').value == '' || document.getElementById('pass3').value == '') {
+                document.getElementById('msg2').innerHTML = 'Empty fields';
+            }
+            else if (document.getElementById('pass2').value !== document.getElementById('pass3').value) {
+                document.getElementById('msg2').innerHTML = 'Password Mismatch';
+            }
+            else {
+                document.getElementById('newPass').value = document.getElementById('pass2').value;
+                document.getElementById('dbPass').value = document.getElementById('pass1').value;
+                $('#passwordModal').modal('show');
+            }
             }
 
         function deleteAcc() {
@@ -187,7 +186,6 @@
             else{
                 document.getElementById('msgD').innerHTML = '';
             }
-
         }
 
         openCity("email")
@@ -199,21 +197,6 @@
             }
             document.getElementById(cityName).style.display = "block";
         }
-
-    </script>
-    <%- include('../partials/dashboard-scripts') %>
-    <script>
-        if ("<%-success%>") {
-            swal({
-                text: "<%=success%>",
-            });
-        }
-        else if ("<%-error%>") {
-            swal({
-                text: "<%=error%>",
-            });
-        }
     </script>
 </body>
-
 </html>
