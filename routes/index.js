@@ -902,21 +902,20 @@ router.route('/dashboard/contact-us')
 // Management pages
 router.route('/dashboard/:tag')
     .all(isLoggedIn)
-    .get((req, res, next) => {
+    .get(async (req, res, next) => {
         let req_url = req.originalUrl;
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
         let page_tag = req.params.tag.trim();
         let page_obj = n[page_tag.replace(/(-)+/gi, '_')];
-        Page.findOne({ tag: page_tag })
-            .then((content) => {
-                res.render('backend/template-one', { upload, failure, req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo })
-            })
-            .catch((err) => {
-                console.error(`Error occured during GET(/dashboard/${page_tag}): ${err}`);
-            })
+        let content = '';
+
+        try {
+            content = await Page.findOne({ tag: page_tag })
+        } catch(err) {
+            showError('GET', `/dashboard/${page_tag}`, err);
+        }
+        res.render('backend/template-one', { req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo })
     })
-    .post(getOldImage, upload.single('postImage'), (req, res, next) => {
+    .post(getOldImage, upload.single('postImage'), async (req, res, next) => {
         removeOldImage();
 
         let page_tag = req.params.tag.trim();
@@ -928,19 +927,20 @@ router.route('/dashboard/:tag')
             postImageCaption: req.body.postImageCaption,
             meta_key: req.body.meta_key,
             meta_desc: req.body.meta_desc,
-            is_active: true
+            is_active: 1
         }
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Page.findOneAndUpdate({ tag: page_tag }, pageData, { upsert: true })
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/${page_tag}): ${err}`); })
-            .then(() => {
-                req.flash('upload', `PAGE (${capitalize(page_tag)}) - Content Update Successful!`);
-                res.redirect('/dashboard/' + page_tag);
-            })
+        try {
+            await Page.findOneAndUpdate({ tag: page_tag }, pageData, { upsert: true })
+            req.flash('success', `PAGE (${capitalize(page_tag)}) - Content Update Successful!`);
+        } catch(err) {
+            showError('POST', `/dashboard/${page_tag}`, err);
+        }
+        res.redirect('/dashboard/' + page_tag);
     })
 
 

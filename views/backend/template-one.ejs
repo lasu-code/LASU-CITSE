@@ -11,7 +11,6 @@
     <div class="container-fluid">
         <div class="row">
 
-            <!-- sidebar -->
             <%- include('../partials/sidebar.ejs') %>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
@@ -19,10 +18,9 @@
                     <h1 class="h2 rw"> Edit Page Content: <span class="text-info"><%= title.toUpperCase() %></span></h1>
                 </div>
 
-                <form action="<%= req_url %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                <form action="<%= req_url %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10 mb-5">
 
                     <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Post Header Image', valueField: (content) ? content.postImage : false }); %>
-
                     <%- include('../fields/textarea', { fieldname: 'postImageCaption', fieldlabel: 'Post Image Caption', valueField: (content) ? content.postImageCaption : ''}); %>
 
                     <hr class="my-4"/>
@@ -30,7 +28,6 @@
                     <div class="col mb-4"></div>
 
                     <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'Post Content', valueField: (content) ? content.content : ''}); %>
-
                     <%- include('../fields/hidden', { fieldname: 'name', valueField: page }); %>
                     <%- include('../fields/hidden', { fieldname: 'tag', valueField: page }); %>
 
@@ -39,20 +36,14 @@
 
                     <%- include('../fields/textarea', { fieldname: 'meta_desc', fieldlabel: 'SEO Description', valueField: (content) ? content.meta_desc : ''}); %>
 
-                    <div class="col-sm-10 ml-md-auto pl-0">
-                        <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
+                    <hr class="my-4"/>
+                    <div class="row justify-content-end">
+                        <div class="col-sm-10 px-3">
+                            <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
+                        </div>
                     </div>
 
                 </form>
-                <span style="display: none" id="upload">
-                    <%=upload%>
-                </span>
-
-                 <span style="display: none" id="failure">
-                    <%=failure%>
-                </span>
-
-                <br> <br>
             </main>
         </div>
     </div>
