@@ -1,29 +1,35 @@
 let message = require('../models/message')
 let Slider = require('../models/slider');
 let News = require('../models/news');
-let Page = require('../models/page'); 
+let Page = require('../models/page');
 let nodemailer= require('nodemailer')
-let keys = require('../config/keys.js')
+// let keys = require('../config/keys.js')
 let subscribe = require('../models/subscribe')
+let Contact = require('../models/contact');
+let Mail = require('../models/contactaddress')
+let Sponsor = require('../models/sponsor')
+let Speech = require('../models/speech');
 
 
 
 let f = require('../config/frontNav');
 let allNews = News.find({});
+let allSponsors = Sponsor.find({});
 
 exports.homePage = function (req, res, next) {
     (async () => {
         let sliders = Slider.find({})
+        let allspeech = Speech.find({})
         let mission = Page.find({ tag: 'mission' })
         let vision = Page.find({ tag: 'vision' })
         let objectives = Page.find({ tag: 'objectives' })
 
-        const [sld, mss, vss, obj, news] =
+        const [sld, mss, vss, obj, news, Sponsor, speech] =
             await Promise.all(
-                [sliders, mission, vision, objectives, allNews]
+                [sliders, mission, vision, objectives, allNews, allSponsors, allspeech]
             );
 
-        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home' });
+        res.render('frontend/index', {result: sld, mission: mss[0], vision: vss[0], obj: obj[0], doc: news, activeNav: 'home', Sponsor, speech });
     })()
 }
 
@@ -31,10 +37,11 @@ exports.renderPage = function (req, res, next) {
     let navIndex = req.path.substr(1);
     if (typeof f[navIndex] === 'undefined') {
         (async () => {
-            const news = await allNews;
+            const [news, Sponsor] = await Promise.all(
+                [allNews, allSponsors]
+            );
 
-            // res.render('frontend/template', { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, ' '), activeNav });
-            res.render('frontend/404', {activeNav: '', navIndex, doc: news });
+            res.render('frontend/404', {activeNav: '', navIndex, doc: news, Sponsor });
         })()
     } else {
         let thisPage = f[navIndex].data;
@@ -42,12 +49,12 @@ exports.renderPage = function (req, res, next) {
         (async () => {
             let pageData = Page.find({ tag: thisPage })
 
-            const [dt, news] =
+            const [dt, news, Sponsor] =
                 await Promise.all(
-                    [pageData, allNews]
+                    [pageData, allNews, allSponsors]
                 );
 
-            res.render('frontend/template', { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, ' '), activeNav });
+            res.render('frontend/template', { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, ' '), activeNav, Sponsor });
         })()
     }
 }
@@ -57,32 +64,50 @@ exports.servicesPage = function (req, res, next) {
 };
 
 exports.contactPage = function (req, res, next) {
-    let subscribeData ={
-        email: req.body.newsletterEmail1,
-    }
-
-    let newData = new subscribe(subscribeData);
-        newData.save()
-    Page.find({name: "contactus"}).then((file)=>{
-        if (file){
-            News.find({}).then((doc)=>{
-                if(doc){
-                    res.render('frontend/contact', {file, doc, activeNav: 'about'});
-                }
-            })
-        }else{
-            res.render('frontend/contact');
+    (async () => {
+        let subscribeData = {
+            email: req.body.newsletterEmail1,
         }
-    })
+
+        let newData = new subscribe(subscribeData);
+        newData.save()
+
+
+        let pageData = Contact.find({})
+
+        const [dt, news, Sponsor] =
+            await Promise.all(
+                [pageData, allNews, allSponsors]
+            );
+
+        res.render('frontend/contact', { content: dt[0], doc: news, activeNav: 'about', gmap_api_key: process.env.GMAP_API_KEY, Sponsor });
+    })()
 };
 
 exports.newsPage = function (req, res, next) {
+    let newsID = req.params.id;
+    News.findOne({ _id: newsID })
+        .exec()
+        .then((oneNews) => {
+            News.find({}).exec().then((doc) => {
+                if (doc) {
+                    res.render('extras/news', {oneNews, doc, activeNav: 'news' })
+                } else {
+                    res.render('extras/news')
+                }
+            })
+        })
+};
 
-    News.find({}).then((doc)=>{
-        if (doc){
-            res.render('extras/news', {doc, activeNav: 'news'})
-        }else{
-            res.render('extras/news')
+
+
+exports.newsListsPage = function (req, res, next) {
+
+    News.find({}).then((doc) => {
+        if (doc) {
+            res.render('extras/news-lists', { doc, activeNav: 'news' })
+        } else {
+            res.render('extras/news-lists')
         }
     })
 
@@ -92,7 +117,7 @@ exports.teamPage = function (req, res, next) {
 
     News.find({}).then((doc)=>{
         if (doc){
-            res.render('frontend/team', {doc});
+            res.render('frontend/team', { doc, activeNav: 'management' });
             console.log(doc)
         }else{
             res.render('frontend/team', {});
@@ -100,81 +125,35 @@ exports.teamPage = function (req, res, next) {
     })
 };
 
-exports.post_contactPage =(req, res, next)=>{
-    let messageData = {
-        name: req.body.name,
-        email: req.body.email,
-        subject: req.body.subject,
-        message: req.body.message
-
-    }
-    let newData = new message(messageData);
-    newData.save()
-    Page.find({name: "contactus"}).then((file)=>{
-        if (file){
-            News.find({}).then((doc)=>{
-                if(doc){
-                    res.render('frontend/contact', {file, doc, activeNav: 'about'});
-                }
-            })
-        }else{
-            res.render('frontend/contact');
-        }
-    })
-
-    // res.render('frontend/contact', {activeNav: 'about'})
-    let Transport = nodemailer.createTransport({
-        service: "gmail",
-        secure: false,
-        port: 25,
-        auth: {
-          user: "phawazzzy@gmail.com",
-          pass: keys.keys.password
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      });
-  
-  
-      //sending email with SMTP, configuration using SMTP settings
-      let mailOptions = {
-        from: "lasu CITSE - <lasu_citse@gmail.com>", //sender adress
-        // to: req.body.userMail,
-        to: 'phawazzzy@gmail.com',
-  
-        subject: "LASU CITSE",
-        html: req.body.message
-      };
-  
-      Transport.sendMail(mailOptions, (error, info)=>{
-        if (error) {
-          console.log(error);
-          console.log(mailOptions.html);
-  
-          //res.send("email could not send due to error:" + error);
-        } else {
-          console.log(info);
-          console.log(mailOptions.html);
-  
-          // res.send("email has been sent successfully");
-        }
-        res.redirect("/contact")
-      });
-  
-    res.redirect('/contact')
-
-
+exports.post_contactPage = async function (req, res, next) {
+    let result = await Mail.find({})
+    let address = result.map((val, index, arr) => val.email);
+   
+    (function sendMail() {
+        const mailOptions = {
+            to: address,
+            subject: req.body.subject,
+            text: req.body.message
+        };
+        
+        smtpTransport.sendMail(mailOptions, function (err) {
+            console.log('An e-mail has been sent to  with further instructions.');
+            
+        });
+            
+    })();
+           
+    res.redirect('/contact');
 }
 
 exports.subscribe = function (req, res, next){
-    let subscribeData ={
+    let subscribeData = {
         email: req.body.newsletterEmail,
     }
 
     let newData = new subscribe(subscribeData);
-        newData.save()
-    
+    newData.save()
+
     res.redirect(req.originalUrl)
 }
 

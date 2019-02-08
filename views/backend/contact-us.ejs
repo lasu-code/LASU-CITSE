@@ -54,7 +54,12 @@
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
         // Init Ckeditor
-        CKEDITOR.replace('editor', { height: 250 });
+        CKEDITOR.replace('address', {
+            toolbar: [
+				{name:'basic', items:['Bold','Italic','Underline','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','NumberedList','BulletedList','-','SelectAll','RemoveFormat','Undo','Redo']},
+			],
+            height: '200'
+        });
 
         // Show POST success alert
         if ($.trim($('#upload').text()).length !== 0) {

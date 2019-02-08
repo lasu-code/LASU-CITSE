@@ -1,55 +1,63 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <%- include('../partials/dashboard-head', {pagename: 'Edit News'}) %>
-  </head>
+</head>
 
-  <body>
+<body>
     <%- include('../partials/dashboard-nav') %>
 
     <div class="container-fluid">
-      <div class="row">
+        <div class="row">
 
-        <!-- sidebar -->
-        <%- include('../partials/sidebar.ejs', {active: 'news'}) %>
+            <!-- sidebar -->
+            <%- include('../partials/sidebar.ejs', {active: 'news'}) %>
 
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-            <h1 class="h2">News CMS</h1>
-          </div>
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2">News CMS</h1>
+                </div>
 
-          <form action="/handlenews" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-            <%- include('../fields/text', { fieldname: 'title', fieldplaceholder: 'News Title', fieldlabel: 'News Title'}); %>
+                <form action="/handlenews" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    <%- include('../fields/text', { fieldname: 'title', fieldplaceholder: 'News Title', fieldlabel: 'News Title', valueField: (doc) ? doc.title : ''}); %>
 
-            <%- include('../fields/text', { fieldname: 'writer', fieldplaceholder: "Writer's name", fieldlabel: "Writer's name"}); %>
+                    <%- include('../fields/text', { fieldname: 'writer', fieldplaceholder: "Writer's name", fieldlabel: "Writer's name", valueField: (doc) ? doc.writer : ''}); %>
 
-            <%- include('../fields/text', { fieldname: 'department', fieldplaceholder: "Department", fieldlabel: "Department"}); %>
+                    <%- include('../fields/text', { fieldname: 'department', fieldplaceholder: "Department", fieldlabel: "Department", valueField: (doc) ? doc.department : ''}); %>
 
-            <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image'}); %>
+                    <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image', valueField: (doc) ? doc.newImg : ''}); %>
 
-            <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content'}); %>
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', valueField: (doc) ? doc.content : ''}); %>
 
-            <%- include('../fields/button', { fieldvalue: 'Upload News'}); %>
-          </form>
-          <span style="display: none" id="upload">
-              <%=upload%>
-          </span>
+                    <hr class="my-4"/>
+                    <div class="col-sm-10 ml-md-auto pl-0">
+                    <%- include('../fields/button', { fieldvalue: 'Upload News'}); %>
+                    </div>
+                </form>
+                <span style="display: none" id="upload">
+                    <%=upload%>
+                </span>
 
-          <br> <br>
-        </main>
-      </div>
+                <br> <br>
+            </main>
+        </div>
     </div>
 
     <%- include('../partials/dashboard-scripts') %>
     <script src="/ckeditor/ckeditor.js"></script>
     <script type="text/javascript">
-      // Init Ckeditor
-      CKEDITOR.replace( 'editor' );
+    // Init Ckeditor
+    CKEDITOR.replace('content', {
+        toolbar: [
+            {name:'basic', items:['Font','Format','FontSize','TextColor','BGColor','-','Bold','Italic','Underline','Strike','Subscript','Superscript','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','Copy','Cut','Paste','PasteText','PasteFromWord','-','Image','-','NumberedList','BulletedList']},
+            '/',
+            {name:'insert', items: ['Link','Unlink','Outdent','Indent','SpecialChar','InsertPre','HorizontalRule','PageBreak','-','Image','-','SelectAll','RemoveFormat','Undo','Redo','Maximize']},
+        ],
+        height: 350 });
 
-      // Show success alert
-      if($.trim($('#upload').text()).length !== 0) {
-        alert("<%=upload%>")
-      }
+
+    // Show success alert
+    
     </script>
-  </body>
+</body>
 </html>

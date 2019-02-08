@@ -1,10 +1,12 @@
 <nav class="navbar navbar-dark fixed-top bg-light flex-md-nowrap p-0 shadow">
     <div class="col-md-2 pl-3">
-        <img src="/img/bg-img/admin.png" alt="">
+        <img src="/img/admin.png" alt="">
     </div>
+    <span class="w3-opennav w3-xlarge w3-hide-large" onclick="w3_open()">☰</span>
     <ul class="navbar-nav px-3 mr-5">
         <li class="nav-item text-nowrap">
-            <span class="ml-2 mr-2 fa-lg text-dark"> Welcome <%= typeof loginUser !== 'undefined' ? loginUser : 'Administrator' %></span> |
+            <span class="ml-2 mr-2 fa-lg text-dark"> Welcome <%= usrInfo.name %></span> |
+            <a href="/dashboard/adminSettings"><span class="fa fa-gear ml-2"></span> Manage Account</a> |
             <a class="text-danger ml-2" href="/logout" style="color:black">Sign out</a>
         </li>
     </ul>

@@ -12,36 +12,36 @@ passport.deserializeUser(function(id, done){
     })
 })
 
-passport.use('local.registerAdmin', new LocalStrategy({
-    usernameField: "email",
-    passwordField: "password",
-    passReqToCallback: true
-}, function(req, email, password, done){
-    User.findOne({'email': email}, function(err, user){
-        if (err) {
-            return done(err);
-        }
-        if (user) {
-            req.flash('error', 'User account exist, login instead');
-            return done(null, false)
-        }
+// passport.use('local.registerAdmin', new LocalStrategy({
+//     usernameField: "email",
+//     passwordField: "password",
+//     passReqToCallback: true
+// }, function(req, email, password, done){
+//     User.findOne({'email': email}, function(err, user){
+//         if (err) {
+//             return done(err);
+//         }
+//         if (user) {
+//             req.flash('error', 'User account exist, login instead');
+//             return done(null, false)
+//         }
 
-        let newUser = new User();
-        newUser.name = req.body.name;
-        newUser.email = req.body.email;
-        newUser.password = newUser.generateHash(req.body.password);
-        newUser.position = req.body.position;
+//         let newUser = new User();
+//         newUser.name = req.body.name;
+//         newUser.email = req.body.email;
+//         newUser.password = newUser.generateHash(req.body.password);
+//         newUser.position = req.body.position;
 
-        newUser.save(function(err){
-            if (err){
-            return done(err)
+//         newUser.save(function(err){
+//             if (err){
+//             return done(err)
 
-            }
+//             }
 
-            // return done(null, newUser)
-        })
-    })
-}))
+//             // return done(null, newUser)
+//         })
+//     })
+// }))
 
 passport.use('local.loginAdmin', new LocalStrategy({
     usernameField: "email",

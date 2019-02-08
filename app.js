@@ -1,11 +1,10 @@
-
-var createError = require('http-errors');
+// APP.JS
+const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
 const session = require("express-session");
 const passport = require('passport');
 const MongoStore = require('connect-mongodb-session')(session);
@@ -13,23 +12,22 @@ const flash = require("express-flash");
 const multer =require("multer");
 // const methodOverride = require("method-override");
 const nodemailer = require("nodemailer")
+const dotenv = require('dotenv');
+const methodOverride = require('method-override');
 
+dotenv.config();
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
 require("./config/passport");
 
+const app = express();
 
-var app = express();
-
-let db_uri = "mongodb://korwalskiy:DBpass123@ds255364.mlab.com:55364/citse-cms";
-mongoose.connect(db_uri, { useNewUrlParser: true }).then(console.log("database connected")).catch(err=>console.log(err));
-
+let db_uri = process.env.DB_URI;
+mongoose.connect(db_uri, { useNewUrlParser: true, useCreateIndex: true }).then(console.log("database connected")).catch(err=>console.log(err));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-
-
 app.set('view engine', 'ejs');
 
 
@@ -38,9 +36,13 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser('mysecrect'));
+app.use(methodOverride('_method'));
 
-app.use(express.static(path.join(__dirname, 'public')));
 
+const oneDay = 86400000; // in milliseconds
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxage: oneDay
+}));
 
 app.use(session({
     secret: "mysecrect",
@@ -72,7 +74,5 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('frontend/error');
 });
-
-
 
 module.exports = app;

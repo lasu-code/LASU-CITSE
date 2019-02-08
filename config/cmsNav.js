@@ -9,7 +9,7 @@ module.exports = {
     learning_activities: {parent: 'education', title: 'learning activities'},
     skills_gap: { parent: 'education', title: 'skill gap to be bridged'},
     innovations_in_pedagogy:  { parent: 'education', title: 'innovations in pedagogy'},
-    innovations_in_assessment:  { parent: 'education', title: 'innovations in assessment'},
+    degree_programmes:  { parent: 'education', title: 'degree programmes'},
     online_courses: {parent: 'education', title: 'online courses'},
     research_plan: {parent: 'research', title: 'research plan'},
     industrial_partnerships: {parent: 'research', title: 'industrial partnerships'},
@@ -19,4 +19,7 @@ module.exports = {
     staff: {parent: 'management', title: 'staff'},
     centre_operations: {parent: 'management', title: 'centre operations'},
     implementation_timeline: {parent: 'management', title: 'implementation timeline'},
+    settings: {parent: 'settings', title: 'settings'},
+    industrial_advisory_boards: {parent: 'management', title: 'industrial advisory boards'},
+    // centre_leaders: {parent: 'management', title: 'centre leaders'},
 }
