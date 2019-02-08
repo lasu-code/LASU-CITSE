@@ -10,7 +10,6 @@ const bcrypt = require("bcrypt-nodejs");
 const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
 
-let mailSender = require("../config/mailer");
 let User = require("../models/users");
 let News = require("../models/news");
 let Slider = require("../models/slider");
@@ -20,11 +19,13 @@ let Settings = require("../models/settings");
 let Mail = require("../models/contactaddress");
 let Partner = require("../models/partner");
 let People = require("../models/people");
+let Message = require("../models/message");
 
 let controller = require("../controllers/frontendControllers");
-let mailController = require("../controllers/mailControllers");
+let mailSender = require("../config/mailer");
 let n = require("../config/cmsNav");
 global.usrInfo = {};
+global.siteInfo = {};
 let oldImage = {};
 
 
@@ -310,10 +311,6 @@ router.delete("/deleteadmin", async function (req, res) {
 
 });
 
-router.get("/dashboard/messages", adminLoggedIn, mailController.messages);
-
-router.post("/reply", mailController.reply);
-
 router.get("/dashboard/settings", adminLoggedIn, function (req, res) {
     let upload = req.flash("upload");
 
@@ -349,9 +346,8 @@ router.post("/postaddress", function (req, res) {
     });
 });
 
-
-// Partners
 // ----
+// Partners
 router.route("/dashboard/partners")
     .all(isLoggedIn)
     .get(async function (req, res) {
@@ -728,55 +724,6 @@ router.post("/handlenews", upload.single("newImg"),  function (req, res) {
     res.redirect("dashboard/news");
 });
 
-// -----
-// Staff    -   NOT USED
-router.get("/dashboard/staffs", function (req, res) {
-    let upload = req.flash("upload");
-    let failure = req.flash("failure");
-    res.render("backend/staff", { upload, failure });
-});
-
-router.post("/poststaff", function (req, res) {
-    upload(req, res, (err) => {
-        if (err) {
-
-            //res.render("students", {msg : err})
-            res.send(err);
-        } else {
-            console.log(req.files);
-            Page.findOne({ name: "staff" }).then(function (result) {
-                if (result) {
-
-                    req.flash("failure", "Sorry You can only update not create new ones");
-                    res.redirect("dashboard/staff");
-
-
-                } else if (!result) {
-
-                    let newPage = new Page();
-
-                    newPage.name = req.body.name;
-                    newPage.content = req.body.content;
-                    newPage.newImg = req.file.secure_url;
-
-                    newPage.save().then((result) => {
-                        if (result) {
-                            console.log(result);
-                            req.flash("upload", "Staff page has been uploaded successfully");
-                            res.redirect("dashboard/staff");
-                        } else {
-                            res.send("err");
-                        }
-                    });
-
-                    // console.log("sorry cannot save new data")
-                }
-                //    // res.send("test")
-            });
-        }
-    });
-});
-
 // ----
 // Admin Settings
 router.get("/dashboard/adminSettings", function (req, res) {
@@ -888,6 +835,70 @@ router.route("/dashboard/contact-us")
         }
         res.redirect("/dashboard/contact-us");
     });
+
+// -----
+// Staff    -   NOT USED
+router.get("/dashboard/staffs", function (req, res) {
+    let upload = req.flash("upload");
+    let failure = req.flash("failure");
+    res.render("backend/staff", { upload, failure });
+});
+
+router.post("/poststaff", function (req, res) {
+    upload(req, res, (err) => {
+        if (err) {
+
+            //res.render("students", {msg : err})
+            res.send(err);
+        } else {
+            console.log(req.files);
+            Page.findOne({ name: "staff" }).then(function (result) {
+                if (result) {
+
+                    req.flash("failure", "Sorry You can only update not create new ones");
+                    res.redirect("dashboard/staff");
+
+
+                } else if (!result) {
+
+                    let newPage = new Page();
+
+                    newPage.name = req.body.name;
+                    newPage.content = req.body.content;
+                    newPage.newImg = req.file.secure_url;
+
+                    newPage.save().then((result) => {
+                        if (result) {
+                            console.log(result);
+                            req.flash("upload", "Staff page has been uploaded successfully");
+                            res.redirect("dashboard/staff");
+                        } else {
+                            res.send("err");
+                        }
+                    });
+
+                    // console.log("sorry cannot save new data")
+                }
+                //    // res.send("test")
+            });
+        }
+    });
+});
+
+router.get("/dashboard/messages", adminLoggedIn, (req, res) => {
+    Message.find({}).then((result) => {
+        if (result) {
+            console.log(result);
+            res.render("backend/messages", { result: result });
+        } else {
+            res.render("backend/messages");
+        }
+    });
+});
+
+router.post("/reply", (req, res) => {
+    res.redirect("dashboard/messages");
+});
 
 // -----
 // About pages
