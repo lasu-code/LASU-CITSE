@@ -1,12 +1,12 @@
-let message = require("../models/message");
+let Message = require("../models/message");
 let Slider = require("../models/slider");
 let News = require("../models/news");
 let Page = require("../models/page");
-let subscribe = require("../models/subscribe");
+let Subscribe = require("../models/subscribe");
 let Contact = require("../models/contact");
-let Mail = require("../models/contactaddress");
 let Partner = require("../models/partner");
 let People = require("../models/people");
+let Settings = require("../models/settings");
 
 let mailSender = require("../config/mailer");
 let f = require("../config/frontNav");
@@ -65,7 +65,7 @@ exports.contactPage = function (req, res) {
             email: req.body.newsletterEmail1,
         };
 
-        let newData = new subscribe(subscribeData);
+        let newData = new Subscribe(subscribeData);
         newData.save();
 
         let pageData = Contact.find({});
@@ -77,6 +77,45 @@ exports.contactPage = function (req, res) {
 
         res.render("frontend/contact", { content: dt[0], doc: news, activeNav: "about", gmap_api_key: process.env.GMAP_API_KEY, partners: ptn });
     })();
+};
+
+exports.post_contactPage = async function (req, res) {
+    let messageData = {
+        name: req.body.name,
+        email: req.body.email,
+        subject: req.body.subject,
+        message: req.body.message
+    };
+    Message.create(messageData);
+    let rxs = await Settings.find({name: "contactEmails"});
+    try {
+        mailSender.sendMail({
+            template: "../views/emails/contact",
+            rx: rxs[0].value,
+            locals: {
+                site: siteInfo,
+                data: messageData
+            }
+        });
+        req.flash("success", "Message submitted successfully!");
+
+    } catch(err) {
+        console.error("An error occured during POST (/post-contact)", err);
+        req.flash("error", "An error occured, try again");
+    }
+
+    res.redirect("/contact");
+};
+
+exports.subscribe = function (req, res){
+    let subscribeData = {
+        email: req.body.newsletterEmail,
+    };
+
+    let newData = new Subscribe(subscribeData);
+    newData.save();
+
+    res.redirect(req.originalUrl);
 };
 
 exports.newsPage = async function (req, res) {
@@ -110,44 +149,4 @@ exports.teamPage = async function (req, res) {
         );
 
     res.render("frontend/team", { doc: news, partners: ptn, team: tm, activeNav: "management" });
-};
-
-exports.post_contactPage = async function (req, res) {
-    let messageData = {
-        name: req.body.name,
-        email: req.body.email,
-        subject: req.body.subject,
-        message: req.body.message
-
-    };
-    let newData = new message(messageData);
-    newData.save();
-    let result = await Mail.find({});
-    let address = result.map((val) => val.email);
-
-    (function sendMail() {
-        const mailOptions = {
-            to: address,
-            subject: req.body.subject,
-            text: req.body.message
-        };
-
-        smtpTransport.sendMail(mailOptions, function () {
-            console.log("An e-mail has been sent to  with further instructions.");
-        });
-
-    })();
-
-    res.redirect("/contact");
-};
-
-exports.subscribe = function (req, res){
-    let subscribeData = {
-        email: req.body.newsletterEmail,
-    };
-
-    let newData = new subscribe(subscribeData);
-    newData.save();
-
-    res.redirect(req.originalUrl);
 };

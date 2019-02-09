@@ -1,32 +1,33 @@
 const nodemailer = require("nodemailer");
 const Email = require("email-templates");
 
-const smtpTransport = nodemailer.createTransport({
-    service: "gmail",
-    port: process.env.MAIL_PORT || 25,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PWD
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
-
 const emailInst = new Email({
-    transport: smtpTransport,
+    message: {
+        from: process.env.MAIL_USER
+    },
     send: true,
     preview: false,
     views: {
         options: {
             extension: "ejs"
         }
-    }
+    },
+    transport: nodemailer.createTransport({
+        service: "gmail",
+        port: process.env.MAIL_PORT || 25,
+        auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PWD
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    })
 });
 
-let mailer  = {
+let mailer = {
     sendFrom: function(mailFrom = process.env.MAIL_USER) {
-        emailInst.message.from = mailFrom;
+        emailInst.config.message.from = mailFrom;
     },
     sendMail: async function(mailData) {
         await emailInst.send({
