@@ -16,7 +16,6 @@ let Slider = require("../models/slider");
 let Page = require("../models/page");
 let Contact = require("../models/contact");
 let Settings = require("../models/settings");
-let Mail = require("../models/contactaddress");
 let Partner = require("../models/partner");
 let People = require("../models/people");
 let Message = require("../models/message");
@@ -137,6 +136,23 @@ async function removeOldImage() {
         //      })
     }
 }
+
+function setSiteInfo(result) {
+    global.siteInfo = {};
+    for (let d in result) {
+        global.siteInfo[result[d].name] = result[d].value;
+    }
+}
+
+// SITE SETTINGS MIDDLEWARE
+// -----
+router.use(async (req, res, next) => {
+    if (Object.values(siteInfo).length < 1) {
+        let result = await Settings.find({});
+        setSiteInfo(result);
+    }
+    next();
+});
 
 
 // DASHBOARD ROUTES
@@ -311,40 +327,45 @@ router.delete("/deleteadmin", async function (req, res) {
 
 });
 
-router.get("/dashboard/settings", adminLoggedIn, function (req, res) {
-    let upload = req.flash("upload");
-
-    res.render("backend/settings", { upload, usrInfo, page: "settings" });
-});
-
-router.post("/postdashboard/settings", upload.single("siteLogo"), (req, res) => {
-    let pageData = {
-        tag: req.body.tag,
-        siteName: req.body.siteName,
-    };
-
-    if (req.file) {
-        pageData.siteLogo = req.file.path.substring(6);
-    }
-    Settings.findOneAndUpdate({ tag: "settings" }, pageData, { upsert: true })
-        .catch((err) => { console.error(`Error occured during POST(/dashboard/settings): ${err}`); })
-        .then(() => {
-            req.flash("upload", "PAGE - Content Updated Successful!");
-            res.redirect("/dashboard/settings");
-        });
-});
-
-router.post("/postaddress", function (req, res) {
-    let newMail = new Mail();
-    newMail.email = req.body.email;
-    newMail.save().then((result) => {
-        if (result) {
-            console.log(result);
-            res.redirect("/dashboard/settings");
-            req.flash("upload", "Address has been saved successfully");
+router.route("/dashboard/settings")
+    .all(adminLoggedIn)
+    .get(async function (req, res) {
+        let result = "";
+        try {
+            result = await Settings.find({});
+            setSiteInfo(result);
+        } catch(err) {
+            showError(req, "GET", "/dashboard/settings", err);
         }
+        res.render("backend/settings", { result });
+    })
+    .post(upload.single("siteLogo"), async function (req, res) {
+        let pageData = {
+            one: {
+                name: "siteName",
+                value: req.body.siteName
+            },
+            three: {
+                name: "contactEmails",
+                value: req.body.contactEmails
+            }
+        };
+        if (req.file) {
+            pageData.two = {
+                name: "siteLogo",
+                value: req.file.secure_url
+            };
+        }
+        for(let d in pageData) {
+            try {
+                await Settings.findOneAndUpdate({name: pageData[d].name}, pageData[d], { upsert: true, new: true });
+                req.flash("success", "Settings Updated Successfully!");
+            } catch(err) {
+                showError(req, "POST", "/dashboard/settings", err);
+            }
+        }
+        res.redirect("/dashboard/settings");
     });
-});
 
 // ----
 // Partners
@@ -813,7 +834,7 @@ router.route("/dashboard/contact-us")
             req.flash("error", "An error occured, try again or contact web admin!");
         }
 
-        res.render("backend/contact-us", { req_url, content: data[0], page: "contact-us", usrInfo, activeParent: "about" });
+        res.render("backend/contact-us", { req_url, content: data[0], page: "contact-us", activeParent: "about" });
     })
     .post( async (req, res) => {
         let pageData = {

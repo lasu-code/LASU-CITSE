@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', {pagename: 'Edit News'}) %>
+    <%- include('../partials/dashboard-head', {pagename: 'CMS Settings'}) %>
 </head>
 
 <body>
@@ -11,44 +11,32 @@
     <div class="container-fluid">
         <div class="row">
             <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs', {active: 'settings'}) %>
+            <%- include('../partials/sidebar.ejs', {page: 'settings'}) %>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
                     <h1 class="h2">CMS Settings</h1>
                 </div>
 
-                <form action="/postdashboard/settings" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    <%- include('../fields/text', { fieldname: 'siteName', fieldplaceholder: 'Site Name', fieldlabel: 'Site Name', valueField: ''}); %>
+                <form action="/dashboard/settings" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    <%- include('../fields/text', { fieldname: 'siteName', fieldplaceholder: 'Site Name', fieldlabel: 'Site Name', valueField: (typeof result != 'undefined') ? result[0].value : '' }); %>
+                    <div><hr/></div>
 
-                    <%- include('../fields/file', { fieldname: 'siteLogo', fieldlabel: 'Site Logo', valueField: ''}); %>
+                    <%- include('../fields/file', { fieldname: 'siteLogo', fieldlabel: 'Site Logo', valueField: (typeof result != 'undefined') ? result[2].value : '' }); %>
+                    <div><hr/></div>
 
-                    <%- include('../fields/hidden', { fieldname: 'tag', valueField: 'settings' }); %>
+                    <%- include('../fields/text', { fieldname: 'contactEmails', fieldplaceholder: 'Recipient Email Address', fieldlabel: 'Recipient Email Address', valueField: (typeof result != 'undefined') ? result[1].value : '' }); %>
+                    <div><hr/></div>
 
-                    <%- include('../fields/button', { fieldvalue: 'Upload settings'}); %>
-                </form>
-
-                    <form action="/postaddress" method="POST"  class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-                    <%- include('../fields/email', { fieldname: 'email', fieldplaceholder: 'Recipient Email Address', fieldlabel: 'Recipient Email Address', valueField: ''}); %>
-
-                    <%- include('../fields/button', { fieldvalue: 'Upload Address'}); %>
+                    <div class="col-sm-10 ml-md-auto px-0">
+                        <%- include('../fields/button', { fieldvalue: 'Update settings'}); %>
+                    </div>
                 </form>
             </main>
         </div>
     </div>
 
-    <span style="display: none" id="upload">
-        <%=upload%>
-    </span>
-
     <%- include('../partials/dashboard-scripts') %>
 
-    <script type="text/javascript">
-        // Show success alert
-        if ($.trim($('#upload').text()).length !== 0) {
-            alert("<%=upload%>")
-        }
-    </script>
 </body>
-
 </html>
