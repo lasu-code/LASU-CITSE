@@ -8,22 +8,9 @@
                 <% if (doc.length < 1) { %>
                 <h2>No Latest News</h2>
                 <%} else { %>
-                    <% for (var i = 0; i < doc.length; i++) { %>
-                    <a href="/news-lists/<%= doc[i]._id%>">
-                        <div class="widget-single-blog-post d-flex align-items-center">
-                            <div class="widget-post-thumbnail pr-3">
-                                <img src="<%= doc[i].newImg %>" alt="">
-                            </div>
-                            <div class="widget-post-content">
-                                <a href="#"><%= doc[i].title %></a>
-                                <p><%= doc[i].createdDate %></p>
-                            </div>
-                        </div>
-                    </a>
-                    
-                    <% } %>
+                    <%- include("../partials/newsbit") %>
                 <%} %>
-                
+
             </div>
         </div>
     </div>

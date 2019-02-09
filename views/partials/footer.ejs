@@ -33,19 +33,7 @@
                         <div class="widget-title">
                             <h6>Latest News</h6>
                         </div>
-                        <div class="widget-blog-post">
-                            <% for(let i=0; i < doc.length; i++) { %>
-                                <div class="widget-single-blog-post d-flex">
-                                    <div class="widget-post-thumbnail text-right">
-                                        <i class="fa fa-3x text-secondary fa-newspaper-o"></i>
-                                    </div>
-                                    <div class="widget-post-content">
-                                        <a href="/news"><%=doc[i].title%></a>
-                                        <p><%= new Date(doc[i].createdDate).toLocaleString() %></p>
-                                    </div>
-                                </div>
-                            <%}%>
-                        </div>
+                        <%- include("../partials/newsbit") %>
                     </div>
                 </div>
 
