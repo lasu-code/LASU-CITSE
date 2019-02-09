@@ -26,3 +26,5 @@ rules:
     - off
 globals:
   usrInfo: writeable
+  siteInfo: writeable
+  jQuery: writeable
