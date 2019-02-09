@@ -147,9 +147,13 @@ function setSiteInfo(result) {
 // SITE SETTINGS MIDDLEWARE
 // -----
 router.use(async (req, res, next) => {
-    if (Object.values(siteInfo).length < 1) {
-        let result = await Settings.find({});
-        setSiteInfo(result);
+    if (Object.values(global.siteInfo).length < 1) {
+        try {
+            let result = await Settings.find({});
+            setSiteInfo(result);
+        } catch(err) {
+            showError(req, "GET", "settings object", err);
+        }
     }
     next();
 });
