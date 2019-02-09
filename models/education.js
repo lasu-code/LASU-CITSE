@@ -10,6 +10,6 @@ let educationSchema = new Schema({
         type: Date,
         default: Date.now
     }
-})
+});
 
-module.exports = mongoose.model("Eduction", educationSchema)
+module.exports = mongoose.model("Eduction", educationSchema);

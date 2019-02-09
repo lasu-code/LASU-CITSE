@@ -10,6 +10,6 @@ let partnerSchema = new Schema({
     content: {type: String},
 
     publicid: {type: String},
-})
+});
 
-module.exports = mongoose.model("Partner", partnerSchema)
+module.exports = mongoose.model("Partner", partnerSchema);

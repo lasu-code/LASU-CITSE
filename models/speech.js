@@ -12,7 +12,6 @@ let speechSchema = new Schema({
     const: {type: String},
 
     publicid: {type: String},
+});
 
-})
-
-module.exports = mongoose.model("Speech", speechSchema)
+module.exports = mongoose.model("Speech", speechSchema);

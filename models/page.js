@@ -37,6 +37,6 @@ let PageSchema = new Schema({
         type: Date,
         default: Date.now
     }
-})
+});
 
-module.exports = mongoose.model("Page", PageSchema)
+module.exports = mongoose.model("Page", PageSchema);

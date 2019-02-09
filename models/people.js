@@ -1,4 +1,4 @@
-let mongoose = require('mongoose');
+let mongoose = require("mongoose");
 
 let Schema = mongoose.Schema;
 
@@ -16,6 +16,6 @@ let peopleSchema = new Schema({
     tag: { type: String },
     is_active: { type: String, default: true },
     createdDate: { type: Date, default: Date.now }
-})
+});
 
 module.exports = mongoose.model("People", peopleSchema);

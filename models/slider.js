@@ -24,6 +24,6 @@ let sliderSchema = new Schema({
         type: Date,
         default: Date.now
     }
-})
+});
 
-module.exports = mongoose.model("Slider", sliderSchema)
+module.exports = mongoose.model("Slider", sliderSchema);
