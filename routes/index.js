@@ -654,7 +654,7 @@ router.route("/dashboard/slider/add")
             await Slider.create(pageData);
             req.flash("New Slider created successfully!");
         } catch(err) {
-            showError(req, "POST", "/dashboard/slider", err);
+            showError(req, "POST", "/dashboard/slider/add", err);
         }
         res.redirect("/dashboard/sliders");
     });
@@ -698,55 +698,102 @@ router.route("/dashboard/slider/edit/:id")
         res.redirect("/dashboard/sliders");
     });
 
-router.delete("/dashboard/slider/delete/:id", async function (req, res) {
-    let idd = req.params.id;
-    oldImage = await Slider.findOne({ _id: idd });
-    removeOldImage();
-    try {
-        await Slider.deleteOne({ _id: req.body.id });
-        req.flash("success", "Slider deleted successfully!");
-    } catch(err) {
-        showError(req, "DELETE", `/dashboard/slider/delete/${idd}`, err);
-    }
-    res.redirect("/dashboard/sliders");
-});
 
 // -----
 // News
-router.get("/dashboard/news", function (req, res) {
-    let upload = req.flash("upload");
-
-    News.find({}).then((doc) => {
-        if (doc) {
-            res.render("backend/news", { upload, doc, page: "news", activeParent: "news" });
-        } else {
-            res.render("backend/news");
+router.route("/dashboard/news")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await News.find({}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/news", err);
         }
+        res.render("backend/news", { result });
     });
-});
 
-router.post("/handlenews", upload.single("newImg"),  function (req, res) {
-    let newNews = new News();
+router.route("/dashboard/news/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/news-add");
+    })
+    .post(upload.single("newsImage"), async (req, res) => {
+        let pageData = {
+            title: req.body.title,
+            summary: req.body.summary,
+            content: req.body.content,
+            author: req.body.author,
+            tags: req.body.tags,
+            meta_keyword: req.body.meta_keyword,
+            meta_desc: req.body.meta_desc,
+            is_visible: req.body.is_visible
+        };
+        if (req.file) {
+            pageData.newsImage = req.file.secure_url;
+            pageData.newsImageId = req.file.public_id;
+        }
 
-    newNews.title = req.body.title;
-    newNews.writer = req.body.writer;
-    newNews.department = req.body.department;
-    newNews.content = req.body.content;
-    newNews.newImg = req.file.secure_url;
+        try {
+            await News.create(pageData);
+            req.flash("success", "News created successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/news/add", err);
+        }
+        res.redirect("/dashboard/news");
+    });
 
-    newNews.save()
-        .then((result) => {
-            if (result) {
-                req.flash("upload", "News has been uploaded successfully");
-            } else {
-                res.flash("error", "An error occured, try again");
-            }
-        })
-        .catch((err) => {
-            res.flash("error", `An error occured: ${err}`);
-        });
+router.route("/dashboard/news/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await News.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/news/edit/${id}`, err);
+        }
+        res.render("backend/news-add", { result, action: req.originalUrl });
+    })
+    .post(upload.single("newsImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await News.findOne({ _id: idd });
+        removeOldImage();
 
-    res.redirect("dashboard/news");
+        let pageData = {
+            title: req.body.title,
+            summary: req.body.summary,
+            content: req.body.content,
+            author: req.body.author,
+            tags: req.body.tags,
+            meta_keyword: req.body.meta_keyword,
+            meta_desc: req.body.meta_desc,
+            is_visible: req.body.is_visible
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await News.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "News updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/news/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/news");
+    });
+
+router.delete("/dashboard/news/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await News.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await News.deleteOne({ _id: req.body.id });
+        req.flash("success", "News deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/news/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/news");
 });
 
 // ----
