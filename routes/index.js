@@ -352,6 +352,10 @@ router.route("/dashboard/settings")
             three: {
                 name: "contactEmails",
                 value: req.body.contactEmails
+            },
+            four: {
+                name: "siteUrl",
+                value: req.body.siteUrl
             }
         };
         if (req.file) {

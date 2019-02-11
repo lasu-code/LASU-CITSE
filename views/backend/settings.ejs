@@ -19,6 +19,9 @@
                 </div>
 
                 <form action="/dashboard/settings" method="POST" enctype=multipart/form-data class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+                    <%- include('../fields/text', { fieldname: 'siteUrl', fieldplaceholder: 'Site URL', fieldlabel: 'Site URL', valueField: (typeof result != 'undefined') ? result[3].value : '' }); %>
+                    <div><hr/></div>
+
                     <%- include('../fields/text', { fieldname: 'siteName', fieldplaceholder: 'Site Name', fieldlabel: 'Site Name', valueField: (typeof result != 'undefined') ? result[0].value : '' }); %>
                     <div><hr/></div>
 
