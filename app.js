@@ -14,6 +14,9 @@ const methodOverride = require("method-override");
 
 dotenv.config();
 
+global.usrInfo = {};
+global.siteInfo = {};
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 require("./config/passport");

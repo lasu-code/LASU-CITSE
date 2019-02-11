@@ -23,8 +23,6 @@ let Message = require("../models/message");
 let controller = require("../controllers/frontendControllers");
 let mailSender = require("../config/mailer");
 let n = require("../config/cmsNav");
-global.usrInfo = {};
-global.siteInfo = {};
 let oldImage = {};
 
 
@@ -137,26 +135,14 @@ async function removeOldImage() {
     }
 }
 
-function setSiteInfo(result) {
-    global.siteInfo = {};
-    for (let d in result) {
-        global.siteInfo[result[d].name] = result[d].value;
-    }
-}
-
-// SITE SETTINGS MIDDLEWARE
-// -----
-router.use(async (req, res, next) => {
-    if (Object.values(global.siteInfo).length < 1) {
-        try {
-            let result = await Settings.find({});
-            setSiteInfo(result);
-        } catch(err) {
-            showError(req, "GET", "settings object", err);
+async function setSiteInfo(result) {
+    if (Object.values(global.siteInfo).length < Object.values(result).length) {
+        global.siteInfo = {};
+        for (let d in result) {
+            global.siteInfo[result[d].name] = result[d].value;
         }
     }
-    next();
-});
+}
 
 
 // DASHBOARD ROUTES
