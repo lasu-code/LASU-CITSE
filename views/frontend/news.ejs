@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("../partials/frontend-head", { title: oneNews.title }) %>
+</head>
+
+<body>
+    <%- include("../partials/navbar") %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(/img/news.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="breadcumb-content">
+                        <h3 class="breadcumb-title">News // <b><%= oneNews.title %> </b></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="medilife-blog-area section-padding-100">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="single-blog-area">
+                        <!-- Post Thumbnail -->
+                        <div class="blog-post-thumbnail row justify-content-center">
+                            <div class="col-9">
+                                <img src="<%=oneNews.newsImage%>" alt="" class="img-fluid">
+                            </div>
+                        </div>
+                        <!-- Post Content -->
+                        <div class="post-content col-12">
+                            <h3 class="lead w3-xxlarge text-info"><%= oneNews.title%> </h3>
+                            <div class="post-meta">
+                                <span class="text-primary">Posted by: </span><a class="post-author-name">by <%= oneNews.author%></a> &emsp; | &emsp;
+                                <span class="text-success">Posted Date: </span><%= oneNews.createdDate.toLocaleString() %> &emsp; | &emsp;
+                                <span class="text-info">Tags: </span><a class="post-catagory"><%= oneNews.tags%></a>
+                            </div>
+                            <div class="well p-5 bg-light text-dark mt-3 mb-5">
+                                <%- oneNews.summary%>
+                            </div>
+                            <%- oneNews.content%>
+                        </div>
+                    </div>
+                    <!-- Leave A Comment -->
+                    <div class="disqus_thread"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <%- include("../partials/footer") %>
+
+    <%- include("../partials/frontend-scripts") %>
+
+    <script id="dsq-count-scr" src="//acitse.disqus.com/count.js" async></script>
+    <script>
+        let disqus_config = function () {
+            this.page.identifier = "<%= oneNews._id%>";
+            this.page.url = "<%= siteInfo.siteURL %>/news/article/<%= oneNews.title.replace(/(\s|\'|\"|\;)+/gi, '-').toLowerCase() %>/<%= oneNews._id%>";
+        };
+
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://lasu-aceitse-org.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+</body>
+</html>

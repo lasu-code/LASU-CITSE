@@ -122,11 +122,8 @@ exports.newsPage = async function (req, res) {
     let newsID = req.params.id;
     let oneNews = News.findOne({ _id: newsID });
 
-    const [news, ptn] =
-        await Promise.all(
-            [oneNews, allPartners]
-        );
-    res.render("extras/news", {oneNews, doc: news, partners: ptn, activeNav: "news" });
+    const [ptn, doc, onn] = await Promise.all([allPartners, allNews, oneNews]);
+    res.render("frontend/news", { oneNews: onn, doc, partners: ptn, activeNav: "news" });
 };
 
 exports.newsListsPage = async function (req, res) {
@@ -136,7 +133,7 @@ exports.newsListsPage = async function (req, res) {
             [allNews, allPartners]
         );
 
-    res.render("extras/news-lists", { doc: news, activeNav: "news", partners: ptn });
+    res.render("frontend/news-all", { doc: news, activeNav: "news", partners: ptn });
 
 };
 

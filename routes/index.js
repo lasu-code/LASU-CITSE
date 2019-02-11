@@ -1029,7 +1029,7 @@ router.get("/services", controller.servicesPage);
 router.get("/contact", controller.contactPage);
 router.post("/post-contact", controller.post_contactPage);
 router.get("/team", controller.teamPage);
-router.get("/news/:id", controller.newsPage);
+router.get("/news/article/:name/:id", controller.newsPage);
 router.get("/news", controller.newsListsPage);
 router.get("/:page_name", controller.renderPage);
 router.post("/subscribe", controller.subscribe);

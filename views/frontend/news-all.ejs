@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include("../partials/frontend-head", { title: "News" }) %>
+</head>
+
+<body>
+    <% include ../partials/navbar %>
+
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(/img/news.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="breadcumb-content">
+                        <h3 class="breadcumb-title"><b>News </b></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="medilife-blog-area section-padding-100">
+        <div class="container">
+            <% if (doc.length < 1) { %>
+                <h2>No Latest News</h2>
+            <%} else { %>
+                <div class="row">
+                    <div class="col-12 ">
+                        <div class="row">
+                            <!-- Single Blog Area -->
+                            <% for (let i = 0; i < doc.length; i++) { %>
+                            <div class="col-12 mb-5 pb-2">
+                                <div class="col-sm-4 float-left">
+                                    <img src="<%= doc[i].newsImage %>" alt="" />
+                                </div>
+                                    <!-- Post Content -->
+                                <div class="col-sm-8 float-left">
+                                    <a href="/news/article/<%= doc[i].title.replace(/(\s|\'|\"|\;)+/gi, '-').toLowerCase() %>/<%= doc[i]._id%>" class="headline lead w3-xlarge text-info mt-1 mb-2 d-flex"><%= doc[i].title %></a>
+                                    <p class="mb-1 bg-light p-2">
+                                        <i class="fa fa-calendar pr-2"></i><%= doc[i].createdDate.toLocaleString() %></a> &emsp; &mdash; &emsp;
+                                        <i class="fa fa-tags"></i> <span>Tags: <%= doc[i].tags %></span>
+                                    </p>
+                                    <%- doc[i].summary %>
+                                    <a href="/news/article/<%= doc[i].title.replace(/(\s|\'|\"|\;)+/gi, '-').toLowerCase() %>/<%= doc[i]._id%>" class="btn btn-info">Read More</a>
+                                </div>
+
+                            </div>
+                            <hr style="border-style:ridge; border-width:3px 0 0" class="col-12 py-3" />
+                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+            <%} %>
+        </div>
+    </section>
+    </div>
+
+    <% include ../partials/footer %>
+
+    <% include ../partials/frontend-scripts %>
+
+    <script id="dsq-count-scr" src="//acitse.disqus.com/count.js" async></script>
+</body>
+</html>
