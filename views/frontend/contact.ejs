@@ -7,7 +7,7 @@
 
 <body>
     <!-- Preloader -->
-    <% include ../partials/navbar.ejs %>
+    <%- include('../partials/navbar') %>
 
     <!-- ***** Breadcumb Area Start ***** -->
     <div style="height:129px"></div>
@@ -86,9 +86,9 @@
         </div>
     </section>
 
-    <% include ../partials/footer.ejs %>
+    <%- include('../partials/footer') %>
 
-    <% include ../partials/frontend-scripts.ejs %>
+    <%- include('../partials/frontend-scripts') %>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=<%= gmap_api_key %>"></script>
     <script>
@@ -106,5 +106,4 @@
 	</script>
 
 </body>
-
 </html>
