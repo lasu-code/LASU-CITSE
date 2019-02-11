@@ -144,6 +144,20 @@ async function setSiteInfo(result) {
     }
 }
 
+// SITE SETTINGS MIDDLEWARE
+// -----
+router.use(async (req, res, next) => {
+    if (Object.values(global.siteInfo).length < 1) {
+        try {
+            let result = await Settings.find({});
+            setSiteInfo(result);
+        } catch(err) {
+            showError(req, "GET", "settings object", err);
+        }
+    }
+    next();
+});
+
 
 // DASHBOARD ROUTES
 // -----
