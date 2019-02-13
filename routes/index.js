@@ -239,30 +239,30 @@ router.get("/reset/:token", function (req, res) {
     });
 });
 
-router.post("/reset/:token", async function (req, res, next) {
-    User.findOneAndUpdate(
-        { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } },
-        { $set: { password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)), resetPasswordToken: undefined } },
-        { new: true },
-        (err, doc) => {
-            if (err) {
-                console.log("Something wrong when updating data!");
-                req.flash("error", "An error occured during password update, try again!");
-            } else {
-                let mailOptions = {
-                    to: doc.email,
-                    subject: "Your password has been changed",
-                    text: "Hello,\n\n" + "This is a confirmation that the password for your account " + doc.email + " has just been changed.\n"
-                };
-                mailSender(mailOptions)
-                    .catch((err) => {
-                        return next(err);
-                    });
-                req.flash("success", "Success! Your password has been changed, login to continue");
-            }
+router.post("/reset/:token", async function (req, res) {
+    try {
+        let usr = await User.findOneAndUpdate(
+            { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } },
+            { $set: { password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)), resetPasswordToken: undefined } },
+            { new: true });
+        req.flash("success", "Your password was successful, login to continue");
 
-            res.redirect("/login");
+        mailSender.sendMail({
+            template: "../views/emails/reset",
+            rx: usr.email,
+            locals: {
+                site: siteInfo,
+                loginInfo: {
+                    name: usr.name,
+                    url: `${siteInfo.siteUrl}/login`
+                }
+            }
         });
+    } catch (err) {
+        showError(req, "POST", `/reset/${req.params.token}`, err);
+    }
+
+    res.redirect("/login");
 
 });
 

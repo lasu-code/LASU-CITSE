@@ -2,15 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=
-    , initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/login/images/icons/favicon.ico" />
-    <!--===============================================================================================-->
+    <meta name="viewport" content="width=initial-scale=1.0">
     <link rel="icon" type="image/png" href="/img/icons/favicon.ico" />
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="/css/util.css">
     <link rel="stylesheet" type="text/css" href="/css/main.css">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -19,14 +13,12 @@
 <body>
     <div class="container-login100">
         <div class="wrap-login100">
-    
+
             <form class="login100-form validate-form" action="/reset/<%-token%>" method="POST">
-                <%- include('../partials/error') %>
                 <span class="login100-form-title p-b-34">
                     Confirm password
                 </span>
-    
-    
+
                 <div class="wrap-input100 rs1-wrap-input100 validate-input m-b-20" data-validate="Type password">
                     <input class="input100" type="password" placeholder="Password" name="password" id="password" required>
                     <span class="focus-input100"></span>
@@ -36,7 +28,7 @@
                         required>
                     <span class="focus-input100"></span>
                 </div>
-    
+
                 <div class="w-full text-center p-t-27 p-b-239">
                     <div class="container-login100-form-btn">
                         <button class="login100-form-btn">
@@ -45,29 +37,12 @@
                     </div>
                 </div>
             </form>
-    
+
             <div class="login100-more" style="background-image: url('/img/africa.jpg');"></div>
         </div>
     </div>
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
- <script> 
-if( "<%-success%>" ){
-  swal({
-  text: "<%=success%>",
-});
-}
-
-console.log('<%-token%>')
-
-if( "<%-error%>" ){
-  swal({
-  text: "<%=error%>",
-});
-}
-
-
-</script>
+    <%- include("../partials/dashboard-scripts") %>
 
 </body>
 </html>
