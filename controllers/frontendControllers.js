@@ -16,7 +16,7 @@ let allPartners = Partner.find({});
 
 exports.homePage = function (req, res) {
     (async () => {
-        let sliders = Slider.find({});
+        let sliders = Slider.find({is_visible: 1});
         let mission = Page.find({ tag: "mission" });
         let vision = Page.find({ tag: "vision" });
         let objectives = Page.find({ tag: "objectives" });
