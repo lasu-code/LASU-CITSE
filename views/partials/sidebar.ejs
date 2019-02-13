@@ -111,6 +111,15 @@
                 </ul>
             </li>
             <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" data-target="#admnav">
+                    <span data-feather="book"></span> Admission Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
+                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'admission') ? '' : 'collapse navbar-collapse' %>" id="admnav">
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'downloads') ? 'text-primary' : '' %>" href="/dashboard/downloads">Downloads</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link <%= (page == 'news') ? 'text-primary' : '' %>" href="/dashboard/news">
                     <span data-feather="radio"></span> News </a>
             </li>

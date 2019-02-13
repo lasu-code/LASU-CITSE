@@ -37,43 +37,35 @@ cloudinary.config({
 const cloudStorage = cloudinaryStorage({
     cloudinary: cloudinary,
     folder: "citse",
-    allowedFormats: ["jpg", "png"],
 });
 
-// DISK STORAGE CONFIG
-// const diskStorage = multer.diskStorage({
-//     destination: "./public/uploads",
-//     filename: function (req, file, cb) {
-//         cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-//     }
-// });
+// FILE CHECK
+function checkFileType(type) {
+    return function (req, file, cb) {
+        // Allowed ext
+        let filetypes;
+        if (type ==  "pdf") {
+            filetypes = /pdf/;
+        } else if (type == "images") {
+            filetypes = /jpeg|jpg|png|gif/;
+        }
 
-// Set multer runtime options
-const multerOpts = {
-    storage: cloudStorage,
-    //limits: {fileSize: 10},
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-};
+        // Get ext
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-//check file type
-function checkFileType(file, cb) {
-    // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif/;
-    // Get ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // Check mime
-    const mimetype = filetypes.test(file.mimetype);
+        // Check mime
+        const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype && extname) {
-        return cb(null, true);
-    } else {
-        cb(new Error("Error Occured: Upload Images Only!"));
-    }
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb(new Error(`Error Occured: Upload ${type.toUpperCase()} Only!`));
+        }
+    };
 }
 // Multer execute
-const upload = multer(multerOpts);
+const upload = multer({storage: cloudStorage, fileFilter: checkFileType("images")});
+const uploadFile = multer({storage: cloudStorage, fileFilter: checkFileType("pdf")});
 
 
 // AUTH MIDDLEWARE, HELPER FUNCTIONS
@@ -702,6 +694,93 @@ router.route("/dashboard/slider/edit/:id")
         res.redirect("/dashboard/sliders");
     });
 
+// -----
+// Photos, Download
+router.route("/dashboard/downloads")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await Page.find({tag: "download"}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/downloads", err);
+        }
+        res.render("backend/downloads", { result });
+    });
+
+router.route("/dashboard/download/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/download-add");
+    })
+    .post(uploadFile.single("postImage"), async (req, res) => {
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            tag: "download",
+            is_active: true
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await Page.create(pageData);
+            req.flash("success", "Download file added successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/download/add", err);
+        }
+        res.redirect("/dashboard/downloads");
+    });
+
+router.route("/dashboard/download/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await Page.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/download/edit/${id}`, err);
+        }
+        res.render("backend/download-add", { result, action: req.originalUrl });
+    })
+    .post(uploadFile.single("postImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await Page.findOne({ _id: idd });
+        removeOldImage();
+
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await Page.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "Download file updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/download/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/downloads");
+    });
+
+router.delete("/dashboard/download/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await Page.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await Page.deleteOne({ _id: req.body.id });
+        req.flash("success", "Download file deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/download/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/downloads");
+});
 
 // -----
 // News

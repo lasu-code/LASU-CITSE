@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../partials/dashboard-head', {pagename: 'Add/Edit Download File'}) %>
+</head>
+
+<body>
+    <%- include('../partials/dashboard-nav') %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <%- include('../partials/sidebar.ejs', {page: 'downloads', activeParent: "admission"}) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                   <h1 class="h2 rw"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %> Page Content: <span class="text-info">DOWNLOAD FILE</span></h1>
+                </div>
+
+                <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/download/add' %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'File Title', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
+
+                    <hr class="my-4"/>
+                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'File (PDF Only)', valueField: (typeof result != 'undefined') ? result.postImage : '' }); %>
+
+                    <hr class="my-4"/>
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'File Notes', valueField: (typeof result != 'undefined') ? result.content : '' }); %>
+
+                    <hr class="my-4"/>
+                    <%- include('../fields/radio', { fieldname: 'is_active', fieldlabel: 'Is Published', valueField: (typeof result != 'undefined') ? result.is_active : 1 }); %>
+
+                    <hr class="my-4"/>
+                    <div class="col-sm-10 ml-md-auto px-0">
+                        <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE DOWNLOAD FILE' : 'CREATE DOWNLOAD FILE' }); %>
+                        <a href="/dashboard/downloads" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/dashboard-scripts') %>
+    <script type="text/javascript">
+        CKbasic('content');
+    </script>
+</body>
+</html>
