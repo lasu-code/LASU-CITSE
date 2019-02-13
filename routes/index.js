@@ -201,22 +201,22 @@ router.post("/forgot", function (req, res, next) {
             });
         },
         function (token, user, done) {
-            let mailOptions = {
-                to: req.body.email,
-                subject: "Password Reset",
-                text: "You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n" +
-                "Please click on the following link, or paste this into your browser to complete the process:\n\n" +
-                "https://" + req.headers.host + "/reset/" + token + "\n\n" +
-                "If you did not request this, please ignore this email and your password will remain unchanged.\n"
-            };
-            mailSender(mailOptions)
-                .catch((err) => {
-                    return next(err);
-                })
-                .then(() => {
-                    req.flash("success", "An e-mail has been sent to " + req.body.email + " with further instructions.");
-                    done(null, "done");
+            try {
+                mailSender.sendMail({
+                    template: "../views/emails/forgot",
+                    rx: req.body.email,
+                    locals: {
+                        site: siteInfo,
+                        username: user.name,
+                        resetlink: `${siteInfo.siteUrl}/reset/${token}`
+                    }
                 });
+                req.flash("success", `Password email sent to ${user.email}`);
+                done(null, "done");
+            } catch(err) {
+                showError(req, "POST", "/forgot", err);
+                done(err, false);
+            }
         }
     ], function (err) {
         if (err) {
