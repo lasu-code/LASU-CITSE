@@ -2,21 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-    <!-- Title  -->
-    <title><%= title.toUpperCase() %> | LASU-ACEITSE</title>
-
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/w3.css">
+    <%- include("../partials/frontend-head", { title: title }) %>
     <style>
         .w3-container ul, .w3-container ol {padding-left: 20px}
         .w3-container ul li {padding-left: 15px; list-style: square outside}
@@ -27,7 +13,7 @@
 
 <body>
     <!-- Preloader -->
-    <% include ../partials/navbar.ejs %>
+    <% include ../partials/navbar %>
 
     <!-- ***** Breadcumb Area Start ***** -->
     <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url('<%- content.postImage %>');">
@@ -47,7 +33,7 @@
     <section class="medilife-blog-area section-padding-50">
         <div class="container">
             <div class="row">
-                <div class="col-12 col-lg-8">
+                <div class="col-sm-8 pr-5">
                     <div class=" w3-container w3-leftbar ">
                         <br>
                         <p> <%- content.content %></p>
@@ -58,7 +44,7 @@
                 </div>
 
                 <!-- sideNav -->
-                <% include ../partials/sideNav.ejs %>
+                <% include ../partials/sideNav %>
             </div>
 
 
@@ -66,23 +52,10 @@
     </section>
     <!-- ***** Blog Area End ***** -->
 
+    <% include ../partials/footer %>
 
-    <!-- ***** Footer Area Start ***** -->
-    <% include ../partials/footer.ejs %>
-    <!-- ***** Footer Area End ***** -->
+    <% include ../partials/frontend-scripts %>
 
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
-    <% include ../partials/subscribe-script.ejs %>
- 
 </body>
 
 </html>

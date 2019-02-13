@@ -1,29 +1,43 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
+const Email = require("email-templates");
 
-let smtpTransport = nodemailer.createTransport({
-    host: process.env.MAIL_HOST || "smtp.gmail.com",
-    secure: process.env.MAIL_SECURITY || false,
-    port: process.env.MAIL_PORT || 465,
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PWD
+const emailInst = new Email({
+    message: {
+        from: process.env.MAIL_USER
     },
-    tls: {
-        rejectUnauthorized: false
-    }
+    send: true,
+    preview: false,
+    views: {
+        options: {
+            extension: "ejs"
+        }
+    },
+    transport: nodemailer.createTransport({
+        service: "gmail",
+        port: process.env.MAIL_PORT || 25,
+        auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PWD
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    })
 });
 
-let mailOptions = {
-    from: 'info.acetise@lasu.edu.ng'
-};
-
-function setMailOptions (optionObj) {
-    for (let key in optionObj) {
-        mailOptions[key] = optionObj[key];
+let mailer = {
+    sendFrom: function(mailFrom = process.env.MAIL_USER) {
+        emailInst.config.message.from = mailFrom;
+    },
+    sendMail: async function(mailData) {
+        await emailInst.send({
+            template: mailData.template,
+            message: {
+                to: mailData.rx
+            },
+            locals: mailData.locals
+        });
     }
-}
-
-module.exports = async (mOpt) => {
-    setMailOptions(mOpt);
-    await smtpTransport.sendMail(mailOptions);
 };
+
+module.exports = mailer;

@@ -26,7 +26,7 @@
                         <nav class="navbar h-100 navbar-expand-lg">
                             <!-- Logo Area  -->
                             <a class="navbar-brand float-left" href="/">
-                                <img src="img/core-img/logo.png" alt="ACEITSE Logo">
+                                <img src="<%= siteInfo.siteLogo %>" alt="ACEITSE Logo">
                             </a>
 
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#medilifeMenu"
@@ -62,6 +62,8 @@
                                             <a class="dropdown-item" href="/innovations-in-pedagogy">Innovations in Pedagogy</a>
                                             <a class="dropdown-item" href="/degree-programmes">Academic and Professional Programmes</a>
                                             <a class="dropdown-item" href="/online-courses">Online Courses</a>
+                                            <hr/>
+                                            <a class="dropdown-item" href="/lecture-rooms">Lecture Rooms</a>
                                         </div>
                                     <li class="nav-item dropdown <%= (activeNav === 'research') ? 'active' : '' %>">
                                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
@@ -94,10 +96,12 @@
                                             <a class="dropdown-item" href="#">Application</a>
                                             <a class="dropdown-item" href="#">International Student</a>
                                             <a class="dropdown-item" href="#">School Fee</a>
+                                            <hr/>
+                                            <a class="dropdown-item" href="/downloads">Downloads</a>
                                         </div>
                                     </li>
                                     <li class="nav-item <%= (activeNav === 'news') ? 'active' : '' %>">
-                                        <a class="nav-link" href="/news-lists">News</a>
+                                        <a class="nav-link" href="/news">News</a>
                                     </li>
 
                                 </ul>

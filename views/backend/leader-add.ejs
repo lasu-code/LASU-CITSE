@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/dashboard-head', { pagename: 'Add Person' }) %>
+</head>
+
+<body>
+    <%- include('../partials/dashboard-nav') %>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <%- include('../partials/sidebar.ejs', { page: 'centre-leaders', activeParent: 'management' }) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2 rw"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %> Page Content: <span class="text-info">CENTRE LEADER</span></h1>
+                </div>
+
+                <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/leader/add' %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Name', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
+
+                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Partner Image', valueField: (typeof result != 'undefined') ? result.postImage : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'work_at', fieldlabel: 'Institution', valueField: (typeof result != 'undefined') ? result.work_at : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'position', fieldlabel: 'Position', valueField: (typeof result != 'undefined') ? result.position : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'email', fieldlabel: 'Email Address', valueField: (typeof result != 'undefined') ? result.email : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'phone', fieldlabel: 'Phone Number', valueField: (typeof result != 'undefined') ? result.phone : '' }); %>
+
+                    <%- include('../fields/text', { fieldname: 'work_info_1', fieldlabel: 'Expertise', valueField: (typeof result != 'undefined') ? result.work_info_1 : '' }); %>
+
+                    <%- include('../fields/textarea', { fieldname: 'work_info_2', fieldlabel: 'Expected Contribution', valueField: (typeof result != 'undefined') ? result.work_info_2 : '' }); %>
+
+                    <%- include('../fields/radio', { fieldname: 'is_active', fieldlabel: 'Is Active', valueField: (typeof result != 'undefined') ? result.is_active : 1 }); %>
+
+                    <hr class="my-4"/>
+                    <div class="col-sm-10 ml-md-auto px-0">
+                        <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE LEADER' : 'CREATE NEW LEADER' }); %>
+                        <a href="/dashboard/leaders" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/dashboard-scripts') %>
+    <script>
+        CKbasic('work_info_2');
+    </script>
+</body>
+</html>

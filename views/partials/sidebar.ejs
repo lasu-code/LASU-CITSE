@@ -1,12 +1,6 @@
-<nav class="w3-sidenav w3-collapse w3-white w3-card-2 w3-animate-left" style="width:200px;">
+<nav class="w3-sidenav w3-collapse w3-white w3-card-2 w3-animate-left" style="width:220px;">
 
-    <div class="">
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-
+    <div style="padding-top: 100px">
         <a href="javascript:void(0)" onclick="w3_close()" class="w3-closenav w3-large w3-hide-large">Close ×</a>
         <ul class="nav flex-column">
             <li class="nav-item">
@@ -19,7 +13,7 @@
                     <span data-feather="book"></span> Home Page <i class="fa fa-caret-down text-left pl-3"> </i></a>
                 <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'home') ? '' : 'collapse navbar-collapse' %>" id="homeNav">
                     <li class="nav-item">
-                        <a class="nav-link <%= (page == 'slider') ? 'text-primary' : '' %>" href="/dashboard/slider"> Sliders</a>
+                        <a class="nav-link <%= (page == 'sliders') ? 'text-primary' : '' %>" href="/dashboard/sliders"> Sliders</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'VC Speech') ? 'text-primary' : '' %>" href="/dashboard/speech"> VC's Speech</a>
@@ -72,6 +66,9 @@
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'online-courses') ? 'text-primary' : '' %>" href="/dashboard/online-courses"> Online Courses</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'lecture-room-photos') ? 'text-primary' : '' %>" href="/dashboard/lecture-room-photos"> Lecture Room Photos</a>
+                    </li>
                 </ul>
             </li>
             <li class="nav-item">
@@ -86,18 +83,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'academic-partnerships') ? 'text-primary' : '' %>" href="/dashboard/academic-partnerships"> Partnership with Academic Institutions</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-toggle="collapse" data-target="#recruitment">
-                    <span data-feather="book"></span> Recruitment Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
-                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'recruit') ? '' : 'collapse navbar-collapse' %>" id="recruitment">
-                    <li class="nav-item">
-                        <a class="nav-link <%= (page == 'retention-support') ? 'text-primary' : '' %>" href="/dashboard/retention-support"> Retention and Support </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= (page == 'student-recruitment') ? 'text-primary' : '' %>" href="/dashboard/student-recruitment"> Student Recruitment</a>
                     </li>
                 </ul>
             </li>
@@ -120,32 +105,52 @@
                     <li class="nav-item">
                         <a class="nav-link <%= (page == 'centre-leaders') ? 'text-primary' : '' %>" href="/dashboard/leaders">Centre Leaders</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'retention-support') ? 'text-primary' : '' %>" href="/dashboard/retention-support"> Retention and Support </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'student-recruitment') ? 'text-primary' : '' %>" href="/dashboard/student-recruitment"> Student Recruitment</a>
+                    </li>
                 </ul>
-            </li>   
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="collapse" data-target="#admnav">
+                    <span data-feather="book"></span> Admission Pages <i class="fa fa-caret-down text-left pl-3"> </i></a>
+                <ul class="<%= (typeof activeParent !== 'undefined' && activeParent === 'admission') ? '' : 'collapse navbar-collapse' %>" id="admnav">
+                    <li class="nav-item">
+                        <a class="nav-link <%= (page == 'downloads') ? 'text-primary' : '' %>" href="/dashboard/downloads">Downloads</a>
+                    </li>
+                </ul>
+            </li>
             <li class="nav-item">
                 <a class="nav-link <%= (page == 'news') ? 'text-primary' : '' %>" href="/dashboard/news">
                     <span data-feather="radio"></span> News </a>
             </li>
+<<<<<<< HEAD
             <li class="nav-item">
                 <a class="nav-link <%= (page == 'staff') ? 'active' : '' %>" href="/dashboard/stafflist">
+=======
+            <li class="nav-item d-none">
+                <a class="nav-link <%= (page == 'stafflist') ? 'active' : '' %>" href="/dashboard/stafflist">
+>>>>>>> 9044f2dd2429e15efd853fbbbacc313e942f4143
                     <span data-feather="users"></span> Staff List </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <%= (page == 'sponsors') ? 'text-primary' : '' %>" href="/dashboard/sponsors">
-                    <span data-feather="thumbs-up"></span> Sponsors </a>
+                <a class="nav-link <%= (page == 'partners') ? 'text-primary' : '' %>" href="/dashboard/partners">
+                    <span data-feather="thumbs-up"></span> Partners </a>
             </li>
             <li class="nav-item d-none">
                 <a class="nav-link <%= (page == 'users messages') ? 'text-primary' : '' %>" href="/dashboard/messages">
                     <span data-feather="message-square"></span> Contact Messages </a>
             </li>
             <% if(usrInfo.pos == "head") { %>
-                <li class="nav-item"><hr/></li>
+                <li class="nav-item pt-1"><hr/></li>
                 <li id="admin" class="nav-item">
                     <a class="nav-link <%= (page == 'admin') ? 'text-primary' : '' %>" href="/dashboard/authorizeadmins">
                         <span data-feather="lock"></span> CMS Admins </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link <%= (page == 'settings') ? 'active' : '' %>" href="/dashboard/settings">
+                    <a class="nav-link <%= (page == 'settings') ? 'text-primary' : '' %>" href="/dashboard/settings">
                         <span data-feather="settings"></span> CMS Settings </a>
                 </li>
             <% } %>

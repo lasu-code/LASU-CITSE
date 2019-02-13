@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include("../partials/dashboard-head", {pagename: "Lecture Room Photos"}) %>
+</head>
+
+<body>
+    <%- include("../partials/dashboard-nav") %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <%- include("../partials/sidebar.ejs", {page: "lecture-room-photos", activeParent: "education"}) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2">Lecture Room Photos CMS</h1>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <a href="/dashboard/lecture-room-photo/add" class="btn btn-primary">Add New Photo <span class="fa fa-plus-circle"></span></a>
+                        </div>
+
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <hr class="border-secondary pt-1" />
+                        </div>
+
+                        <h3 class="col-lg-12 col-nd-12 col-sm-12 col-xs-12">All Lecture Room Photos</h3>
+
+                        <div class="col mt-3 pl-2">
+                        <% for(let i=0; i < result.length; i++) { %>
+                            <div class="col-sm-6 col-xs-12 px-0 mb-4 float-left"><div class="border m-2 px-0 py-3 row">
+                                <div class="pb-1 col d-flex justify-content-center" style="align-items:center">
+                                    <img src="<%= result[i].postImage %>" class="img-fluid" />
+                                </div>
+                                <div class="col">
+                                    <h3><%- result[i].name %></h3>
+                                    <div class="">
+                                        <p class="mb-1 mt-0 btn mr-3">
+                                            <i class="fa fa-check-circle"></i> <%- (result[i].is_active == 1) ? "<span class='text-success'>Published</span>" : "<span class='text-warning'>Draft</span>" %>
+                                            <br/>
+                                            @ <%= result[i].createdDate.toLocaleString() %></p>
+                                        <br/>
+                                        <hr/>
+                                        <a class="btn btn-success float-left mr-3 mb-3" href="<%= result[i].postImage %>">Download Photo</a>
+                                        <a class="btn btn-primary float-left mr-3 mb-3" href="/dashboard/lecture-room-photo/edit/<%= result[i]._id %>">Edit Photo</a>
+                                        <form action="/dashboard/lecture-room-photo/delete/<%= result[i]._id %>?_method=DELETE" method="POST" class="form-inline float-left mb-3">
+                                            <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                            <input type="submit" class="btn btn-danger delete-item" value="Delete">
+                                        </form>
+                                    </div>
+                                </div>
+                            </div></div>
+                        <% }%>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include("../partials/dashboard-scripts") %>
+</body>
+</html>

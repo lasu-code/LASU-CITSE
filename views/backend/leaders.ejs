@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <%- include('../partials/dashboard-head', {pagename: 'Centre Leaders'}) %>
+</head>
+
+<body>
+    <%- include('../partials/dashboard-nav') %>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- sidebar -->
+            <%- include('../partials/sidebar.ejs', {page: 'centre-leaders', activeParent: 'management'}) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2">Centre Leaders CMS</h1>
+                </div>
+
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <a href="/dashboard/leader/add" class="btn btn-primary">Add New Person <span class="fa fa-plus-circle"></span></a>
+                        </div>
+
+                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
+                            <hr class="border-secondary pt-1" />
+                        </div>
+
+                        <h3 class="col-lg-12 col-nd-12 col-sm-12 col-xs-12">Current Leaders</h3>
+
+                        <div class="col card-deck mt-3 pl-2">
+                        <% for(let i=0; i < result.length; i++) { %>
+                            <div class="col-sm-4 col-xs-12 px-2"><div class="border mb-4 mx-1 px-0">
+                                <div class="card-body text-center pb-1">
+                                    <img src="<%= result[i].postImage %>" alt="<%= result[i].name %>" class="img-fluid p-2">
+                                    <p class="mt-2"><%= result[i].name %></p>
+                                    <p class="mb-1 mt-0"><%- (result[i].is_active == 1) ? '<span class="text-success">Enabled</span>' : '<span class="text-warning">Disabled</span>' %></p>
+                                </div>
+                                <div class="card-footer justify-content-center d-flex">
+                                    <a class="btn btn-primary float-left mr-3" href="/dashboard/leader/edit/<%= result[i]._id %>">Edit Person</a>
+                                    <form action="/dashboard/leader/delete/<%= result[i]._id %>?_method=DELETE" method="POST" class="form-inline float-left">
+                                        <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                        <input type="submit" class="btn btn-danger delete-item" value="Delete">
+                                    </form>
+                                </div>
+                            </div></div>
+                        <% }%>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/dashboard-scripts') %>
+</body>
+</html>
+
+
+
+
+

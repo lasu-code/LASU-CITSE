@@ -1,36 +1,35 @@
-const path = require('path');
-const express = require('express');
+const path = require("path");
+const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const multer = require("multer");
-// const fse = require('fs-extra');
-const async = require('async');
-const crypto = require('crypto');
+// const fse = require("fs-extra");
+const async = require("async");
+const crypto = require("crypto");
 const bcrypt = require("bcrypt-nodejs");
-const cloudinary = require('cloudinary');
+const cloudinary = require("cloudinary");
 const cloudinaryStorage = require("multer-storage-cloudinary");
 
-let mailSender = require('../config/mailer');
-let User = require('../models/users');
-let News = require('../models/news');
-let Slider = require('../models/slider');
-let Page = require('../models/page');
-let Contact = require('../models/contact');
-let Settings = require('../models/settings');
-let Mail = require('../models/contactaddress');
-let Sponsor = require('../models/sponsor');
-let Speech = require('../models/speech');
+let User = require("../models/users");
+let News = require("../models/news");
+let Slider = require("../models/slider");
+let Page = require("../models/page");
+let Contact = require("../models/contact");
+let Settings = require("../models/settings");
+let Partner = require("../models/partner");
+let People = require("../models/people");
+let Message = require("../models/message");
 
-let controller = require('../controllers/frontendControllers')
-let mailController = require('../controllers/mailControllers');
-let n = require('../config/cmsNav');
-global.usrInfo = {};
-let oldImage = '';
+let controller = require("../controllers/frontendControllers");
+let mailSender = require("../config/mailer");
+let showError = require("../config/errorHandler");
+let n = require("../config/cmsNav");
+let oldImage = {};
 
 
 // HANDLE IMAGES
 // -----
-//  CLOUDINARY STORAGE
+// CLOUDINARY STORAGE
 cloudinary.config({
     cloud_name: process.env.CLOUD_NAME,     //"dyieekcre"
     api_key:  process.env.CLOUD_KEY,        //"732513327822775"
@@ -39,43 +38,35 @@ cloudinary.config({
 const cloudStorage = cloudinaryStorage({
     cloudinary: cloudinary,
     folder: "citse",
-    allowedFormats: ["jpg", "png"],
 });
 
-// DISK STORAGE CONFIG
-const diskStorage = multer.diskStorage({
-    destination: './public/uploads',
-    filename: function (req, file, cb) {
-        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
-    }
-})
+// FILE CHECK
+function checkFileType(type) {
+    return function (req, file, cb) {
+        // Allowed ext
+        let filetypes;
+        if (type ==  "pdf") {
+            filetypes = /pdf/;
+        } else if (type == "images") {
+            filetypes = /jpeg|jpg|png|gif/;
+        }
 
-// Set multer runtime options
-const multerOpts = {
-    storage: cloudStorage,
-    //limits: {fileSize: 10},
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    }
-}
+        // Get ext
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 
-//check file type
-function checkFileType(file, cb) {
-    // Allowed ext
-    const filetypes = /jpeg|jpg|png|gif/;
-    // Get ext
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    // Check mime
-    const mimetype = filetypes.test(file.mimetype);
+        // Check mime
+        const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype && extname) {
-        return cb(null, true);
-    } else {
-        cb(new Error('Error Occured: Upload Images Only!'))
-    }
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb(new Error(`Error Occured: Upload ${type.toUpperCase()} Only!`));
+        }
+    };
 }
 // Multer execute
-const upload = multer(multerOpts);
+const upload = multer({storage: cloudStorage, fileFilter: checkFileType("images")});
+const uploadFile = multer({storage: cloudStorage, fileFilter: checkFileType("pdf")});
 
 
 // AUTH MIDDLEWARE, HELPER FUNCTIONS
@@ -84,11 +75,11 @@ function isLoggedIn(req, res, next) {
     if (req.isAuthenticated() || req.user) {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-        return next()
+        return next();
     } else {
-        console.error('Login to continue');
-        req.flash('error', 'Login to continue!');
-        res.redirect('/login');
+        console.error("Login to continue");
+        req.flash("error", "Login to continue!");
+        res.redirect("/login");
     }
 }
 
@@ -96,11 +87,11 @@ function adminLoggedIn(req, res, next) {
     if (req.isAuthenticated() && req.user.position == "head") {
         global.usrInfo.pos = req.user.position;
         global.usrInfo.name = req.user.name;
-        return next()
+        return next();
     } else {
-        console.error('Login to continue');
-        req.flash('error', 'Permission denied!');
-        res.redirect('/dashboard');
+        console.error("Login to continue");
+        req.flash("error", "Permission denied!");
+        res.redirect("/dashboard");
     }
 }
 
@@ -113,53 +104,70 @@ async function getOldImage(req, res, next) {
     oldImage = await Page.findOne({ tag: req.params.tag.trim() });
     return next();
 }
-async function getOldSliderImage(req, res, next) {
-    if (oldImage != null) {
-        oldImage = await Slider.findOne({ _id: isUpdate });
-    }
-    return next();
-}
 
 // remove old uploaded image
 async function removeOldImage() {
     if (oldImage) {
         // Cloudinary
-        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log(result) });
+        cloudinary.uploader.destroy( oldImage.publicid, function(result) { console.log("Removed image at", oldImage.postImage), " ==> status", result; });
 
         // Disk
-        // fse.remove('\public' + oldImage.postImage)
+        // fse.remove("\public" + oldImage.postImage)
         //      .catch(err => {
         //          console.error(err)
         //      })
     }
 }
 
+async function setSiteInfo(result) {
+    if (Object.values(global.siteInfo).length < Object.values(result).length) {
+        global.siteInfo = {};
+        for (let d in result) {
+            global.siteInfo[result[d].name] = result[d].value;
+        }
+    }
+}
+
+// SITE SETTINGS MIDDLEWARE
+// -----
+router.use(async (req, res, next) => {
+    if (Object.values(global.siteInfo).length < 1) {
+        try {
+            let result = await Settings.find({});
+            setSiteInfo(result);
+        } catch(err) {
+            showError(req, "GET", "settings object", err);
+        }
+    }
+    next();
+});
+
 
 // DASHBOARD ROUTES
 // -----
 // Access Control
-router.get('/login', function (req, res, next) {
-    let success = req.flash('success');
-    let error = req.flash('error')
+router.get("/login", function (req, res) {
+    let success = req.flash("success");
+    let error = req.flash("error");
 
-    res.render('backend/login', { success, error })
-})
+    res.render("backend/login", { success, error });
+});
 
-router.post('/login/admin', passport.authenticate('local.loginAdmin', {
-    successRedirect: '/dashboard',
-    failureRedirect: '/login',
+router.post("/login/admin", passport.authenticate("local.loginAdmin", {
+    successRedirect: "/dashboard",
+    failureRedirect: "/login",
     failureFlash: true
-}))
+}));
 
-router.get('/signup', function (req, res, next) {
-    res.render('backend/signup')
-})
+router.get("/signup", function (req, res) {
+    res.render("backend/signup");
+});
 
-router.get('/logout', function (req, res, next) {
+router.get("/logout", function (req, res) {
     req.logout();
     global.usrInfo = {};
-    res.redirect('/login');
-})
+    res.redirect("/login");
+});
 
 router.get('/dashboard', isLoggedIn, function (req, res, next) {
     let success = req.flash('success');
@@ -167,23 +175,23 @@ router.get('/dashboard', isLoggedIn, function (req, res, next) {
     res.render('backend/dashboard', { success, error });
 });
 
-router.get('/forgot',function (req, res, next) {
-    res.render('backend/forgot');
-})
+router.get("/forgot",function (req, res) {
+    res.render("backend/forgot");
+});
 
-router.post('/forgot', function (req, res, next) {
+router.post("/forgot", function (req, res, next) {
     async.waterfall([
         function (done) {
             crypto.randomBytes(20, function (err, buf) {
-                var token = buf.toString('hex');
+                var token = buf.toString("hex");
                 done(err, token);
             });
         },
         function (token, done) {
             User.findOne({ email: req.body.email }, function (err, user) {
                 if (!user) {
-                    req.flash('error', 'No account with that email address exists!');
-                    return res.redirect('/forgot');
+                    req.flash("error", "No account with that email address exists!");
+                    return res.redirect("/forgot");
                 }
 
                 user.resetPasswordToken = token;
@@ -195,566 +203,916 @@ router.post('/forgot', function (req, res, next) {
             });
         },
         function (token, user, done) {
-            let mailOptions = {
-                to: req.body.email,
-                subject: 'Password Reset',
-                text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-                'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                'https://' + req.headers.host + '/reset/' + token + '\n\n' +
-                'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-            };
-            mailSender(mailOptions)
-                .catch((err) => {
-                    return next(err);
-                })
-                .then(() => {
-                    req.flash('success', 'An e-mail has been sent to ' + req.body.email + ' with further instructions.');
-                    done(null, 'done');
-                })
+            try {
+                mailSender.sendMail({
+                    template: "../views/emails/forgot",
+                    rx: req.body.email,
+                    locals: {
+                        site: siteInfo,
+                        username: user.name,
+                        resetlink: `${siteInfo.siteUrl}/reset/${token}`
+                    }
+                });
+                req.flash("success", `Password email sent to ${user.email}`);
+                done(null, "done");
+            } catch(err) {
+                showError(req, "POST", "/forgot", err);
+                done(err, false);
+            }
         }
     ], function (err) {
         if (err) {
             return next(err);
         }
-        res.redirect('/forgot');
+        res.redirect("/forgot");
     });
 });
 
-router.get('/reset/:token', function (req, res) {
-    let success = req.flash('success');
-    let error = req.flash('error');
+router.get("/reset/:token", function (req, res) {
+    let success = req.flash("success");
+    let error = req.flash("error");
     User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
 
         if (!user) {
-            req.flash('error', 'Invalid user!');
-            return res.redirect('/forgot');
+            req.flash("error", "Invalid user!");
+            return res.redirect("/forgot");
         }
-        res.render('backend/reset', { token: req.params.token, success, error });
+        res.render("backend/reset", { token: req.params.token, success, error });
     });
 });
 
-router.post('/reset/:token', async function (req, res, next) {
-    User.findOneAndUpdate(
-        { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } },
-        { $set: { password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)), resetPasswordToken: undefinedresetPasswordExpires = undefined } },
-        { new: true },
-        (err, doc) => {
-            if (err) {
-                console.log("Something wrong when updating data!");
-                req.flash('error', 'An error occured during password update, try again!');
-            } else {
-                let mailOptions = {
-                    to: doc.email,
-                    subject: 'Your password has been changed',
-                    text: 'Hello,\n\n' + 'This is a confirmation that the password for your account ' + doc.email + ' has just been changed.\n'
-                };
-                mailSender(mailOptions)
-                    .catch((err) => {
-                        return next(err);
-                    })
-                req.flash('success', 'Success! Your password has been changed, login to continue');
+router.post("/reset/:token", async function (req, res) {
+    try {
+        let usr = await User.findOneAndUpdate(
+            { resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } },
+            { $set: { password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)), resetPasswordToken: undefined } },
+            { new: true });
+        req.flash("success", "Your password was successful, login to continue");
+
+        mailSender.sendMail({
+            template: "../views/emails/reset",
+            rx: usr.email,
+            locals: {
+                site: siteInfo,
+                loginInfo: {
+                    name: usr.name,
+                    url: `${siteInfo.siteUrl}/login`
+                }
             }
-
-            res.redirect('/login')
         });
+    } catch (err) {
+        showError(req, "POST", `/reset/${req.params.token}`, err);
+    }
 
-})
+    res.redirect("/login");
 
-router.get('/dashboard', isLoggedIn, function (req, res, next) {
-    res.render('backend/dashboard');
+});
+
+router.get("/dashboard", isLoggedIn, function (req, res) {
+    res.render("backend/dashboard");
 });
 
 // -----
 // Admin
-router.get('/dashboard/authorizeadmins', adminLoggedIn, function (req, res, next) {
+router.get("/dashboard/authorizeadmins", adminLoggedIn, function (req, res) {
     User.find({}).then((result) => {
         if (result) {
-            res.render('backend/authorize', { result })
+            res.render("backend/authorize", { result });
         } else {
-            res.render('backend/authorize')
+            res.render("backend/authorize");
         }
-    })
-})
+    });
+});
 
-router.post('/createAccount', function (req, res, next) {
-    let newUser = new User();
+router.post("/createAccount", async function (req, res) {
+    let newUser = {
+        name: req.body.name,
+        email: req.body.email,
+        password: (new User).generateHash(req.body.password),
+        position: req.body.position
+    };
 
-    newUser.name = req.body.name;
-    newUser.email = req.body.email;
-    newUser.password = newUser.generateHash(req.body.password);
-    newUser.position = req.body.position;
+    try {
+        await User.create(newUser);
+        req.flash("success", "Admin Account created successfully!");
 
-    newUser.save().then((result) => {
-        if (result) {
-            res.redirect('/dashboard/authorizeadmins')
-        } else if (!result) {
-            res.send('error')
-        }
-    })
-})
-
-router.delete('/deleteadmin', function (req, res, next) {
-    User.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            req.flash('success', 'Admin deleted successfully');
-        } else {
-            console.log('err')
-            req.flash('error', `An error occured, try again: ${err}`);
-        }
-        res.redirect('/dashboard/authorizeadmins')
-    })
-
-})
-
-router.get('/dashboard/messages', adminLoggedIn, mailController.messages)
-
-router.post('/reply', mailController.reply);
-
-router.get('/dashboard/settings', adminLoggedIn, function (req, res) {
-    let upload = req.flash('upload');
-
-    res.render('backend/settings', { upload, usrInfo, page: "settings" })
-})
-
-router.post('/postdashboard/settings', upload.single('siteLogo'), (req, res, next) => {
-    pageData = {
-        tag: req.body.tag,
-        siteName: req.body.siteName,
-    }
-
-    if (req.file) {
-        pageData.siteLogo = req.file.path.substring(6)
-    }
-    Settings.findOneAndUpdate({ tag: 'settings' }, pageData, { upsert: true })
-        .catch((err) => { console.error(`Error occured during POST(/dashboard/settings): ${err}`); })
-        .then(() => {
-            req.flash('upload', 'PAGE - Content Updated Successful!');
-            res.redirect('/dashboard/settings');
-        })
-})
-
-router.post('/postaddress', function (req, res, next) {
-    let newMail = new Mail();
-    newMail.email = req.body.email;
-    newMail.save().then((result) => {
-        if (result) {
-            console.log(result)
-            res.redirect('/dashboard/settings')
-            req.flash('upload', "Address has been saved successfully");
-        }
-    })
-})
-
-
-//sponsors
-//----
-router.route('/dashboard/sponsors')
-    .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
-
-        Sponsor.find({}).then((result) => {
-            if (result) {
-                res.render('backend/sponsors', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/sponsors')
+        mailSender.sendMail({
+            template: "../views/emails/newadmin",
+            rx: req.body.email,
+            locals: {
+                site: siteInfo,
+                loginInfo: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    pwd: req.body.password,
+                    url: `${siteInfo.siteUrl}/login`
+                }
             }
-        })
+        });
+
+    } catch(err) {
+        showError(req, "POST", "/dashboard/authorizeadmins", err);
+    }
+
+    res.redirect("/dashboard/authorizeadmins");
+});
+
+router.delete("/deleteadmin", async function (req, res) {
+
+    try {
+        let result = await User.deleteOne({ _id: req.body.id });
+        if (result) {
+            req.flash("success", "Admin deleted successfully");
+        } else {
+            req.flash("error", "An error occured, try again");
+        }
+    } catch(err) {
+        req.flash("error", `An error occured, try again: ${err}`);
+    }
+    res.redirect("/dashboard/authorizeadmins");
+
+});
+
+router.route("/dashboard/settings")
+    .all(adminLoggedIn)
+    .get(async function (req, res) {
+        let result = "";
+        try {
+            result = await Settings.find({});
+            setSiteInfo(result);
+        } catch(err) {
+            showError(req, "GET", "/dashboard/settings", err);
+        }
+        res.render("backend/settings", { result });
     })
-      
-router.get('/dashboard/sponsors/add', isLoggedIn, function(req, res, next){
-     let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        res.render("backend/sponsors-form", {upload, failure})
-})
+    .post(upload.single("siteLogo"), async function (req, res) {
+        let pageData = {
+            one: {
+                name: "siteName",
+                value: req.body.siteName
+            },
+            three: {
+                name: "contactEmails",
+                value: req.body.contactEmails
+            },
+            four: {
+                name: "siteUrl",
+                value: req.body.siteUrl
+            },
+            five: {
+                name: "siteShortName",
+                value: req.body.siteShortName
+            }
+        };
+        if (req.file) {
+            pageData.two = {
+                name: "siteLogo",
+                value: req.file.secure_url
+            };
+        }
+        for(let d in pageData) {
+            try {
+                await Settings.findOneAndUpdate({name: pageData[d].name}, pageData[d], { upsert: true, new: true });
+                req.flash("success", "Settings Updated Successfully!");
+            } catch(err) {
+                showError(req, "POST", "/dashboard/settings", err);
+            }
+        }
+        res.redirect("/dashboard/settings");
+    });
 
-router.post('/dasboard/sponsor/add', upload.single('postImage'), function(req, res, next){
-    pageData = {
+// ----
+// Partners
+router.route("/dashboard/partners")
+    .all(isLoggedIn)
+    .get(async function (req, res) {
+        let result = "";
+        try {
+            result = await Partner.find({});
+        } catch (err) {
+            result = "";
+            showError(req, "GET", "dashboard/partners", err);
+        }
+
+        res.render("backend/partner", { result });
+    });
+
+router.route("/dashboard/partner/add")
+    .all(isLoggedIn)
+    .get (function(req, res){
+        try {
+            res.render("backend/partner-add");
+        } catch (err) {
+            showError(req, "GET", "dashboard/partners/add", err);
+            res.redirect("/dashboard");
+        }
+    })
+    .post( upload.single("postImage"), async function(req, res){
+        let pageData = {
             name: req.body.name,
-            text_on_img: req.body.text_on_img,
-             }
-
+            content: req.body.content
+        };
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Sponsor.create(pageData)
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/sponsors): ${err}`); })
-            .then((result) => {
-                console.log(result)
-                req.flash('upload', `Sponsor Creation Successful!`);
-                res.redirect('/dashboard/sponsors');
-            })    
-})
-
-    router.get('/dashboard/sponsor/edit/:id', function(req, res, next){
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-        let id = req.params.id;
-        console.log(id);
-
-        res.render('backend/editSponsor', { upload, failure, id, content: {} })
-    })
-
- router.post('/dashboad/sponsor/edit/:id', upload.single('postImage'), async function(req, res, next){
-
-        let idd = req.params.id;
-        let oldSponsorImage = await Sponsor.findOne({_id: idd});
-
-        (function removeSponsorOldImage() {
-            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
-        })()
-
-        sponsorData = {
-            name: req.body.name,
-            text_on_img: req.body.text_on_img,
-            
-        }
-        if (req.file) {
-            sponsorData.postImage = req.file.secure_url;
-            sponsorData.publicid = req.file.public_id;
+        try {
+            await Partner.create(pageData);
+            req.flash("success", "Partner Creation Successful!");
+        } catch(err) {
+            showError(req, "POST", "/dashboard/partner/add", err);
         }
 
-        Sponsor.findOneAndUpdate({_id: idd  }, sponsorData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/sponsor/edit/:id") })
-            .then(() => {
-                req.flash('upload', "Sponsor has been updated successfully");
-                res.redirect("/dashboard/sponsors");
-            })
-    })
+        res.redirect("/dashboard/partners");
+    });
 
-      //delete Sponsor
-router.delete('/dashboard/sponsor/delete/:id', async function (req, res, next) {
-    let idd = req.params.id;
-    let oldSponsorImage = await Sponsor.findOne({_id: idd});
-
-        (function removeSponsorOldImage() {
-            cloudinary.uploader.destroy( oldSponsorImage.publicid, function(result) { console.log(result) });
-        })()
-
-        Sponsor.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            if (result) {
-                res.redirect('/dashboard/sponsors')
-            } else {
-                console.log('err')
-            }
-        }
-    })
-
-})
-//sponsors ends here
-
-//centre leaders
-router.route('/dashboard/leaders')
+router.route("/dashboard/partner/edit/:id")
     .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
-
-        sponsor.find({}).then((result) => {
-            if (result) {
-                res.render('backend/center-leaders', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/center-leaders')
-            }
-        })
+    .get(async function(req, res){
+        let id = req.params.id, result;
+        try {
+            result = await Partner.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/partner/edit/${id}`, err);
+        }
+        res.render("backend/partner-add", { result, action: req.originalUrl });
     })
+    .post(upload.single("postImage"), async function(req, res){
+        let idd = req.params.id;
 
-router.route('/dashboard/leaders/add')
-    .all( adminLoggedIn)
-    .get ((req, res, next)=>{
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        res.render("backend/center-leadersForm", {upload, failure})
-})
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+        };
+        if (req.file) {
+            oldImage = await Partner.findOne({ _id: idd });
+            removeOldImage();
 
-//center leadres ends here
-//-----
-// Vc Speech
-//------
-router.get('/dashboard/speech', isLoggedIn, function(req, res, next){
-     let upload = req.flash('upload');
-        let failure = req.flash('failure');
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
 
-    Speech.findOne({const: "VC"}).then((result)=>{
-            res.render('backend/speech', {upload, failure, content: {}, result })  
-    })        
-})
+        try {
+            await Partner.findOneAndUpdate({_id: idd}, pageData, { upsert: true });
+            req.flash("success", "Partner updated successfully");
+        } catch(err) {
+            showError(req, "POST", `/dashboard/partner/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/partners");
+    });
 
-router.post('/dashboard/speech', upload.single('postImage'), async function(req, res, next){
-        let oldSpeechImage = await Speech.findOne({const: "VC"});
+router.delete("/dashboard/partner/delete/:id", async function (req, res) {
+    let idd = req.params.id;
 
-        (function removeSpeechOldImage() {
-            cloudinary.uploader.destroy( oldSpeechImage.publicid, function(result) { console.log(result) });
-        })()
-    let speechData = {
-        name: req.body.name,
-        text_on_img: req.body.text_on_img,
-        const: "VC"
+    oldImage = await Partner.findOne({ _id: idd });
+    removeOldImage();
+
+    try {
+        await Partner.deleteOne({ _id: req.body.id });
+        req.flash("success", "Partner deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/partner/delete/${idd}`, err);
     }
+    res.redirect("/dashboard/partners");
+});
 
-    if (req.file) {
+// ----
+// Center Leaders
+router.route("/dashboard/leaders")
+    .all(isLoggedIn)
+    .get(async function (req, res) {
+        let result = "";
+        try {
+            result = await People.find({tag: "centre-leaders"});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/leaders", err);
+        }
+        res.render("backend/leaders", { result });
+    });
+
+router.route("/dashboard/leader/add")
+    .all( adminLoggedIn)
+    .get ((req, res) => {
+        res.render("backend/leader-add");
+    })
+    .post(upload.single("postImage"), async function (req, res) {
+        let pageData = {
+            name: req.body.name,
+            work_at: req.body.work_at,
+            position: req.body.position,
+            email: req.body.email,
+            phone: req.body.phone,
+            work_info_1: req.body.work_info_1,
+            work_info_2: req.body.work_info_2,
+            tag: "centre-leaders",
+            is_active: 1,
+
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await People.create(pageData);
+            req.flash("success", "Centre Leader Creation Successful!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/leader/add", err);
+        }
+
+        res.redirect("/dashboard/leaders");
+    });
+
+router.route("/dashboard/leader/edit/:id")
+    .all(isLoggedIn)
+    .get(async function (req, res) {
+        let id = req.params.id, result;
+        try {
+            result = await People.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/leader/edit/${id}`, err);
+        }
+        res.render("backend/leader-add", { result, action: req.originalUrl });
+    })
+    .post(upload.single("postImage"), async function (req, res) {
+        let idd = req.params.id;
+
+        let pageData = {
+            name: req.body.name,
+            work_at: req.body.work_at,
+            position: req.body.position,
+            email: req.body.email,
+            phone: req.body.phone,
+            work_info_1: req.body.work_info_1,
+            work_info_2: req.body.work_info_2,
+            is_active: req.body.is_active,
+            tag: "centre-leaders"
+        };
+        if (req.file) {
+            oldImage = await Partner.findOne({ _id: idd });
+            removeOldImage();
+
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await People.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "Centre Leader updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboard/leader/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/leaders");
+    });
+
+router.delete("/dashboard/leader/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+
+    oldImage = await People.findOne({ _id: idd });
+    removeOldImage();
+
+    try {
+        await People.deleteOne({ _id: req.body.id });
+        req.flash("success", "Centre Leader record deleted successfully!");
+    } catch (err) {
+        showError(req, "DELETE", `/dashboard/leader/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/leaders");
+
+});
+
+// ----
+// VC Speech
+router.route("/dashboard/speech")
+    .all(isLoggedIn)
+    .get(async function(req, res) {
+        let result = "";
+        try {
+            result = await Page.findOne({tag: "vc_speech"});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/speech", err);
+        }
+        res.render("backend/speech", { result });
+    })
+    .post(upload.single("postImage"), async function(req, res){
+
+        let speechData = {
+            postImageCaption: req.body.postImageCaption,
+            summary: req.body.vc_name,
+            content: req.body.content
+        };
+
+        if (req.file) {
+            // remove old image
+            try {
+                oldImage = await Page.findOne({tag: "vc_speech"});
+                removeOldImage();
+            } catch(err) {
+                console.error("Error occured during delete of old image: ", err);
+            }
+
+            // write new image info
             speechData.postImage = req.file.secure_url;
             speechData.publicid = req.file.public_id;
         }
 
-    Speech.findOneAndUpdate({const: "VC"  }, speechData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/speech") })
-            .then((result) => {
-                console.log(result)
-                req.flash('upload', "VC Speech has been updated successfully");
-                res.redirect("/dashboard/speech");
-            })
-})
+        try {
+            await Page.findOneAndUpdate({tag: "vc_speech"}, speechData, { upsert: true });
+            req.flash("success", "PAGE (VC Speech) - Content Update Successful!");
+        } catch(err) {
+            showError(req, "POST", "/dashboard/speech", err);
+        }
+        res.redirect("/dashboard/speech");
+    });
 
 // -----
 // Slider
-router.route('/dashboard/slider')
+router.route("/dashboard/sliders")
     .all(isLoggedIn)
-    .get(function (req, res, next) {
-        let failure = req.flash('failure');
-        let success = req.flash('success');
-        let uploaded = req.flash('uploaded');
+    .get(async function (req, res) {
+        let result = "";
+        try {
+            result = await Slider.find().sort({_id: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/slider", err);
+        }
+        res.render("backend/sliders", { result });
+    });
 
-        Slider.find({}).then((result) => {
-            if (result) {
-                res.render('backend/slider', { result, failure, success, uploaded })
-            } else {
-                res.render('backend/slider')
-            }
-        })
+router.route("/dashboard/slider/add")
+    .all(isLoggedIn)
+    .get(function (req, res) {
+        res.render("backend/slider-add");
     })
-
-router.route('/dashboard/slider/add')
-    .all(isLoggedIn, function (req, res, next) {
-        oldImage = null
-        return next()
-    })
-    .get(function (req, res, next) {
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-
-        res.render('backend/slider-form', { upload, failure, content: {} })
-    })
-    .post(getOldSliderImage, upload.single('postImage'), (req, res) => {
-        removeOldImage();
-        pageData = {
+    .post(upload.single("postImage"), async (req, res) => {
+        let pageData = {
             name: req.body.name,
             text_on_img: req.body.text_on_img,
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
-            is_active: true,
-        }
+            is_visible: req.body.is_visible
+        };
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Slider.create(pageData)
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/slider): ${err}`); })
-            .then(() => {
-                req.flash('upload', `Slider Creation Successful!`);
-                res.redirect('/dashboard/slider');
-            })
+        try {
+            await Slider.create(pageData);
+            req.flash("New Slider created successfully!");
+        } catch(err) {
+            showError(req, "POST", "/dashboard/slider/add", err);
+        }
+        res.redirect("/dashboard/sliders");
+    });
+
+router.route("/dashboard/slider/edit/:id")
+    .all(isLoggedIn)
+    .get(async function(req, res){
+        let id = req.params.id, result;
+        try {
+            result = await Slider.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/slider/edit/${id}`, err);
+        }
+        res.render("backend/slider-add", { result, action: req.originalUrl });
     })
-
-    router.get('/dashboard/edit/:id', function(req, res, next){
-        let upload = req.flash('upload');
-        let failure = req.flash('flash');
-        let id = req.params.id;
-        console.log(id);
-
-        res.render('backend/editslider', { upload, failure, id, content: {} })
-    })
-
- router.post('/dashboad/slider/edit/:id', upload.single('postImage'), async function(req, res, next){
+    .post(upload.single("postImage"), async function(req, res){
 
         let idd = req.params.id;
-        let oldSliderImage = await Slider.findOne({_id: idd});
+        oldImage = await Slider.findOne({_id: idd});
+        removeOldImage();
 
-        (function removeSliderOldImage() {
-            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-        })()
-
-        sliderData = {
+        let sliderData = {
             name: req.body.name,
             text_on_img: req.body.text_on_img,
             img_link: req.body.img_link,
             img_link_text: req.body.img_link_text,
-            is_active: true,
+            is_visible: req.body.is_visible
 
-        }
+        };
         if (req.file) {
             sliderData.postImage = req.file.secure_url;
             sliderData.publicid = req.file.public_id;
         }
-
-        Slider.findOneAndUpdate({_id: idd  }, sliderData, { upsert: true })
-            .catch((err) => { console.error("Error occured during POST /dashboad/slider/edit/:id") })
-            .then(() => {
-                req.flash('upload', "Slider has been updated successfully");
-                res.redirect("/dashboard/slider");
-            })
-    })
-
-      //delete Slider
-router.delete('/dashboard/slider/delete/:id', async function (req, res, next) {
-    let idd = req.params.id;
-    let oldSliderImage = await Slider.findOne({_id: idd});
-
-        (function removeSliderOldImage() {
-            cloudinary.uploader.destroy( oldSliderImage.publicid, function(result) { console.log(result) });
-        })()
-
-    Slider.deleteOne({ _id: req.body.id }).then((result) => {
-        if (result) {
-            if (result) {
-                res.redirect('/dashboard/slider')
-            } else {
-                console.log('err')
-            }
+        try {
+            await Slider.findOneAndUpdate({ _id: idd }, sliderData, { upsert: true });
+            req.flash("success", "Slider updated successfully");
+        } catch(err) {
+            showError(req, "POST", `/dashboad/slider/edit/${idd}`, err);
         }
-    })
+        res.redirect("/dashboard/sliders");
+    });
 
-})
+// -----
+// Photos, Download
+router.route("/dashboard/downloads")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await Page.find({tag: "download"}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/downloads", err);
+        }
+        res.render("backend/downloads", { result });
+    });
+
+router.route("/dashboard/download/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/download-add");
+    })
+    .post(uploadFile.single("postImage"), async (req, res) => {
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            tag: "download",
+            is_active: true
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await Page.create(pageData);
+            req.flash("success", "Download file added successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/download/add", err);
+        }
+        res.redirect("/dashboard/downloads");
+    });
+
+router.route("/dashboard/download/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await Page.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/download/edit/${id}`, err);
+        }
+        res.render("backend/download-add", { result, action: req.originalUrl });
+    })
+    .post(uploadFile.single("postImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await Page.findOne({ _id: idd });
+        removeOldImage();
+
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await Page.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "Download file updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/download/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/downloads");
+    });
+
+router.delete("/dashboard/download/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await Page.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await Page.deleteOne({ _id: req.body.id });
+        req.flash("success", "Download file deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/download/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/downloads");
+});
+
+router.route("/dashboard/lecture-room-photos")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await Page.find({tag: "photo"}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/lecture-room-photos", err);
+        }
+        res.render("backend/photos", { result });
+    });
+
+router.route("/dashboard/lecture-room-photo/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/photo-add");
+    })
+    .post(upload.single("postImage"), async (req, res) => {
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            tag: "photo",
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await Page.create(pageData);
+            req.flash("success", "Photo added successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/lecture-room-photo/add", err);
+        }
+        res.redirect("/dashboard/lecture-room-photos");
+    });
+
+router.route("/dashboard/lecture-room-photo/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await Page.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/lecture-room-photo/edit/${id}`, err);
+        }
+        res.render("backend/photo-add", { result, action: req.originalUrl });
+    })
+    .post(upload.single("postImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await Page.findOne({ _id: idd });
+        removeOldImage();
+
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await Page.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "Photo updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/lecture-room-photo/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/lecture-room-photos");
+    });
+
+router.delete("/dashboard/lecture-room-photo/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await Page.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await Page.deleteOne({ _id: req.body.id });
+        req.flash("success", "Photo deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/lecture-room-photo/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/lecture-room-photos");
+});
+
 // -----
 // News
-router.get('/dashboard/news', function (req, res, next) {
-    let upload = req.flash('upload');
-
-    News.find({}).then((doc) => {
-        if (doc) {
-            res.render('backend/news', { upload, doc, page: 'news', activeParent: 'news' })
-        } else {
-            res.render('backend/news')
+router.route("/dashboard/news")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await News.find({}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/news", err);
         }
+        res.render("backend/news", { result });
+    });
+
+router.route("/dashboard/news/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/news-add");
     })
-})
+    .post(upload.single("newsImage"), async (req, res) => {
+        let pageData = {
+            title: req.body.title,
+            summary: req.body.summary,
+            content: req.body.content,
+            author: req.body.author,
+            tags: req.body.tags,
+            meta_keyword: req.body.meta_keyword,
+            meta_desc: req.body.meta_desc,
+            is_visible: req.body.is_visible
+        };
+        if (req.file) {
+            pageData.newsImage = req.file.secure_url;
+            pageData.newsImageId = req.file.public_id;
+        }
 
-router.post("/handlenews", upload.single('newImg'),  function (req, res, next) {
-    let newNews = new News();
+        try {
+            await News.create(pageData);
+            req.flash("success", "News created successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/news/add", err);
+        }
+        res.redirect("/dashboard/news");
+    });
 
-    newNews.title = req.body.title;
-    newNews.writer = req.body.writer;
-    newNews.department = req.body.department;
-    newNews.content = req.body.content;
-    newNews.newImg = req.file.secure_url;
+router.route("/dashboard/news/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await News.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/news/edit/${id}`, err);
+        }
+        res.render("backend/news-add", { result, action: req.originalUrl });
+    })
+    .post(upload.single("newsImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await News.findOne({ _id: idd });
+        removeOldImage();
 
-    newNews.save()
-        .then((result) => {
-            if (result) {
-                req.flash('upload', "News has been uploaded successfully");
-            } else {
-                res.flash('error', "An error occured, try again")
-            }
-        })
-        .catch((err) => {
-            res.flash('error', `An error occured: ${err}`);
-        })
+        let pageData = {
+            title: req.body.title,
+            summary: req.body.summary,
+            content: req.body.content,
+            author: req.body.author,
+            tags: req.body.tags,
+            meta_keyword: req.body.meta_keyword,
+            meta_desc: req.body.meta_desc,
+            is_visible: req.body.is_visible
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await News.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "News updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/news/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/news");
+    });
 
-        res.redirect('dashboard/news');
-})
+router.delete("/dashboard/news/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await News.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await News.deleteOne({ _id: req.body.id });
+        req.flash("success", "News deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/news/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/news");
+});
 
-// -----
-// Staff    -   NOT USED
-router.get('/dashboard/staffs', function (req, res, next) {
-    let upload = req.flash('upload');
-    let failure = req.flash('failure')
-    res.render('backend/staff', { upload, failure })
-})
+// ----
+// Admin Settings
+router.get("/dashboard/adminSettings", function (req, res) {
+    let success = req.flash("succes");
+    let failure = req.flash("failure");
+    let info = req.flash('info');
+    res.render("backend/adminSettings", {success, failure, email: req.user.email});
+});
 
-router.get('/dashboard/adminSettings', function (req, res, next) {
-    let success = req.flash('succes');
-    let failure = req.flash('failure')
-    let error = req.flash('error')
-    res.render('backend/adminSettings', {success, failure, error, email: req.user.email})
-})
-
-router.put('/dashboard/adminSettings/email', function (req, res, next) {
+router.put("/dashboard/adminSettings/email", function (req, res) {
     if (req.body.dbEmail == req.user.email) {
         User.findByIdAndUpdate({ _id: req.user._id }, { email: req.body.newEmail })
             .exec()
             .then(() => {
-                req.flash('success', 'Email Change Successfull!')
-                res.redirect('/dashboard');
+                req.flash("success", "Email Change Successfull!");
+                res.redirect("/dashboard");
             })
             .catch((err) => {
                 console.log(err);
-            })
+            });
     } else {
-        req.flash('info', "Incorrect Email!");
-        res.redirect('/dashboard/adminSettings');
+        req.flash("info", "Incorrect Email!");
+        res.redirect("/dashboard/adminSettings");
     }
-})
+});
 
-router.put('/dashboard/adminSettings/password', function (req, res, next) {
+router.put("/dashboard/adminSettings/password", function (req, res) {
     bcrypt.compare(req.body.dbPass, req.user.password, function (err, usr) {
-				if (err) {
+        if (err) {
             console.log(err);
-						req.flash('error', 'An error occured, try again');
+            req.flash("error", "An error occured, try again");
         }
-				if (!usr) {
-            req.flash('error', 'Incorrect password')
-            res.redirect('/dashboard/adminSettings');
+        if (!usr) {
+            req.flash("error", "Incorrect password");
+            res.redirect("/dashboard/adminSettings");
         } else {
             User.findByIdAndUpdate({ _id: req.user._id }, { password: bcrypt.hashSync(req.body.newPass, bcrypt.genSaltSync(10))})
                 .exec()
                 .then(() => {
-                    req.flash('success', 'Password Successfully changed')
-                    res.redirect('/dashboard');
+                    req.flash("success", "Password Successfully changed");
+                    res.redirect("/dashboard");
                 })
                 .catch((err) => {
                     console.log(err);
-                })
+                });
         }
 
     });
-})
+});
 
-router.delete('/dashboard/adminSettings/delete', function (req, res, next) {
+router.delete("/dashboard/adminSettings/delete", function (req, res) {
 
-
-    bcrypt.compare(req.body.password, req.user.password, function (req, res, err) {
+    bcrypt.compare(req.body.password, req.user.password, function (err, data) {
         if (err) {
-            console.log(err)
+            console.log(err);
         }
-        if (res){
+        if (data){
             User.findByIdAndRemove({ _id: req.user._id })
                 .exec()
                 .then(() => {
-                    res.redirect('/login');
+                    res.redirect("/login");
                 })
                 .catch((err) => {
                     console.log(err);
-                })
+                });
         }
         else {
-            console.log('unmatch');
-            res.redirect('/dashboard/adminSettings');
-
+            console.log("unmatch");
+            res.redirect("/dashboard/adminSettings");
         }
     });
 
-})
+});
 
-router.post('/poststaff', function (req, res, next) {
+// -----
+// Contact
+router.route("/dashboard/contact-us")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let req_url = req.originalUrl;
+        let data = "";
+
+        try {
+            data = await Contact.find({});
+        } catch(err) {
+            data = [];
+            console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
+            req.flash("error", "An error occured, try again or contact web admin!");
+        }
+
+        res.render("backend/contact-us", { req_url, content: data[0], page: "contact-us", activeParent: "about" });
+    })
+    .post( async (req, res) => {
+        let pageData = {
+            address: req.body.address,
+            phone: req.body.phone,
+            email: req.body.email,
+            mapLongitude: req.body.mapLongitude,
+            mapLatitude: req.body.mapLatitude,
+            is_active: true,
+            // _id = (req.body.id) ? req.body.id : ""
+        };
+
+        try {
+            await Contact.findOneAndUpdate({}, pageData, { upsert: true });
+            req.flash("success", "PAGE (Contact Us) - Content Update Successful!");
+        } catch(err) {
+            console.error(`Error occured during POST(/dashboard/contact-us): ${err}`);
+            req.flash("error", "Error occured while updating 'Contact Page', try again or contact the web admin");
+        }
+        res.redirect("/dashboard/contact-us");
+    });
+
+// -----
+// Staff    -   NOT USED
+router.get("/dashboard/staffs", function (req, res) {
+    let upload = req.flash("upload");
+    let failure = req.flash("failure");
+    res.render("backend/staff", { upload, failure });
+});
+
+router.post("/poststaff", function (req, res) {
     upload(req, res, (err) => {
         if (err) {
 
-            //res.render('students', {msg : err})
-            res.send(err)
+            //res.render("students", {msg : err})
+            res.send(err);
         } else {
             console.log(req.files);
             Page.findOne({ name: "staff" }).then(function (result) {
                 if (result) {
 
-                    req.flash('failure', "Sorry You can only update not create new ones");
-                    res.redirect('dashboard/staff');
+                    req.flash("failure", "Sorry You can only update not create new ones");
+                    res.redirect("dashboard/staff");
 
 
                 } else if (!result) {
@@ -767,56 +1125,36 @@ router.post('/poststaff', function (req, res, next) {
 
                     newPage.save().then((result) => {
                         if (result) {
-                            console.log(result)
-                            req.flash('upload', "Staff page has been uploaded successfully");
-                            res.redirect('dashboard/staff');
+                            console.log(result);
+                            req.flash("upload", "Staff page has been uploaded successfully");
+                            res.redirect("dashboard/staff");
                         } else {
-                            res.send("err")
+                            res.send("err");
                         }
-                    })
+                    });
 
                     // console.log("sorry cannot save new data")
                 }
                 //    // res.send("test")
-            })
+            });
         }
-    })
-})
+    });
+});
 
-// -----
-// Contact
-router.route('/dashboard/contact-us')
-    .all(isLoggedIn)
-    .get((req, res, next) => {
-        let req_url = req.originalUrl;
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
-        Contact.find({})
-            .then((data) => {
-                res.render('backend/contact-us', { upload, failure, req_url, content: data[0], page: 'contact-us', usrInfo, activeParent: 'about' })
-            })
-            .catch((err) => {
-                console.error(`Error occured during GET(/dashboard/contact-us): ${err}`);
-            })
-    })
-    .post((req, res, next) => {
-        pageData = {
-            address: req.body.address,
-            phone: req.body.phone,
-            email: req.body.email,
-            mapLongitude: req.body.mapLongitude,
-            mapLatitude: req.body.mapLatitude,
-            is_active: true,
-            // _id = (req.body.id) ? req.body.id : ''
+router.get("/dashboard/messages", adminLoggedIn, (req, res) => {
+    Message.find({}).then((result) => {
+        if (result) {
+            console.log(result);
+            res.render("backend/messages", { result: result });
+        } else {
+            res.render("backend/messages");
         }
+    });
+});
 
-        Contact.findOneAndUpdate({}, pageData, { upsert: true })
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/contact-us): ${err}`); })
-            .then(() => {
-                req.flash('upload', `PAGE (Contact Us) - Content Update Successful!`);
-                res.redirect('/dashboard/contact-us');
-            })
-    })
+router.post("/reply", (req, res) => {
+    res.redirect("dashboard/messages");
+});
 
 // -----
 // About pages
@@ -824,27 +1162,26 @@ router.route('/dashboard/contact-us')
 // Research pages
 // Recruitment pages
 // Management pages
-router.route('/dashboard/:tag')
+router.route("/dashboard/:tag")
     .all(isLoggedIn)
-    .get((req, res, next) => {
+    .get(async (req, res) => {
         let req_url = req.originalUrl;
-        let upload = req.flash('upload');
-        let failure = req.flash('failure');
         let page_tag = req.params.tag.trim();
-        let page_obj = n[page_tag.replace(/(-)+/gi, '_')];
-        Page.findOne({ tag: page_tag })
-            .then((content) => {
-                res.render('backend/template-one', { upload, failure, req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo })
-            })
-            .catch((err) => {
-                console.error(`Error occured during GET(/dashboard/${page_tag}): ${err}`);
-            })
+        let page_obj = n[page_tag.replace(/(-)+/gi, "_")];
+        let content = "";
+
+        try {
+            content = await Page.findOne({ tag: page_tag });
+        } catch(err) {
+            showError(req, "GET", `/dashboard/${page_tag}`, err);
+        }
+        res.render("backend/template-one", { req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo });
     })
-    .post(getOldImage, upload.single('postImage'), (req, res, next) => {
+    .post(getOldImage, upload.single("postImage"), async (req, res) => {
         removeOldImage();
 
         let page_tag = req.params.tag.trim();
-        pageData = {
+        let pageData = {
             tag: page_tag,
             name: req.body.name,
             summary: req.body.summary,
@@ -852,33 +1189,35 @@ router.route('/dashboard/:tag')
             postImageCaption: req.body.postImageCaption,
             meta_key: req.body.meta_key,
             meta_desc: req.body.meta_desc,
-            is_active: true
-        }
+            is_active: 1
+        };
         if (req.file) {
             pageData.postImage = req.file.secure_url;
             pageData.publicid = req.file.public_id;
         }
 
-        Page.findOneAndUpdate({ tag: page_tag }, pageData, { upsert: true })
-            .catch((err) => { console.error(`Error occured during POST(/dashboard/${page_tag}): ${err}`); })
-            .then(() => {
-                req.flash('upload', `PAGE (${capitalize(page_tag)}) - Content Update Successful!`);
-                res.redirect('/dashboard/' + page_tag);
-            })
-    })
-
+        try {
+            await Page.findOneAndUpdate({ tag: page_tag }, pageData, { upsert: true });
+            req.flash("success", `PAGE (${capitalize(page_tag)}) - Content Update Successful!`);
+        } catch(err) {
+            showError(req, "POST", `/dashboard/${page_tag}`, err);
+        }
+        res.redirect("/dashboard/" + page_tag);
+    });
 
 
 // WEBSITE ROUTES
 // -----
-router.get('/', controller.homePage);
-router.get('/services', controller.servicesPage);
-router.get('/contact', controller.contactPage);
-router.post('/post-contact', controller.post_contactPage);
-router.get('/team', controller.teamPage);
-router.get('/news-lists/:id', controller.newsPage);
-router.get('/news-lists', controller.newsListsPage);
-router.get('/:page_name', controller.renderPage);
-router.post('/subscribe', controller.subscribe)
+router.get("/", controller.homePage);
+router.get("/services", controller.servicesPage);
+router.get("/contact", controller.contactPage);
+router.post("/post-contact", controller.post_contactPage);
+router.get("/team", controller.teamPage);
+router.get("/news/article/:name/:id", controller.newsPage);
+router.get("/news", controller.newsListsPage);
+router.get("/lecture-rooms", controller.lecturePage);
+router.get("/downloads", controller.downloadPage);
+router.get("/:page_name", controller.renderPage);
+router.post("/subscribe", controller.subscribe);
 
 module.exports = router;

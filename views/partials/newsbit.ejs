@@ -1,0 +1,13 @@
+<div class="widget-blog-post">
+    <% for(let i=0; i < doc.length; i++) { %>
+    <div class="widget-single-blog-post d-flex row">
+        <div class="col-sm-2 text-right float-left">
+            <img src="<%= doc[i].newsImage %>" class="img-fluid" />
+        </div>
+        <div class="widget-post-content col-sm-10 float-left">
+            <a href="/news/article/<%= doc[i].title.replace(/(\s|\'|\"|\;)+/gi, '-').toLowerCase() %>/<%= doc[i]._id%>"> <%= doc[i].title %> </a>
+            <p><%= new Date(doc[i].createdDate).toDateString() %></p>
+        </div>
+    </div>
+    <%}%>
+</div>

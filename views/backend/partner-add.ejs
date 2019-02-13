@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/dashboard-head', { pagename: 'Add/Edit Partner' }) %>
+</head>
+
+<body>
+    <%- include('../partials/dashboard-nav') %>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <%- include('../partials/sidebar.ejs', { page: 'partners', activeParent: 'partners' }) %>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
+                    <h1 class="h2 rw"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %> Page Content: <span class="text-info">PARTNERS</span></h1>
+                </div>
+
+                <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/partner/add' %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Partner Name', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
+
+                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Partner Image', valueField: (typeof result != 'undefined') ? result.postImage : '' }); %>
+
+                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'Partner Details', valueField: (typeof result != 'undefined') ? result.content : '' }); %>
+
+                    <hr class="my-4"/>
+                    <div class="col-sm-10 ml-md-auto px-0">
+                        <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE PARTNER' : 'CREATE PARTNER' }); %>
+                        <a href="/dashboard/partners" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <%- include('../partials/dashboard-scripts') %>
+    <script>
+        CKfull('content');
+    </script>
+</body>
+</html>

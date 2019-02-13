@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <%- include('../partials/frontend-head', { title: 'Lecture Rooms' }) %>
+     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+     <style>
+        .grid-item:hover img {
+            box-shadow: 0px 2px 12px #555;
+        }
+     </style>
+</head>
+
+<body>
+    <!-- Preloader -->
+    <% include ../partials/navbar.ejs %>
+
+    <!-- ***** Breadcumb Area Start ***** -->
+    <section class="breadcumb-area bg-img gradient-background-overlay" style="background-image: url(/img/front.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="breadcumb-content">
+                        <h3 class="breadcumb-title">Lecture Rooms</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ***** Breadcumb Area End ***** -->
+    <section class="our-skills-area text-center">
+            <div class="row pt-3 mx-3 mb-5 grid" data-masonry='{ "itemSelector": ".grid-item", "columnWidth": ".grid-item" }'>
+            <% for (let i = 0; i < photos.length; i++) { %>
+                <div class="grid-item mb-3 col-4 px-0">
+                    <div class="pb-1 d-flex mr-4">
+                        <a href="<%= photos[i].postImage %>" class="w-100">
+                            <img src="<%= photos[i].postImage %>" class="w-100" />
+                            <p class="text-center p-2 bg-white text-info text-uppercase border border-info mt-2"><%- photos[i].name %></p>
+                        </a>
+                    </div>
+                </div>
+            <% } %>
+            </div>
+    </section>
+
+    <% include ../partials/footer.ejs %>
+
+    <% include ../partials/frontend-scripts %>
+
+</body>
+</html>

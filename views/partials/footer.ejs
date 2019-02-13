@@ -1,26 +1,15 @@
-<div class="container-fluid bg-light p-5">
-    <h2 class="text-center mb-5">Our Partners</h2>
-    <div class="row mb-3">
-        <div class="col-sm text-center">
-            <img src="img/core-img/p1.jpg" class="img-thumbnail" alt="">
-        </div>
-        <div class="col-sm text-center">
-            <img src="img/core-img/p2.jpg" class="img-thumbnail" alt="">
-        </div>
-        <div class="col-sm text-center">
-            <img src="img/core-img/p3.jpg" class="img-thumbnail" alt="">
-        </div>
-        <div class="col-sm text-center">
-            <img src="img/core-img/p4.jpg" class="img-thumbnail" alt="">
-        </div>
-        <div class="col-sm text-center">
-            <img src="img/core-img/p5.jpg" class="img-thumbnail" alt="">
-        </div>
-        <div class="col-sm text-center">
-            <img src="img/core-img/p6.jpg" class="img-thumbnail" alt="">
+<% if (typeof partners != "undefined")  { %>
+    <div class="container-fluid bg-light p-5">
+        <h2 class="text-center mb-5">Our Partners</h2>
+        <div class="row mb-3">
+        <% for (let i = 0; i < partners.length; i++) { %>
+            <div class="col-sm text-center">
+                <img src="<%= partners[i].postImage %>" class="img-thumbnail" alt="<%= partners[i].name %>">
+            </div>
+        <% } %>
         </div>
     </div>
-</div>
+<% } %>
 
 <footer class="footer-area section-padding-50">
     <div class="main-footer-area">
@@ -29,7 +18,7 @@
                 <div class="col-12 col-lg-4 col-sm-6 px-4">
                     <div class="footer-widget-area">
                         <div class="footer-logo mb-3">
-                            <img src="img/core-img/logo.png" alt="" class="bg-white p-3">
+                            <img src="<%= siteInfo.siteLogo %>" alt="ACEITSE logo" class="bg-white p-3">
                         </div>
                         <p class="col-10 p-0">Centre of Excellence In Innovative and Transformative STEM Education (CITSE)</p>
                         <div class="footer-social-info">
@@ -46,19 +35,7 @@
                         <div class="widget-title">
                             <h6>Latest News</h6>
                         </div>
-                        <div class="widget-blog-post">
-                            <% for(let i=0; i < doc.length; i++) { %>
-                                <div class="widget-single-blog-post d-flex">
-                                    <div class="widget-post-thumbnail text-right">
-                                        <i class="fa fa-3x text-secondary fa-newspaper-o"></i>
-                                    </div>
-                                    <div class="widget-post-content">
-                                        <a href="/news"><%=doc[i].title%></a>
-                                        <p><%= new Date(doc[i].createdDate).toLocaleString() %></p>
-                                    </div>
-                                </div>
-                            <%}%>
-                        </div>
+                        <%- include("../partials/newsbit") %>
                     </div>
                 </div>
 
@@ -74,9 +51,7 @@
                                     placeholder="Your Email Here" required>
                                 <button type="submit" id="submitData">Subscribe</button>
                             </form>
-                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod
-                                tincidunt ut laoreet dolore magna aliquam erat volutpat. Lorem ipsum dolor sit amet,
-                                consectetuer.</p>
+                            <p class="fa-lg">Don't miss any ACEITSE news, events, publications and more.</p>
                         </div>
                     </div>
                 </div>

@@ -19,6 +19,7 @@
         "debug": "~2.6.9",
         "dotenv": "^6.2.0",
         "ejs": "~2.5.7",
+        "email-templates": "^5.0.3",
         "express": "~4.16.0",
         "express-flash": "0.0.2",
         "express-session": "^1.15.6",

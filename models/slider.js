@@ -18,7 +18,12 @@ let sliderSchema = new Schema({
     is_visible: {
         type: Boolean,
         default: true
-    }
-})
+    },
 
-module.exports = mongoose.model("Slider", sliderSchema)
+    createdDate: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+module.exports = mongoose.model("Slider", sliderSchema);

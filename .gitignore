@@ -5,3 +5,4 @@ public/uploads
 config/keys.js
 .env
 .DS_Store
+public/ckeditor

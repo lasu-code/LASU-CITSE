@@ -1,4 +1,4 @@
-let mongoose = require('mongoose');
+let mongoose = require("mongoose");
 
 let Schema = mongoose.Schema;
 
@@ -7,8 +7,7 @@ let subscribeSchema = new Schema({
     createdDate: {
         type: Date,
         default: Date.now()
-    
     }
 });
 
-module.exports = mongoose.model('subscribe', subscribeSchema)
+module.exports = mongoose.model("Subscriber", subscribeSchema);
