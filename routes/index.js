@@ -356,6 +356,10 @@ router.route("/dashboard/settings")
             four: {
                 name: "siteUrl",
                 value: req.body.siteUrl
+            },
+            five: {
+                name: "siteShortName",
+                value: req.body.siteShortName
             }
         };
         if (req.file) {

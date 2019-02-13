@@ -25,6 +25,9 @@
                     <%- include('../fields/text', { fieldname: 'siteName', fieldplaceholder: 'Site Name', fieldlabel: 'Site Name', valueField: (typeof result != 'undefined') ? result[0].value : '' }); %>
                     <div><hr/></div>
 
+                    <%- include('../fields/text', { fieldname: 'siteShortName', fieldplaceholder: 'Site Short Name', fieldlabel: 'Site Short Name', valueField: (typeof result != 'undefined') ? result[4].value : '' }); %>
+                    <div><hr/></div>
+
                     <%- include('../fields/file', { fieldname: 'siteLogo', fieldlabel: 'Site Logo', valueField: (typeof result != 'undefined') ? result[2].value : '' }); %>
                     <div><hr/></div>
 
