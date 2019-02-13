@@ -782,6 +782,92 @@ router.delete("/dashboard/download/delete/:id", async function (req, res) {
     res.redirect("/dashboard/downloads");
 });
 
+router.route("/dashboard/lecture-room-photos")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let result = "";
+        try {
+            result = await Page.find({tag: "photo"}).sort({createdDate: -1});
+        } catch(err) {
+            showError(req, "GET", "/dashboard/lecture-room-photos", err);
+        }
+        res.render("backend/photos", { result });
+    });
+
+router.route("/dashboard/lecture-room-photo/add")
+    .all(isLoggedIn)
+    .get((req, res) => {
+        res.render("backend/photo-add");
+    })
+    .post(upload.single("postImage"), async (req, res) => {
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            tag: "photo",
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+
+        try {
+            await Page.create(pageData);
+            req.flash("success", "Photo added successfully!");
+        } catch (err) {
+            showError(req, "POST", "/dashboard/lecture-room-photo/add", err);
+        }
+        res.redirect("/dashboard/lecture-room-photos");
+    });
+
+router.route("/dashboard/lecture-room-photo/edit/:id")
+    .all(isLoggedIn)
+    .get(async (req, res) => {
+        let id = req.params.id, result;
+        try {
+            result = await Page.findById(id);
+        } catch (err) {
+            result = undefined;
+            showError(req, "GET", `dashboard/lecture-room-photo/edit/${id}`, err);
+        }
+        res.render("backend/photo-add", { result, action: req.originalUrl });
+    })
+    .post(upload.single("postImage"), async (req, res) => {
+        let idd = req.params.id;
+        oldImage = await Page.findOne({ _id: idd });
+        removeOldImage();
+
+        let pageData = {
+            name: req.body.name,
+            content: req.body.content,
+            is_active: req.body.is_active
+        };
+        if (req.file) {
+            pageData.postImage = req.file.secure_url;
+            pageData.publicid = req.file.public_id;
+        }
+        try {
+            await Page.findOneAndUpdate({ _id: idd }, pageData, { upsert: true });
+            req.flash("success", "Photo updated successfully");
+        } catch (err) {
+            showError(req, "POST", `/dashboad/lecture-room-photo/edit/${idd}`, err);
+        }
+        res.redirect("/dashboard/lecture-room-photos");
+    });
+
+router.delete("/dashboard/lecture-room-photo/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+    oldImage = await Page.findOne({ _id: idd });
+    removeOldImage();
+    try {
+        await Page.deleteOne({ _id: req.body.id });
+        req.flash("success", "Photo deleted successfully!");
+    } catch(err) {
+        showError(req, "DELETE", `/dashboard/lecture-room-photo/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/lecture-room-photos");
+});
+
 // -----
 // News
 router.route("/dashboard/news")
