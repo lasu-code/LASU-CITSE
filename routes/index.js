@@ -282,21 +282,37 @@ router.get("/dashboard/authorizeadmins", adminLoggedIn, function (req, res) {
     });
 });
 
-router.post("/createAccount", function (req, res) {
-    let newUser = new User();
+router.post("/createAccount", async function (req, res) {
+    let newUser = {
+        name: req.body.name,
+        email: req.body.email,
+        password: (new User).generateHash(req.body.password),
+        position: req.body.position
+    };
 
-    newUser.name = req.body.name;
-    newUser.email = req.body.email;
-    newUser.password = newUser.generateHash(req.body.password);
-    newUser.position = req.body.position;
+    try {
+        await User.create(newUser);
+        req.flash("success", "Admin Account created successfully!");
 
-    newUser.save().then((result) => {
-        if (result) {
-            res.redirect("/dashboard/authorizeadmins");
-        } else if (!result) {
-            res.send("error");
-        }
-    });
+        mailSender.sendMail({
+            template: "../views/emails/newadmin",
+            rx: req.body.email,
+            locals: {
+                site: siteInfo,
+                loginInfo: {
+                    name: req.body.name,
+                    email: req.body.email,
+                    pwd: req.body.password,
+                    url: `${siteInfo.siteUrl}/login`
+                }
+            }
+        });
+
+    } catch(err) {
+        showError(req, "POST", "/dashboard/authorizeadmins", err);
+    }
+
+    res.redirect("/dashboard/authorizeadmins");
 });
 
 router.delete("/deleteadmin", async function (req, res) {
