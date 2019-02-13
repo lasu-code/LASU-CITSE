@@ -50,7 +50,7 @@ exports.renderPage = function (req, res) {
                     [pageData, allNews, allPartners]
                 );
 
-            res.render("frontend/template", { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, " "), activeNav, partners: ptn });
+            res.render("frontend/template", { content: dt[0], doc: news, title: navIndex.replace(/(-)+/gi, " ").toUpperCase(), activeNav, partners: ptn });
         })();
     }
 };
