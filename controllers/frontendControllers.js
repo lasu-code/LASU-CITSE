@@ -147,3 +147,21 @@ exports.teamPage = async function (req, res) {
 
     res.render("frontend/team", { doc: news, partners: ptn, team: tm, activeNav: "management" });
 };
+
+exports.downloadPage = async function (req, res) {
+    let result = await Page.find({tag: "download", is_active: 1}).sort({createdDate: -1});
+    const [news, ptn, files] =
+        await Promise.all(
+            [allNews, allPartners, result]
+        );
+    res.render("frontend/downloads", { doc: news, partners: ptn, files, activeNav: "requirements"  });
+};
+
+exports.lecturePage = async function (req, res) {
+    let photo = await Page.find({tag: "photo", is_active: 1});
+    const [news, ptn, photos] =
+        await Promise.all(
+            [allNews, allPartners, photo]
+        );
+    res.render("frontend/lecture-rooms", { doc: news, partners: ptn, photos, activeNav: "education"  });
+};

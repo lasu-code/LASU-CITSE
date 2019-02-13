@@ -22,6 +22,7 @@ let Message = require("../models/message");
 
 let controller = require("../controllers/frontendControllers");
 let mailSender = require("../config/mailer");
+let showError = require("../config/errorHandler");
 let n = require("../config/cmsNav");
 let oldImage = {};
 
@@ -96,15 +97,6 @@ function adminLoggedIn(req, res, next) {
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function logError(method, path, err) {
-    console.error(`An error occured during ${method} (${path}): ${err}`);
-}
-
-function showError(req, m, p, e) {
-    logError(m, p, e);
-    return req.flash("error", "An error occured, try again or contact web admin!");
 }
 
 // Get old image path
@@ -1200,6 +1192,8 @@ router.post("/post-contact", controller.post_contactPage);
 router.get("/team", controller.teamPage);
 router.get("/news/article/:name/:id", controller.newsPage);
 router.get("/news", controller.newsListsPage);
+router.get("/lecture-rooms", controller.lecturePage);
+router.get("/downloads", controller.downloadPage);
 router.get("/:page_name", controller.renderPage);
 router.post("/subscribe", controller.subscribe);
 
