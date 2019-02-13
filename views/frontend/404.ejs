@@ -2,29 +2,12 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-
-    <!-- Title  -->
-    <title>404 | LASU-ACEITSE</title>
-
-    <!-- Favicon  -->
-    <link rel="icon" href="img/core-img/favicon.ico">
-
-    <!-- Style CSS -->
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="css/w3.css">
-
+    <%- include("../partials/frontend-head", {title: "404"}) %>
 </head>
 
 <body>
-    <!-- Preloader -->
-    <% include ../partials/navbar.ejs %>
+    <% include ../partials/navbar %>
 
-    <!-- ***** Blog Area Start ***** -->
     <section class="medilife-blog-area section-padding-50" style="padding-top:150px">
         <div class="container">
             <div class="row">
@@ -33,29 +16,16 @@
                         PAGE (<u><%= navIndex%></u>) NOT FOUND
                     </p>
                     <div class="text-center col-12 my-5">
-                        <img src="img/core-img/error-404.png" class="border border-black"/>
+                        <img src="img/error-404.png" class="border border-black"/>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- ***** Blog Area End ***** -->
 
+    <% include ../partials/footer %>
 
-    <!-- ***** Footer Area Start ***** -->
-    <% include ../partials/footer.ejs %>
-    <!-- ***** Footer Area End ***** -->
-
-    <!-- jQuery (Necessary for All JavaScript Plugins) -->
-    <script src="js/jquery/jquery-2.2.4.min.js"></script>
-    <!-- Popper js -->
-    <script src="js/popper.min.js"></script>
-    <!-- Bootstrap js -->
-    <script src="js/bootstrap.min.js"></script>
-    <!-- Plugins js -->
-    <script src="js/plugins.js"></script>
-    <!-- Active js -->
-    <script src="js/active.js"></script>
+    <% include ../partials/frontend-scripts %>
 
 </body>
 

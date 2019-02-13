@@ -1,13 +1,15 @@
-<div class="container-fluid bg-light p-5">
-    <h2 class="text-center mb-5">Our Partners</h2>
-    <div class="row mb-3">
-    <% for (let i = 0; i < partners.length; i++) { %>
-        <div class="col-sm text-center">
-            <img src="<%= partners[i].postImage %>" class="img-thumbnail" alt="<%= partners[i].name %>">
+<% if (typeof partners != "undefined")  { %>
+    <div class="container-fluid bg-light p-5">
+        <h2 class="text-center mb-5">Our Partners</h2>
+        <div class="row mb-3">
+        <% for (let i = 0; i < partners.length; i++) { %>
+            <div class="col-sm text-center">
+                <img src="<%= partners[i].postImage %>" class="img-thumbnail" alt="<%= partners[i].name %>">
+            </div>
+        <% } %>
         </div>
-    <% } %>
     </div>
-</div>
+<% } %>
 
 <footer class="footer-area section-padding-50">
     <div class="main-footer-area">
