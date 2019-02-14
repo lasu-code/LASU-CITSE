@@ -58,32 +58,42 @@
                 <!-- ============================================================== -->
                 <!-- Sales Cards  -->
                 <!-- ============================================================== -->
-                <div class="row el-element-overlay">
-                    <% for(let i=0; i < result.length; i++) { %>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="card">
-                            <div class="el-card-item">
-                                <div class="el-card-avatar el-overlay-1"> <img src="<%= result[i].postImage %>"
-                                        alt="user" />
-                                    <div class="el-overlay">
-                                        <ul class="list-style-none el-info">
-                                            <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link"
-                                                    href="<%= result[i].postImage %>"><i class="mdi mdi-magnify-plus"></i></a></li>
-                                            <li class="el-item"><a class="btn default btn-outline el-link" href="/dashboard/edit/<%= result[i]._id %>"><i
-                                                        class="mdi mdi-link"></i></a></li>
-                                        </ul>
+                <div class="container">
+                    <div class="class">
+                        <div class="row el-element-overlay">
+                            <% for(let i=0; i < result.length; i++) { %>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="card">
+                                    <div class="el-card-item">
+                                        <div class="el-card-avatar el-overlay-1" style="height: 200px;"> <img src="<%= result[i].postImage %>"
+                                                alt="user" />
+                                            <div class="el-overlay">
+                                                <ul class="list-style-none el-info">
+                                                    <li class="el-item"><a class="btn default btn-outline image-popup-vertical-fit el-link"
+                                                            href="<%= result[i].postImage %>"><i class="mdi mdi-magnify-plus"></i></a></li>
+                                                    <li class="el-item"><a class="btn default btn-outline el-link"
+                                                            href="/dashboard/slider/edit/<%= result[i]._id %>"><i class="fa fa-edit"></i></a>
+                                                    </li>
+                                                </ul>
+                                                <form action="/dashboard/slider/delete/<%= result[i]._id %>?_method=DELETE" method="POST"
+                                                    class="form-inline float-left">
+                                                    <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                                    <button type="submit" class="btn btn-danger delete-item fixed-bottom"><span
+                                                            class="fa fa-trash"></span></button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <div class="el-card-content">
+                        
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="el-card-content">
-                                    
-                                </div>
                             </div>
-                        </div>
+                            <% }%>
+                        
+                        
+                        <div>
                     </div>
-                    <% }%>
-                    
-                    
-                <div>
                     <a href="/dashboard/slider/add"><button type="button" class="btn btn-info btn-lg">Add Slider</button></a>
                 </div>
                 <!-- ============================================================== -->

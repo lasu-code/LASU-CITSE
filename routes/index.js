@@ -336,6 +336,7 @@ router.delete("/deleteadmin", async function (req, res) {
 router.route("/dashboard/settings")
     .all(adminLoggedIn)
     .get(async function (req, res) {
+        let upload = req.flash("upload");
         let result = "";
         try {
             result = await Settings.find({});
@@ -343,7 +344,7 @@ router.route("/dashboard/settings")
         } catch(err) {
             showError(req, "GET", "/dashboard/settings", err);
         }
-        res.render("backend/settings", { result });
+        res.render("backend/settings", { result, upload });
     })
     .post(upload.single("siteLogo"), async function (req, res) {
         let pageData = {
@@ -590,12 +591,14 @@ router.route("/dashboard/speech")
     .all(isLoggedIn)
     .get(async function(req, res) {
         let result = "";
+        let upload = req.flash("upload");
+        let failure = req.flash("failure");
         try {
             result = await Page.findOne({tag: "vc_speech"});
         } catch(err) {
             showError(req, "GET", "/dashboard/speech", err);
         }
-        res.render("backend/speech", { result });
+        res.render("backend/speech", { result, upload, failure});
     })
     .post(upload.single("postImage"), async function(req, res){
 
@@ -633,13 +636,16 @@ router.route("/dashboard/speech")
 router.route("/dashboard/sliders")
     .all(isLoggedIn)
     .get(async function (req, res) {
+        let uploaded = req.flash('upload');
+        let failure = req.flash('failure');
+        let success = req.flash('success');
         let result = "";
         try {
             result = await Slider.find().sort({_id: -1});
         } catch(err) {
             showError(req, "GET", "/dashboard/slider", err);
         }
-        res.render("backend/sliders", { result });
+        res.render("backend/slider", { result, uploaded, failure, success});
     });
 
 router.route("/dashboard/slider/add")
@@ -1060,7 +1066,8 @@ router.route("/dashboard/contact-us")
     .get(async (req, res) => {
         let req_url = req.originalUrl;
         let data = "";
-
+        let upload = req.flash("upload");
+        let failure = req.flash("failure");
         try {
             data = await Contact.find({});
         } catch(err) {
@@ -1069,7 +1076,7 @@ router.route("/dashboard/contact-us")
             req.flash("error", "An error occured, try again or contact web admin!");
         }
 
-        res.render("backend/contact-us", { req_url, content: data[0], page: "contact-us", activeParent: "about" });
+        res.render("backend/contact-us", { req_url, content: data[0], page: "contact-us", activeParent: "about" , upload, failure});
     })
     .post( async (req, res) => {
         let pageData = {
@@ -1165,6 +1172,8 @@ router.post("/reply", (req, res) => {
 router.route("/dashboard/:tag")
     .all(isLoggedIn)
     .get(async (req, res) => {
+        let upload = req.flash("upload");
+        let failure = req.flash("failure");
         let req_url = req.originalUrl;
         let page_tag = req.params.tag.trim();
         let page_obj = n[page_tag.replace(/(-)+/gi, "_")];
@@ -1175,7 +1184,7 @@ router.route("/dashboard/:tag")
         } catch(err) {
             showError(req, "GET", `/dashboard/${page_tag}`, err);
         }
-        res.render("backend/template-one", { req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo });
+        res.render("backend/template-one", { req_url, page: page_tag, content, activeParent: page_obj.parent, title: page_obj.title, usrInfo, upload, failure });
     })
     .post(getOldImage, upload.single("postImage"), async (req, res) => {
         removeOldImage();

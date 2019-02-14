@@ -1,61 +1,126 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <%- include('../partials/dashboard-head', {pagename: 'Partners'}) %>
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+
+<head><%- include('../partials2/head', {pagename: 'Partners'}) %>
 </head>
 
 <body>
-    <%- include('../partials/dashboard-nav') %>
-
-    <div class="container-fluid">
-        <div class="row">
-            <!-- sidebar -->
-            <%- include('../partials/sidebar.ejs', {page: 'partners', activeParent: 'partners'}) %>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2">Partners CMS</h1>
-                </div>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
-                            <a href="/dashboard/partner/add" class="btn btn-primary">Add New Partner <span class="fa fa-plus-circle"></span></a>
-                        </div>
-
-                        <div class="col-lg-12 col-nd-12 col-sm-12 col-xs-12 px-0">
-                            <hr class="" />
-                        </div>
-
-                        <h3 class="col-lg-12 col-nd-12 col-sm-12 col-xs-12">Current Partners</h3>
-
-                        <div class="col card-deck mt-3 pl-2">
-                        <% for(let i=0; i < result.length; i++) { %>
-                            <div class="col-sm-4 col-xs-12 px-2"><div class="border mb-4 mx-1 px-0">
-                                <div class="card-body text-center">
-                                    <img src="<%= result[i].postImage %>" alt="<%= result[i].name %>" class="img-fluid p-2">
-                                </div>
-                                <div class="card-footer justify-content-center d-flex">
-                                    <a class="btn btn-primary float-left mr-3" href="/dashboard/partner/edit/<%= result[i]._id %>">Edit Partner</a>
-                                    <form action="/dashboard/partner/delete/<%= result[i]._id %>?_method=DELETE" method="POST" class="form-inline float-left">
-                                        <input type="hidden" name="id" value="<%=result[i]._id%>">
-                                        <input type="submit" class="btn btn-danger delete-item" value="Delete">
-                                    </form>
-                                </div>
-                            </div></div>
-                        <% }%>
-                        </div>
-                    </div>
-                </div>
-            </main>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
         </div>
     </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/navbar') %>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/aside') %>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title">PARTNERS</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+                <div class="container bg-light">
+                    <div class="class">
+                        <div class="">
+                            <a href="/dashboard/partner/add" class="btn btn-primary">Add New Partner <span class="fa fa-plus-circle"></span></a>
+                        </div>
+                        <hr>
+                        <div class="row el-element-overlay">
+                            <h3 class="col-lg-12 col-nd-12 col-sm-12 col-xs-12">Current Partners</h3>
+                            
+                            <div class="col card-deck mt-3 pl-2">
+                                <% for(let i=0; i < result.length; i++) { %>
+                                <div class="col-sm-4 col-xs-12 px-2">
+                                    <div class="border mb-4 mx-1 px-0">
+                                        <div class="card-body text-center">
+                                            <img src="<%= result[i].postImage %>" alt="<%= result[i].name %>" class="img-fluid p-2">
+                                        </div>
+                                        <div class="card-footer justify-content-center d-flex">
+                                            <a class="btn btn-primary float-left mr-3" href="/dashboard/partner/edit/<%= result[i]._id %>">Edit
+                                                Partner</a>
+                                            <form action="/dashboard/partner/delete/<%= result[i]._id %>?_method=DELETE" method="POST"
+                                                class="form-inline float-left">
+                                                <input type="hidden" name="id" value="<%=result[i]._id%>">
+                                                <input type="submit" class="btn btn-danger delete-item" value="Delete">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }%>
+                            </div>
 
-    <%- include('../partials/dashboard-scripts') %>
+                        </div>
+                        <!-- ============================================================== -->
+                        <!-- Recent comment and chats -->
+                        <!-- ============================================================== -->
+                    </div>
+                    <br>
+                    <!-- ============================================================== -->
+                    <!-- End Container fluid  -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!-- footer -->
+                    <!-- ============================================================== -->
+                    <footer class="footer text-center">
+                        All Rights Reserved by Matrix-admin. Designed and Developed by <a
+                            href="https://wrappixel.com">WrapPixel</a>.
+                    </footer>
+                    <!-- ============================================================== -->
+                    <!-- End footer -->
+                    <!-- ============================================================== -->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Page wrapper  -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Wrapper -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- All Jquery -->
+            <!-- ============================================================== -->
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            
+            <%- include('../partials2/cmsScripts') %>
 </body>
+
 </html>
-
-
-
-
-

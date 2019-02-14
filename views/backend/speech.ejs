@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 
-=======
-<!doctype html>
-<html lang="en">
->>>>>>> 9044f2dd2429e15efd853fbbbacc313e942f4143
 <head>
     <%- include('../partials2/head', {pagename: ' VCs Speech'}) %>
 </head>
@@ -52,7 +47,6 @@
                         <h4 class="page-title">Edit Page Content: <span class="text-info">VC's Speech</span></h4>
                     </div>
                 </div>
-<<<<<<< HEAD
             </div>
             <!-- ============================================================== -->
             <!-- End Bread crumb and right sidebar toggle -->
@@ -98,32 +92,11 @@
             <!-- ============================================================== -->
             <!-- End footer -->
             <!-- ============================================================== -->
-=======
-
-                <form action="/dashboard/speech" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
-                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: "VC's Image", valueField: (result) ? result.postImage : "" }); %>
-
-                    <%- include('../fields/text', { fieldname: 'postImageCaption', fieldlabel: 'Image caption', valueField: (result) ? result.postImageCaption : "" }); %>
-
-                    <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: "VC's Speech", valueField: (result) ? result.content : "" }); %>
-
-                    <%- include('../fields/text', { fieldname: 'vc_name', fieldlabel: "VC's Name", valueField: (result) ? result.summary : "" }); %>
-
-                    <hr class="my-4"/>
-                    <div class="col-sm-10 ml-md-auto pl-0">
-                        <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
-                    </div>
-
-                </form>
-            </main>
->>>>>>> 9044f2dd2429e15efd853fbbbacc313e942f4143
         </div>
         <!-- ============================================================== -->
         <!-- End Page wrapper  -->
         <!-- ============================================================== -->
     </div>
-<<<<<<< HEAD
     <!-- ============================================================== -->
     <!-- End Wrapper -->
     <!-- ============================================================== -->
@@ -153,20 +126,10 @@
             alert("<%=failure%>")
         }
 
-=======
-
-    <%- include('../partials/dashboard-scripts') %>
-    <script>
-        CKfull('content')
->>>>>>> 9044f2dd2429e15efd853fbbbacc313e942f4143
     </script>
     <%- include('../partials2/cmsScripts') %>
 
 
 </body>
-<<<<<<< HEAD
 
 </html>
-=======
-</html>
->>>>>>> 9044f2dd2429e15efd853fbbbacc313e942f4143

@@ -1,56 +1,132 @@
-<!doctype html>
-<html lang="en">
+
+
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
 
 <head>
-    <%- include('../partials/dashboard-head', { pagename: 'Add Person' }) %>
+    <%- include('../partials2/head', {pagename: 'Add/Edit Person'}) %>
 </head>
 
 <body>
-    <%- include('../partials/dashboard-nav') %>
-
-    <div class="container-fluid">
-        <div class="row">
-
-            <%- include('../partials/sidebar.ejs', { page: 'centre-leaders', activeParent: 'management' }) %>
-
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-5 pb-2 mb-3">
-                    <h1 class="h2 rw"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %> Page Content: <span class="text-info">CENTRE LEADER</span></h1>
-                </div>
-
-                <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/leader/add' %>" method="post" enctype="multipart/form-data" class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
-
-                    <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Name', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
-
-                    <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Partner Image', valueField: (typeof result != 'undefined') ? result.postImage : '' }); %>
-
-                    <%- include('../fields/text', { fieldname: 'work_at', fieldlabel: 'Institution', valueField: (typeof result != 'undefined') ? result.work_at : '' }); %>
-
-                    <%- include('../fields/text', { fieldname: 'position', fieldlabel: 'Position', valueField: (typeof result != 'undefined') ? result.position : '' }); %>
-
-                    <%- include('../fields/text', { fieldname: 'email', fieldlabel: 'Email Address', valueField: (typeof result != 'undefined') ? result.email : '' }); %>
-
-                    <%- include('../fields/text', { fieldname: 'phone', fieldlabel: 'Phone Number', valueField: (typeof result != 'undefined') ? result.phone : '' }); %>
-
-                    <%- include('../fields/text', { fieldname: 'work_info_1', fieldlabel: 'Expertise', valueField: (typeof result != 'undefined') ? result.work_info_1 : '' }); %>
-
-                    <%- include('../fields/textarea', { fieldname: 'work_info_2', fieldlabel: 'Expected Contribution', valueField: (typeof result != 'undefined') ? result.work_info_2 : '' }); %>
-
-                    <%- include('../fields/radio', { fieldname: 'is_active', fieldlabel: 'Is Active', valueField: (typeof result != 'undefined') ? result.is_active : 1 }); %>
-
-                    <hr class="my-4"/>
-                    <div class="col-sm-10 ml-md-auto px-0">
-                        <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE LEADER' : 'CREATE NEW LEADER' }); %>
-                        <a href="/dashboard/leaders" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
-                    </div>
-                </form>
-            </main>
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="lds-ripple">
+            <div class="lds-pos"></div>
+            <div class="lds-pos"></div>
         </div>
     </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/navbar') %>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <%- include('../partials2/aside') %>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <div class="page-breadcrumb">
+                <div class="row">
+                    <div class="col-12 d-flex no-block align-items-center">
+                        <h4 class="page-title"><%= (typeof action != 'undefined') ? 'Edit' : 'Create' %>: <span
+                                class="text-info">CENTER LEADER</span></h4>
+                    </div>
+                </div>
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Bread crumb and right sidebar toggle -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Sales Cards  -->
+                <!-- ============================================================== -->
+                <div class="container">
+                    <div class="card">
+                        <form action="<%= (typeof action != 'undefined') ? action : '/dashboard/leader/add' %>" method="post" enctype="multipart/form-data">
+                            <div class="card-body">
+                                <%- include('../fields/text', { fieldname: 'name', fieldlabel: 'Name', valueField: (typeof result != 'undefined') ? result.name : '' }); %>
+                                
+                                <%- include('../fields/file', { fieldname: 'postImage', fieldlabel: 'Partner Image', valueField: (typeof result != 'undefined') ? result.postImage : '' }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'work_at', fieldlabel: 'Institution', valueField: (typeof result != 'undefined') ? result.work_at : '' }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'position', fieldlabel: 'Position', valueField: (typeof result != 'undefined') ? result.position : '' }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'email', fieldlabel: 'Email Address', valueField: (typeof result != 'undefined') ? result.email : '' }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'phone', fieldlabel: 'Phone Number', valueField: (typeof result != 'undefined') ? result.phone : '' }); %>
+                                
+                                <%- include('../fields/text', { fieldname: 'work_info_1', fieldlabel: 'Expertise', valueField: (typeof result != 'undefined') ? result.work_info_1 : '' }); %>
+                                
+                                <%- include('../fields/textarea', { fieldname: 'work_info_2', fieldlabel: 'Expected Contribution', valueField: (typeof result != 'undefined') ? result.work_info_2 : '' }); %>
+                                
+                                <%- include('../fields/radio', { fieldname: 'is_active', fieldlabel: 'Is Active', valueField: (typeof result != 'undefined') ? result.is_active : 1 }); %>
+                            </div>
 
-    <%- include('../partials/dashboard-scripts') %>
-    <script>
-        CKbasic('work_info_2');
+                            <%- include('../fields/button', { fieldvalue: (typeof action != 'undefined') ? 'UPDATE LEADER' : 'CREATE NEW LEADER' }); %>
+                            <a href="/dashboard/leaders" class="btn btn-success pull-right"><i class="fa fa-caret-left pr-2"> </i>Back to List</a>
+                        </form>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- Recent comment and chats -->
+                <!-- ============================================================== -->
+            </div>
+            <br>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                All Rights Reserved by Matrix-admin. Designed and Developed by <a
+                    href="https://wrappixel.com">WrapPixel</a>.
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKbasic('content');
     </script>
+
+    <%- include('../partials2/cmsScripts') %>
+
+
 </body>
+
 </html>
