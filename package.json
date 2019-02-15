@@ -43,8 +43,8 @@
         "save": "^2.3.3"
     },
     "engines": {
-        "node": "8.11.4",
-        "npm": "6.4.1"
+        "node": "11.5.0",
+        "npm": "6.5.1"
     },
     "description": "Africa Centre of Excellence in Innovative and Tranformative STEM Education",
     "main": "app.js",
