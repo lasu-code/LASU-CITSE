@@ -147,10 +147,7 @@ router.use(async (req, res, next) => {
 // -----
 // Access Control
 router.get("/login", function (req, res) {
-    let success = req.flash("success");
-    let error = req.flash("error");
-
-    res.render("backend/login", { success, error });
+    res.render("backend/login");
 });
 
 router.post("/login/admin", passport.authenticate("local.loginAdmin", {
