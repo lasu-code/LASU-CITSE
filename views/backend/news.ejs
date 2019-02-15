@@ -4,7 +4,7 @@
 <html dir="ltr" lang="en">
 
 <head>
-    <%- include('../partials2/head', {pagename: 'Contact-Us'}) %>
+    <%- include('../partials2/head', {pagename: 'News'}) %>
 </head>
 
 <body>
@@ -63,16 +63,16 @@
                     <div class="card">
                         <form class="form-horizontal" action="/handlenews" method="post" enctype="multipart/form-data">
                             <div class="card-body">
-                                <%- include('../fields/text', { fieldname: 'title', fieldplaceholder: 'News Title', fieldlabel: 'News Title', valueField: (doc) ? doc.title : ''}); %>
+                                <%- include('../fields/text', { fieldname: 'title', fieldplaceholder: 'News Title', fieldlabel: 'News Title', valueField: (result) ? result.title : ''}); %>
                                 
-                                <%- include('../fields/text', { fieldname: 'writer', fieldplaceholder: "Writer's name", fieldlabel: "Writer's name", valueField: (doc) ? doc.writer : ''}); %>
+                                <%- include('../fields/text', { fieldname: 'writer', fieldplaceholder: "Writer's name", fieldlabel: "Writer's name", valueField: (result) ? result.writer : ''}); %>
                                 
-                                <%- include('../fields/text', { fieldname: 'department', fieldplaceholder: "Department", fieldlabel: "Department", valueField: (doc) ? doc.department : ''}); %>
+                                <%- include('../fields/text', { fieldname: 'department', fieldplaceholder: "Department", fieldlabel: "Department", valueField: (result) ? result.department : ''}); %>
                                 
-                                <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image', valueField: (doc) ? doc.newImg : ''}); %>
+                                <%- include('../fields/file', { fieldname: 'newImg', fieldlabel: 'News Header Image', valueField: (result) ? result.newImg : ''}); %>
                                 <hr>
                                 
-                                <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', valueField: (doc) ? doc.content : ''}); %>
+                                <%- include('../fields/textarea', { fieldname: 'content', fieldlabel: 'News Content', valueField: (result) ? result.content : ''}); %>
                             </div>
 
                             <%- include('../fields/button', { fieldvalue: 'UPDATE CONTENT' }); %>
@@ -122,11 +122,7 @@
         });
 
 
-        // Show success alert
-        if ($.trim($('#upload').text()).length !== 0) {
-            alert("<%=upload%>")
-        }
-    </script>
+   </script>
     <%- include('../partials2/cmsScripts') %>
 
 
