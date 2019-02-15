@@ -706,6 +706,22 @@ router.route("/dashboard/slider/edit/:id")
         res.redirect("/dashboard/sliders");
     });
 
+router.delete("/dashboard/slider/delete/:id", async function (req, res) {
+    let idd = req.params.id;
+
+    oldImage = await Slider.findOne({ _id: idd });
+    removeOldImage();
+
+    try {
+        await Slider.deleteOne({ _id: req.body.id });
+        req.flash("success", "Slider deleted successfully!");
+    } catch (err) {
+        showError(req, "DELETE", `/dashboard/slider/delete/${idd}`, err);
+    }
+    res.redirect("/dashboard/sliders");
+
+});
+
 // -----
 // Photos, Download
 router.route("/dashboard/downloads")
