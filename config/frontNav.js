@@ -3,7 +3,7 @@ module.exports = {
     "vision": { data: "vision", nav: "about" },
     "mission": { data: "mission", nav: "about" },
     "objectives": { data: "objectives", nav: "about" },
-    "programmes": { data: "programmes", nav: "programmes" },
+    "education": { data: "education", nav: "programmes" },
     "teaching": { data: "teaching", nav: "programmes" },
     "learning-activities": { data: "learning-activities", nav: "programmes" },
     "skills-gap": { data: "skills-gap", nav: "programmes" },
